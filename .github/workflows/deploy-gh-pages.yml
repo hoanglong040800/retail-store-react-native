@@ -10,17 +10,14 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    permissions:
-      # https://stackoverflow.com/q/77216921/19568962
-      contents: write
-
     steps:
       - name: Checkout 🔀
         uses: actions/checkout@v4
-        with:
-          # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-          # github workflows auto gen GITHUB_TOKEN secret to authorize deploy
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup git 🛠️
+        run:  |
+          git config --global user.email "hoanglong040800@gmail.com"
+          git config --global user.name "hoanglong040800"
 
       - name: Install 📦
         run: yarn

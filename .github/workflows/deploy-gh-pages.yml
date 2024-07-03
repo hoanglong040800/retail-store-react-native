@@ -10,6 +10,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      # https://stackoverflow.com/q/77216921/19568962
+      contents: write
+
     steps:
       - name: Checkout 🔀
         uses: actions/checkout@v4

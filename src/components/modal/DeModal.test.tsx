@@ -6,7 +6,9 @@ import DeModal from './DeModal';
 type Props = ComponentProps<typeof DeModal>;
 
 // UT: mock component
-jest.mock('../appbar/DeAppBar.tsx', () => () => <div data-testid="DeAppBar" />);
+jest.mock('../appbar', () => ({
+  DeAppBar: () => <div data-testid="DeAppBar" />,
+}));
 
 // UT: mock export default component
 jest.mock('react-native', () => ({

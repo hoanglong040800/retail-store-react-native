@@ -6,7 +6,10 @@ type Props = ComponentProps<typeof CreateTodoContent>;
 
 // TODO move all mock components in setupTest
 jest.mock('components/input/DeTextInput.tsx', () => props => <div data-testid="DeTextInput" {...props} />);
-jest.mock('components/appbar/DeAppbar.tsx', () => () => <div data-testid="DeAppBar" />);
+
+jest.mock('components/appbar', () => ({
+  DeAppBar: () => <div data-testid="DeAppBar" />,
+}));
 
 const mockValueUseCreateTodo = {
   control: 'mockControl',

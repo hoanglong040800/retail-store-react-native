@@ -1,0 +1,9 @@
+{
+  "name": "Retail Store",
+  "slug": "retail-store",
+  "expo": {
+    "experiments": {
+      "baseUrl": "/retail-store-react-native"
+    }
+  }
+}

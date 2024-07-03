@@ -64,5 +64,7 @@ buck-out/
 web-build/
 
 #
+.env
 .eslintcache
 coverage
+dist

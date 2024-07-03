@@ -7,7 +7,3 @@ export const THEME: MD3Theme = {
 export const CUSTOM_THEME = {
   headerHeight: 60,
 };
-
-export const MAIN_TAB_ICON = {
-  size: 20,
-};

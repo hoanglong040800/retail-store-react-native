@@ -26,20 +26,20 @@ describe('Common Utils', () => {
     const testCases = [
       {
         input: 0,
-        expected: '0 ₫',
+        expected: '0\xa0₫', // https://stackoverflow.com/questions/54242039/intl-numberformat-space-character-does-not-match
       },
       {
         input: 1000000,
-        expected: '1.000.000 ₫',
+        expected: '1.000.000\xa0₫',
       },
       {
         input: -12.3785,
-        expected: '-12,38 ₫',
+        expected: '-12,38\xa0₫',
       },
 
       {
         input: 56.892,
-        expected: '56,89 ₫',
+        expected: '56,89\xa0₫',
       },
     ];
 
@@ -47,7 +47,7 @@ describe('Common Utils', () => {
       it(`should return ${expected} when input is ${input}`, () => {
         const result = formatCurrency(input);
 
-        expect(result.toString()).toEqual(expected);
+        expect(result).toBe(expected);
       });
     });
   });

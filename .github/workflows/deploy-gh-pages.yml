@@ -21,6 +21,9 @@ jobs:
         run: yarn
 
       - name: Deploy 🚀
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: yarn deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: dist
+          clean: true
+          single-commit: true

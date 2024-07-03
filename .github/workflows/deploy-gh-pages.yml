@@ -6,18 +6,16 @@ on:
       - main
       - RSP-12-setup-ci-cd
 
-permissions:
-  contents: write
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
       - name: Checkout 🔀
         uses: actions/checkout@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install 📦
         run: yarn

@@ -10,14 +10,13 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    with:
-      # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-      # github workflows auto gen GITHUB_TOKEN secret to authorize deploy
-      github_token: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - name: Checkout 🔀
         uses: actions/checkout@v4
+        with:
+          # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+          # github workflows auto gen GITHUB_TOKEN secret to authorize deploy
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install 📦
         run: yarn

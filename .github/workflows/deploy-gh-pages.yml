@@ -6,19 +6,17 @@ on:
       - main
       - RSP-12-setup-ci-cd
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    uses: actions/checkout@v4
+    with:
+      github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    steps:
-      - name: Checkout 🔀
-        uses: actions/checkout@v4
-
-      - name: Setup git 🛠️
-        run:  |
-          git config --global user.email "hoanglong040800@gmail.com"
-          git config --global user.name "hoanglong040800"
-
+    steps:        
       - name: Install 📦
         run: yarn
 

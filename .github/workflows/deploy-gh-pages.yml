@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - RSP-12-setup-ci-cd
 
 jobs:
   deploy:
@@ -19,10 +20,13 @@ jobs:
       - name: Install 📦
         run: yarn
 
+      - name: Build 🛠️
+        run: yarn predeploy
+
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: .
+          folder: ./dist
           clean: true
           single-commit: true

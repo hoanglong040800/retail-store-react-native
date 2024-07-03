@@ -12,11 +12,13 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    uses: actions/checkout@v4
-    with:
-      github_token: ${{ secrets.GITHUB_TOKEN }}
 
-    steps:        
+    steps:
+      - name: Checkout 🔀
+        uses: actions/checkout@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Install 📦
         run: yarn
 

@@ -12,10 +12,15 @@ jobs:
 
     steps:
       - name: Checkout 🔀
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Install 📦 
         run: yarn
 
       - name: Deploy 🚀
         run: yarn deploy
+        with:
+          # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#about-the-github_token-secret
+          # github workflows auto gen GITHUB_TOKEN secret to authen
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          

@@ -19,6 +19,8 @@ jobs:
 
       - name: Test .env
         run: echo "API_URL = $API_URL"
+        env:
+          API_URL: ${{ env.API_URL }}
 
       - name: Install 📦
         run: yarn

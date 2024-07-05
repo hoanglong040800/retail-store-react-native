@@ -17,6 +17,9 @@ jobs:
       - name: Checkout 🔀
         uses: actions/checkout@v4
 
+      - name: Test .env
+        run: echo "API_URL = $API_URL"
+
       - name: Install 📦
         run: yarn
 

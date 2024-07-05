@@ -20,7 +20,7 @@ jobs:
       - name: Test .env
         run: echo "API_URL = $API_URL"
         env:
-          API_URL: ${{ env.API_URL }}
+          API_URL: ${{ vars.API_URL }}
 
       - name: Install 📦
         run: yarn
@@ -28,7 +28,7 @@ jobs:
       - name: Build 🛠️
         run: yarn predeploy
         env:
-          API_URL: ${{ env.API_URL }}
+          API_URL: ${{ vars.API_URL }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

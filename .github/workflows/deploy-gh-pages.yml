@@ -20,10 +20,12 @@ jobs:
       - name: Install 📦
         run: yarn
 
-      - name: Build 🛠️
+      - name: Env
         uses: oNaiPs/secrets-to-env-action@v1
         with:
           secrets: ${{ toJSON(vars)}}
+
+      - name: Build 🛠️
         run: yarn predeploy
 
       - name: Deploy 🚀

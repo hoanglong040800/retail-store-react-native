@@ -19,6 +19,11 @@ jobs:
       - name: Install 📦
         run: yarn
 
+      - name: Env
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(vars)}}
+
       - name: Build 🛠️
         run: yarn predeploy
 
@@ -28,4 +33,3 @@ jobs:
           branch: gh-pages
           folder: ./dist
           clean: true
-          single-commit: true

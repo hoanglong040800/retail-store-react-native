@@ -21,9 +21,10 @@ jobs:
         run: yarn
 
       - name: Build 🛠️
+        uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(vars)}}
         run: yarn predeploy
-        env:
-          API_URL: ${{ vars.API_URL }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4

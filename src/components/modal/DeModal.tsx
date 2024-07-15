@@ -1,5 +1,5 @@
 import { DeAppBar } from 'components/appbar';
-import { Modal } from 'react-native';
+import { Modal, StyleSheet, View } from 'react-native';
 
 type Props = {
   isOpen: boolean;
@@ -17,9 +17,16 @@ const DeModal = ({ isOpen, title, children, isHideHeader, onConfirm, onClose }: 
         <DeAppBar title={title} primaryText="Save" onPressPrimary={onConfirm} onPressSecondary={onClose} />
       )}
 
-      {children}
+      <View style={styles.content}>{children}</View>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  content: {
+    paddingHorizontal: 4,
+    paddingVertical: 12,
+  },
+});
 
 export default DeModal;

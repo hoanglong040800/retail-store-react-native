@@ -1,3 +1,5 @@
 import AuthModal from './AuthModal';
+import LoginContent from './LoginContent';
+import RegisterContent from './RegisterContent';
 
-export { AuthModal };
+export { AuthModal, LoginContent, RegisterContent };

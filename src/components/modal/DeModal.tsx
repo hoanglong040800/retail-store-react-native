@@ -6,17 +6,33 @@ type Props = {
   title?: string;
   children: JSX.Element;
   isHideHeader?: boolean;
+  isHideHeaderButton?: boolean;
   contentStyles?: StyleProp<ViewStyle>;
 
   onConfirm?: () => void;
   onClose: () => void;
 };
 
-const DeModal = ({ isOpen, title, children, isHideHeader, contentStyles, onConfirm, onClose }: Props) => {
+const DeModal = ({
+  isOpen,
+  title,
+  children,
+  isHideHeader,
+  isHideHeaderButton,
+  contentStyles,
+  onConfirm,
+  onClose,
+}: Props) => {
   return (
     <Modal visible={isOpen} onDismiss={onClose} presentationStyle="overFullScreen" animationType="slide">
       {!isHideHeader && (
-        <DeAppBar title={title} primaryText="Save" onPressPrimary={onConfirm} onPressSecondary={onClose} />
+        <DeAppBar
+          title={title}
+          isHideRightBtn={isHideHeaderButton}
+          primaryText="Save"
+          onPressPrimary={onConfirm}
+          onPressSecondary={onClose}
+        />
       )}
 
       <View style={[styles.content, contentStyles]}>{children}</View>

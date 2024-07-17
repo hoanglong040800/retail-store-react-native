@@ -1,6 +1,7 @@
 import { Route } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { BottomButtonWrapper, ScreenAppBar } from 'components';
+import { CONTAINER_WRAP_BOT_BTN } from 'const';
 import { ProductDetail } from 'modules/product/detail';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button } from 'react-native-paper';
@@ -50,13 +51,7 @@ const ProductDetailsScreen = ({ route: { params } }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    // container full -> allow bottom button stick at end
-    flex: 1,
-
-    // giving space to display bottom button
-    paddingBottom: 64,
-  },
+  container: CONTAINER_WRAP_BOT_BTN,
 });
 
 export default ProductDetailsScreen;

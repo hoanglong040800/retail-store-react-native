@@ -1,9 +1,10 @@
 import { useForm } from 'react-hook-form';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object } from 'yup';
 import { BottomButtonWrapper, DeTextInput } from 'components';
+import { CONTAINER_WRAP_BOT_BTN } from 'const';
 import { RegisterForm, registerSchema } from './_shared';
 
 const resolvedRegisterSchema = yupResolver(object(registerSchema));
@@ -19,31 +20,41 @@ const RegisterContent = ({ onSubmit }: Props) => {
     formState: { errors },
   } = useForm<RegisterForm>({ resolver: resolvedRegisterSchema });
 
-  const handleSubmitFail = () => {};
-
   return (
     <View style={styles.container}>
-      <DeTextInput control={control} errors={errors} name="firstName" label="First Name" />
+      <ScrollView style={styles.content}>
+        <DeTextInput control={control} errors={errors} name="firstName" label="First Name" />
 
-      <DeTextInput control={control} errors={errors} name="lastName" label="Last Name" />
+        <DeTextInput control={control} errors={errors} name="lastName" label="Last Name" />
 
-      <DeTextInput control={control} errors={errors} name="email" label="Email" />
+        <DeTextInput control={control} errors={errors} name="email" label="Email" />
 
-      <DeTextInput control={control} errors={errors} name="password" label="Password" secureTextEntry />
+        <DeTextInput control={control} errors={errors} name="password" label="Password" secureTextEntry />
 
-      <DeTextInput control={control} errors={errors} name="confirmPassword" label="Confirm Password" secureTextEntry />
+        <DeTextInput
+          control={control}
+          errors={errors}
+          name="confirmPassword"
+          label="Confirm Password"
+          secureTextEntry
+        />
+      </ScrollView>
 
-      {/* TODO move logic to save button on header */}
       <BottomButtonWrapper>
-        <Button onPress={handleSubmit(onSubmit, handleSubmitFail)}>Register</Button>
+        <Button mode="contained" onPress={handleSubmit(onSubmit)}>
+          Register
+        </Button>
       </BottomButtonWrapper>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  container: CONTAINER_WRAP_BOT_BTN,
+
+  content: {
     flex: 1,
+    padding: 16,
   },
 });
 

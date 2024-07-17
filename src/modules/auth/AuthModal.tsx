@@ -5,7 +5,7 @@ import { toTitleCase } from 'utils';
 import { LoginContent, RegisterContent } from 'modules/auth';
 import { StyleSheet } from 'react-native';
 import { RegisterBody } from 'types/input';
-import { authRegister } from 'service/auth.service';
+import { authRegister } from 'service';
 import { RegisterForm } from './_shared';
 
 type AuthModeType = 'login' | 'register';
@@ -65,7 +65,7 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <DeModal isOpen={isOpen} onClose={onClose} title={toTitleCase(authMode)} contentStyles={styles.modalContent}>
+    <DeModal isOpen={isOpen} onClose={onClose} title={toTitleCase(authMode)}>
       <>
         <SegmentedButtons
           value={authMode}
@@ -86,10 +86,6 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
 
 const styles = StyleSheet.create({
   authModeSegment: {
-    marginBottom: 12,
-  },
-
-  modalContent: {
     padding: 12,
   },
 });

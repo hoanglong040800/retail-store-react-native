@@ -16,6 +16,16 @@
     "sourceType": "module",
     "project": "./tsconfig.json"
   },
+
+  "overrides": [
+    {
+      "files": ["src/types/dto/*.ts"],
+      "rules": {
+        "max-classes-per-file": "off"
+      }
+    }
+  ],
+
   "rules": {
     "prettier/prettier": 0,
     "react/react-in-jsx-scope": 0,

@@ -18,7 +18,6 @@ const GlobalConfigProvider = ({ children }: Props) => {
     queryFn: () => getGlobalConfig(),
   });
 
-  // TODO move to component
   if (!data || isLoading) {
     return <ActivityIndicator animating />;
   }

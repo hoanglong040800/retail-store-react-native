@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { SegmentedButtons } from 'react-native-paper';
 import { toTitleCase } from 'utils';
 import { LoginContent, RegisterContent } from 'modules/auth';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, ViewStyle } from 'react-native';
 import { RegisterBody, RegisterDto } from 'types';
 import { authRegister } from 'service';
 import { RegisterForm } from './_shared';
@@ -59,23 +59,18 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
       openSnackbar('success', 'Register successfully');
       onClose();
     } catch (error) {
-      // TODO show snackbar on top of modal
       openSnackbar('error', 'Register failed. Please try again');
     }
   };
 
-  // TODO update to hide content only to keep input data
-  const renderContent = (authModePar: AuthModeType): JSX.Element => {
-    switch (authModePar) {
-      case 'login':
-        return <LoginContent />;
+  // -- Render
 
-      case 'register':
-        return <RegisterContent onSubmit={handleSubmitRegister} />;
+  const getContainerStyle = (curAuthMode: AuthModeType): ViewStyle => {
+    const isHide = curAuthMode !== authMode;
 
-      default:
-        return null;
-    }
+    return {
+      display: isHide ? 'none' : 'flex',
+    };
   };
 
   return (
@@ -92,7 +87,12 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
           style={styles.authModeSegment}
         />
 
-        {renderContent(authMode)}
+        {/* Content */}
+        <>
+          <LoginContent containerStyle={getContainerStyle('login')} />
+
+          <RegisterContent onSubmit={handleSubmitRegister} containerStyle={getContainerStyle('register')} />
+        </>
       </>
     </DeModal>
   );

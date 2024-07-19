@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Button } from 'react-native-paper';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object } from 'yup';
@@ -10,10 +10,11 @@ import { RegisterForm, registerSchema } from './_shared';
 const resolvedRegisterSchema = yupResolver(object(registerSchema));
 
 type Props = {
+  containerStyle?: StyleProp<ViewStyle>;
   onSubmit: (data: RegisterForm) => Promise<void>;
 };
 
-const RegisterContent = ({ onSubmit }: Props) => {
+const RegisterContent = ({ containerStyle, onSubmit }: Props) => {
   const {
     control,
     handleSubmit,
@@ -21,7 +22,7 @@ const RegisterContent = ({ onSubmit }: Props) => {
   } = useForm<RegisterForm>({ resolver: resolvedRegisterSchema });
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <ScrollView style={styles.content}>
         <DeTextInput control={control} errors={errors} name="firstName" label="First Name" />
 

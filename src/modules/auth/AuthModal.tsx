@@ -1,10 +1,10 @@
-import { DeModal } from 'components';
+import { DeModal, useSnackbar } from 'components';
 import { useState } from 'react';
 import { SegmentedButtons } from 'react-native-paper';
 import { toTitleCase } from 'utils';
 import { LoginContent, RegisterContent } from 'modules/auth';
 import { StyleSheet } from 'react-native';
-import { RegisterBody } from 'types/input';
+import { RegisterBody, RegisterDto } from 'types';
 import { authRegister } from 'service';
 import { RegisterForm } from './_shared';
 
@@ -17,6 +17,12 @@ type Props = {
 
 const AuthModal = ({ isOpen, onClose }: Props) => {
   const [authMode, setAuthMode] = useState<AuthModeType>('register');
+
+  // -- Hooks
+
+  const { openSnackbar } = useSnackbar();
+
+  // -- Functions
 
   const handleChangeAuthMode = (authModeParam: AuthModeType) => {
     setAuthMode(authModeParam);
@@ -33,7 +39,7 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
   const handleSubmitRegister = async (formData: RegisterForm): Promise<void> => {
     try {
       if (!validateRegisterForm(formData)) {
-        // TODO show snackbar fail
+        openSnackbar('error', 'Form validate failed. Please check again');
       }
 
       const registerBody: RegisterBody = {
@@ -43,14 +49,22 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
         lastName: formData.lastName,
       };
 
-      await authRegister(registerBody);
+      const res: RegisterDto = await authRegister(registerBody);
 
-      // TODO show success snackbar
+      if (!res?.result) {
+        openSnackbar('error', 'Register failed. Please try again');
+        return;
+      }
+
+      openSnackbar('success', 'Register successfully');
+      onClose();
     } catch (error) {
-      // TODO show snackbar
+      // TODO show snackbar on top of modal
+      openSnackbar('error', 'Register failed. Please try again');
     }
   };
 
+  // TODO update to hide content only to keep input data
   const renderContent = (authModePar: AuthModeType): JSX.Element => {
     switch (authModePar) {
       case 'login':
@@ -65,7 +79,7 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
   };
 
   return (
-    <DeModal isOpen={isOpen} onClose={onClose} title={toTitleCase(authMode)}>
+    <DeModal isOpen={isOpen} onClose={onClose} title={toTitleCase(authMode)} isHideHeaderButton>
       <>
         <SegmentedButtons
           value={authMode}

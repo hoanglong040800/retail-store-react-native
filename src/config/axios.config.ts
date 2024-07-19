@@ -24,10 +24,12 @@ const insertAuthToken = async (config: InternalAxiosRequestConfig) => {
 
 const parseResponse = (response: AxiosResponse<any, any>) => response.data;
 
+// TODO render <Snackbar /> error whenever api throw error
 const handleResponseError = (err: any) => {
-  if (err.response) return err.response.data;
+  if (err?.response?.data) return err.response.data;
 
   return {
+    errorCode: 'SERVER_DOWN',
     status: 503,
     message: 'Server Down',
   };

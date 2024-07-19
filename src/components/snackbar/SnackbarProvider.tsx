@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { createPortal } from 'react-dom';
 import { TSnackbar } from 'types';
 import { Snackbar, SnackbarDpCxt, snackbarReducer } from '.';
 
@@ -23,9 +24,19 @@ const SnackbarProvider = ({ children }: Props) => {
     <SnackbarDpCxt.Provider value={dispatch}>
       {children}
 
-      <Snackbar visible={state.visible} title={state.title} onDismiss={handleDismiss} />
+      <SnackbarPortal>
+        <Snackbar visible={state.visible} title={state.title} onDismiss={handleDismiss} />
+      </SnackbarPortal>
     </SnackbarDpCxt.Provider>
   );
+};
+
+// Used for render Snackbar in body so it can apply z-index -> render above modal
+const SnackbarPortal = ({ children }) => {
+  const snackbarRoot = document.createElement('div');
+  document.body.appendChild(snackbarRoot);
+
+  return createPortal(children, snackbarRoot);
 };
 
 export default SnackbarProvider;

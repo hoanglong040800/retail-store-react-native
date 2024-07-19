@@ -15,7 +15,7 @@ const DeAppBar = ({ title, primaryText, isHideRightBtn, onPressSecondary, onPres
     <Appbar.Header style={styles.header}>
       <Appbar.Action icon="close" onPress={onPressSecondary} />
       <Appbar.Content title={title} />
-      {isHideRightBtn && <Button onPress={onPressPrimary}>{primaryText}</Button>}
+      {!isHideRightBtn && <Button onPress={onPressPrimary}>{primaryText}</Button>}
     </Appbar.Header>
   );
 };

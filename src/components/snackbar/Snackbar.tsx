@@ -10,7 +10,15 @@ const Snackbar = ({ visible, title, onDismiss }: Props) => {
   const DURATION = 5000;
 
   return (
-    <PaperSnackbar visible={visible} onDismiss={onDismiss} duration={DURATION}>
+    <PaperSnackbar
+      visible={visible}
+      onDismiss={onDismiss}
+      duration={DURATION}
+      wrapperStyle={{
+        // override Modal z-index
+        zIndex: 9999,
+      }}
+    >
       {title}
     </PaperSnackbar>
   );

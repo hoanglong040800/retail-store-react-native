@@ -3,7 +3,7 @@ import { ProductDetailsScreen, ProductListScreen } from 'screens/Common';
 import { HomeScreen } from 'screens/Home';
 import { Screen } from 'types';
 
-const CategoryStack = () => {
+const HomeStack = () => {
   const Stack = createStackNavigator();
 
   return (
@@ -14,4 +14,4 @@ const CategoryStack = () => {
     </Stack.Navigator>
   );
 };
-export default CategoryStack;
+export default HomeStack;

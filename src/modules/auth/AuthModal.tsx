@@ -16,7 +16,7 @@ type Props = {
 };
 
 const AuthModal = ({ isOpen, onClose }: Props) => {
-  const [authMode, setAuthMode] = useState<AuthModeType>('register');
+  const [authMode, setAuthMode] = useState<AuthModeType>('login');
 
   // -- Hooks
 
@@ -63,6 +63,8 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
     }
   };
 
+  const handleSubmitLogin = async (): Promise<void> => {};
+
   // -- Render
 
   const getContainerStyle = (curAuthMode: AuthModeType): ViewStyle => {
@@ -89,7 +91,7 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
 
         {/* Content */}
         <>
-          <LoginContent containerStyle={getContainerStyle('login')} />
+          <LoginContent containerStyle={getContainerStyle('login')} onSubmit={handleSubmitLogin} />
 
           <RegisterContent onSubmit={handleSubmitRegister} containerStyle={getContainerStyle('register')} />
         </>

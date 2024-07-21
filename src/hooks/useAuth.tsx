@@ -1,12 +1,16 @@
 import { authLogin } from 'service';
 import { LoginBody, LoginDto } from 'types';
-import useAsyncStorage from './useAsyncStorage';
+import { setStorageItems } from 'utils';
 
 export const useAuth = () => {
-  const { setStorageItems } = useAsyncStorage();
+  // ---- Functions
 
   const login = async (body: LoginBody) => {
     try {
+      if (!body) {
+        throw new Error('No body found');
+      }
+
       const resData = await authLogin(body);
 
       processAfterLogin(resData);
@@ -30,6 +34,7 @@ export const useAuth = () => {
 
     const { user, accessToken, refreshToken } = loginData;
 
+    // TODO save token using expo-secure-store
     setStorageItems({
       user,
       accessToken,

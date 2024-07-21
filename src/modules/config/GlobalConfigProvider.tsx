@@ -13,6 +13,7 @@ type Props = {
 };
 
 const GlobalConfigProvider = ({ children }: Props) => {
+  // TODO cache in async storage
   const { data, isLoading } = useQuery<GetGlobalConfigDto, null, GetGlobalConfigDto>({
     queryKey: [],
     queryFn: () => getGlobalConfig(),

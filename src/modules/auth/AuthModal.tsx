@@ -4,9 +4,10 @@ import { SegmentedButtons } from 'react-native-paper';
 import { toTitleCase } from 'utils';
 import { LoginContent, RegisterContent } from 'modules/auth';
 import { StyleSheet, ViewStyle } from 'react-native';
-import { RegisterBody, RegisterDto } from 'types';
+import { LoginBody, RegisterBody, RegisterDto } from 'types';
 import { authRegister } from 'service';
-import { RegisterForm } from './_shared';
+import { useAuth } from 'hooks';
+import { LoginForm, RegisterForm } from './_shared';
 
 type AuthModeType = 'login' | 'register';
 
@@ -21,6 +22,7 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
   // -- Hooks
 
   const { openSnackbar } = useSnackbar();
+  const { login } = useAuth();
 
   // -- Functions
 
@@ -36,6 +38,7 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
     return true;
   };
 
+  // TODO move to useAuth
   const handleSubmitRegister = async (formData: RegisterForm): Promise<void> => {
     try {
       if (!validateRegisterForm(formData)) {
@@ -63,7 +66,19 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
     }
   };
 
-  const handleSubmitLogin = async (): Promise<void> => {};
+  const handleSubmitLogin = async (formData: LoginForm): Promise<void> => {
+    try {
+      const loginBody: LoginBody = {
+        email: formData.email,
+        password: formData.password,
+      };
+
+      await login(loginBody);
+      onClose();
+    } catch (error) {
+      openSnackbar('error', 'Login failed. Please try again');
+    }
+  };
 
   // -- Render
 

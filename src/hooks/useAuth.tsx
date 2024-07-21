@@ -1,8 +1,14 @@
+import { useSnackbar } from 'components';
+import { useRecoilValue } from 'recoil';
 import { authLogin } from 'service';
+import { loginUserState } from 'states';
 import { LoginBody, LoginDto } from 'types';
 import { setStorageItems } from 'utils';
 
 export const useAuth = () => {
+  const loginUser = useRecoilValue(loginUserState);
+  const { openSnackbar } = useSnackbar();
+
   // ---- Functions
 
   const login = async (body: LoginBody) => {
@@ -15,7 +21,7 @@ export const useAuth = () => {
 
       processAfterLogin(resData);
     } catch (error) {
-      console.error(error);
+      openSnackbar('error', 'Login failed. Please try again');
     }
   };
 
@@ -43,6 +49,7 @@ export const useAuth = () => {
   };
 
   return {
+    user: loginUser,
     login,
   };
 };

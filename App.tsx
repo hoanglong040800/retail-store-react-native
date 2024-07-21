@@ -4,22 +4,30 @@ import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'components';
 import { GlobalConfigProvider } from 'modules';
+import { Suspense } from 'react';
+import { ActivityIndicator } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { RecoilRoot } from 'recoil';
 import { AppNavigator } from 'screens';
 
 const queryClient = new QueryClient();
 
+// Add suspense to avoid error with async recoil. github.com/facebook/react/issues/25629
 const App = () => {
   return (
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
-        <GlobalConfigProvider>
-          <SnackbarProvider>
-            <NavigationContainer>
-              <AppNavigator />
-            </NavigationContainer>
-          </SnackbarProvider>
-        </GlobalConfigProvider>
+        <RecoilRoot>
+          <Suspense fallback={<ActivityIndicator />}>
+            <GlobalConfigProvider>
+              <SnackbarProvider>
+                <NavigationContainer>
+                  <AppNavigator />
+                </NavigationContainer>
+              </SnackbarProvider>
+            </GlobalConfigProvider>
+          </Suspense>
+        </RecoilRoot>
       </QueryClientProvider>
     </SafeAreaProvider>
   );

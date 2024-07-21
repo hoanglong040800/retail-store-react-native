@@ -51,6 +51,11 @@
         "exceptions": [".test.ts", ".test.tsx"]
       }
     ],
+    "react-hooks/exhaustive-deps": [
+      "warn", {
+        "additionalHooks": "(useRecoilCallback|useRecoilTransaction_UNSTABLE)"
+      }
+    ],
     "import/no-unresolved": 0,
     "import/extensions": 0,
     "import/prefer-default-export": 0,

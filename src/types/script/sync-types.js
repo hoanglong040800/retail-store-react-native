@@ -1,26 +1,11 @@
 const fs = require('fs').promises; // Use promises for asynchronous operations
 const path = require('path');
 
-const backendPath = `${__dirname}/../../../../backend/src/db`;
-const desPath = `${__dirname}/../`;
-
-const dtoPath = {
-  src: path.resolve(backendPath, 'dto'),
-  des: path.resolve(desPath, 'dto'),
-};
-
-const inputPath = {
-  src: path.resolve(backendPath, 'input'),
-  des: path.resolve(desPath, 'input'),
-};
-
-const interfacePath = {
-  src: path.resolve(backendPath, 'interface'),
-  des: path.resolve(desPath, 'interface'),
-};
-
-async function copyFolder(source, destination) {
+async function copyFolder(folder) {
   try {
+    const source = path.resolve(backendPath, folder);
+    const destination = path.resolve(desPath, folder);
+
     await fs.mkdir(destination, { recursive: true }); // Create destination folder if it doesn't exist
 
     const entries = await fs.readdir(source);
@@ -38,12 +23,19 @@ async function copyFolder(source, destination) {
       }
     }
   } catch (error) {
-    console.error('Error copying folder:', error);
+    console.error(`Error copying folder ${folder}: `, error);
   }
 
-  console.log('Finish sync types');
+  console.log(`Finish sync folder ${folder}`);
 }
 
-copyFolder(dtoPath.src, dtoPath.des);
-copyFolder(inputPath.src, inputPath.des);
-copyFolder(interfacePath.src, interfacePath.des);
+// =============== MAIN ================
+
+const backendPath = `${__dirname}/../../../../backend/src/db`;
+const desPath = `${__dirname}/../`;
+
+const needSyncFolders = ['dto', 'input', 'interface'];
+
+for (const folder of needSyncFolders) {
+  copyFolder(folder);
+}

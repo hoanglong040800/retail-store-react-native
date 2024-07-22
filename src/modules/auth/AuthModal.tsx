@@ -4,8 +4,7 @@ import { SegmentedButtons } from 'react-native-paper';
 import { toTitleCase } from 'utils';
 import { LoginContent, RegisterContent } from 'modules/auth';
 import { StyleSheet, ViewStyle } from 'react-native';
-import { LoginBody, RegisterBody, RegisterDto } from 'types';
-import { authRegister } from 'service';
+import { LoginBody, RegisterBody } from 'types';
 import { useAuth } from 'hooks';
 import { LoginForm, RegisterForm } from './_shared';
 
@@ -17,12 +16,12 @@ type Props = {
 };
 
 const AuthModal = ({ isOpen, onClose }: Props) => {
-  const [authMode, setAuthMode] = useState<AuthModeType>('login');
+  const [authMode, setAuthMode] = useState<AuthModeType>('register');
 
   // -- Hooks
 
   const { openSnackbar } = useSnackbar();
-  const { login } = useAuth();
+  const { login, register } = useAuth();
 
   // -- Functions
 
@@ -52,32 +51,19 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
         lastName: formData.lastName,
       };
 
-      const res: RegisterDto = await authRegister(registerBody);
-
-      if (!res?.result) {
-        openSnackbar('error', 'Register failed. Please try again');
-        return;
-      }
-
-      openSnackbar('success', 'Register successfully');
-      onClose();
+      await register(registerBody, onClose);
     } catch (error) {
       openSnackbar('error', 'Register failed. Please try again');
     }
   };
 
   const handleSubmitLogin = async (formData: LoginForm): Promise<void> => {
-    try {
-      const loginBody: LoginBody = {
-        email: formData.email,
-        password: formData.password,
-      };
+    const loginBody: LoginBody = {
+      email: formData.email,
+      password: formData.password,
+    };
 
-      await login(loginBody);
-      onClose();
-    } catch (error) {
-      openSnackbar('error', 'Login failed. Please try again');
-    }
+    await login(loginBody, onClose);
   };
 
   // -- Render

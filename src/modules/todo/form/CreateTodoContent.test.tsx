@@ -4,7 +4,6 @@ import CreateTodoContent from './CreateTodoContent';
 
 type Props = ComponentProps<typeof CreateTodoContent>;
 
-// TODO move all mock components in setupTest
 jest.mock('components/input/DeTextInput.tsx', () => props => <div data-testid="DeTextInput" {...props} />);
 
 jest.mock('components/appbar', () => ({

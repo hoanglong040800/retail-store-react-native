@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ENV } from 'const';
 import { StorageType } from 'types/storage.type';
 
 export const setStorageItems = async (storageItems: StorageType): Promise<void> => {
@@ -10,11 +9,6 @@ export const setStorageItems = async (storageItems: StorageType): Promise<void> 
   const asyncStorageParams: ReadonlyArray<readonly [string, string]> = Object.entries(storageItems).map(
     ([key, value]) => [key, JSON.stringify(value)]
   );
-
-  if (ENV.TEST_MODE.LOG_ASYNC_STORAGE) {
-    // eslint-disable-next-line no-console
-    console.info('TEST: asyncStorageParams', asyncStorageParams);
-  }
 
   await AsyncStorage.multiSet(asyncStorageParams);
 };
@@ -28,4 +22,12 @@ export const getStorageItem = async (key: keyof StorageType): Promise<any | null
   const value = await AsyncStorage.getItem(key);
 
   return value ? JSON.parse(value) : null;
+};
+
+export const removeStorageItems = async (keys: (keyof StorageType)[]): Promise<void> => {
+  if (!keys) {
+    return;
+  }
+
+  await AsyncStorage.multiRemove(keys);
 };

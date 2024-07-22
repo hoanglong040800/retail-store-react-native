@@ -5,11 +5,11 @@ import { Button } from 'react-native-paper';
 
 const HomeScreen = () => {
   const { isOpen, onOpen, onClose } = useModal();
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <View>
-      {user ? <Button onPress={() => null}>Logout</Button> : <Button onPress={onOpen}>Login</Button>}
+      {user ? <Button onPress={logout}>Logout</Button> : <Button onPress={onOpen}>Login</Button>}
 
       <AuthModal isOpen={isOpen} onClose={onClose} />
     </View>

@@ -1,13 +1,27 @@
+import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { authLogin } from 'service';
-import { loginUserState } from 'states';
+import { loginUserSelector } from 'states';
 import { LoginBody, LoginDto } from 'types';
-import { setStorageItems } from 'utils';
+import { STORAGE_KEYS } from 'types/storage.type';
+import { removeStorageItems, setStorageItems } from 'utils';
 
 export const useAuth = () => {
-  const loginUser = useRecoilValue(loginUserState);
+  // ---- Hooks
+  const loginUser = useRecoilValue(loginUserSelector);
+  // eslint-disable-next-line camelcase
+  const refreshLoginUser = useRecoilRefresher_UNSTABLE(loginUserSelector);
+
   const { openSnackbar } = useSnackbar();
+
+  // const { mutateAsync: authRegisterMutate } = useMutation({
+  //   mutationFn: authRegister,
+  // });
+
+  const { mutateAsync: authLoginMutate } = useMutation({
+    mutationFn: authLogin,
+  });
 
   // ---- Functions
 
@@ -17,7 +31,7 @@ export const useAuth = () => {
         throw new Error('No body found');
       }
 
-      const resData = await authLogin(body);
+      const resData = await authLoginMutate(body);
 
       processAfterLogin(resData);
     } catch (error) {
@@ -33,7 +47,7 @@ export const useAuth = () => {
     saveToStorage(loginData);
   };
 
-  const saveToStorage = (loginData: LoginDto) => {
+  const saveToStorage = async (loginData: LoginDto) => {
     if (!loginData) {
       throw new Error('Failed to save to storage. No data found');
     }
@@ -41,15 +55,31 @@ export const useAuth = () => {
     const { user, accessToken, refreshToken } = loginData;
 
     // TODO save token using expo-secure-store
-    setStorageItems({
+    await setStorageItems({
       user,
       accessToken,
       refreshToken,
     });
+
+    refreshLoginUser();
+  };
+
+  const logout = async (): Promise<void> => {
+    processAfterLogout();
+  };
+
+  const processAfterLogout = () => {
+    removeFromStorage();
+  };
+
+  const removeFromStorage = async () => {
+    await removeStorageItems(STORAGE_KEYS.LOGIN);
+    refreshLoginUser();
   };
 
   return {
     user: loginUser,
     login,
+    logout,
   };
 };

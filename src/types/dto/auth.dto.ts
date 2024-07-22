@@ -4,7 +4,10 @@ export class RegisterDto {
   result: boolean;
 }
 
-export type LoginUserDto = Pick<UserDto, 'id' | 'email' | 'firstName' | 'lastName'>;
+export type LoginUserDto = Pick<
+  UserDto,
+  'id' | 'email' | 'firstName' | 'lastName'
+>;
 
 export class LoginDto {
   accessToken: TokenDto;

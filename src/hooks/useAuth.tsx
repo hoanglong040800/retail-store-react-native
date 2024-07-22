@@ -55,7 +55,7 @@ export const useAuth = () => {
 
     const { user, accessToken, refreshToken } = loginData;
 
-    // TODO save token using expo-secure-store
+    // TODO RSP-45: save token using expo-secure-store
     await setStorageItems({
       user,
       accessToken,

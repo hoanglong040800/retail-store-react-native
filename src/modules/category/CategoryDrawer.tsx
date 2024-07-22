@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useRecoilValue } from 'recoil';
 import { ParamsType, Screen } from 'types';
 import { THEME } from 'const';
 import { useAppNavigation } from 'hooks';
-import { useGlobalConfig } from 'modules/config';
+import { globalConfigState } from 'states';
 import CategoryList from './CategoryList';
 
 type Props = {
@@ -13,7 +14,7 @@ type Props = {
 const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
   const { navigate } = useAppNavigation();
 
-  const { categories } = useGlobalConfig();
+  const { categories } = useRecoilValue(globalConfigState);
 
   const [curMainIndex, setCurMainIndex] = useState<number>(0);
 

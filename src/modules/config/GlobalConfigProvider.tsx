@@ -1,31 +1,49 @@
-import { useQuery } from '@tanstack/react-query';
-import { createContext, useContext } from 'react';
+import { useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
+import { useRecoilState } from 'recoil';
 import { getGlobalConfig } from 'service';
-import { GetGlobalConfigDto } from 'types';
-
-export const GlobalConfigCxt = createContext<GetGlobalConfigDto>({
-  categories: [],
-});
+import { globalConfigState } from 'states';
+import { getStorageItem, setStorageItems } from 'utils';
 
 type Props = {
   children: JSX.Element;
 };
 
 const GlobalConfigProvider = ({ children }: Props) => {
-  // TODO cache in async storage
-  const { data, isLoading } = useQuery<GetGlobalConfigDto, null, GetGlobalConfigDto>({
-    queryKey: [],
-    queryFn: () => getGlobalConfig(),
-  });
+  const [globalConfig, setGlobalConfig] = useRecoilState(globalConfigState);
 
-  if (!data || isLoading) {
-    return <ActivityIndicator animating />;
+  const initGlobalConfig = async (): Promise<void> => {
+    try {
+      const storageGlobalConfig = await getStorageItem('globalConfig');
+
+      if (storageGlobalConfig) {
+        setGlobalConfig(storageGlobalConfig);
+        return;
+      }
+
+      const fetchGlobalConfig = await getGlobalConfig();
+
+      await setStorageItems({
+        globalConfig: fetchGlobalConfig,
+      });
+
+      setGlobalConfig(fetchGlobalConfig);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    if (!globalConfig) {
+      initGlobalConfig();
+    }
+  }, [globalConfig, initGlobalConfig]);
+
+  if (!globalConfig) {
+    return <ActivityIndicator />;
   }
 
-  return <GlobalConfigCxt.Provider value={data}>{children}</GlobalConfigCxt.Provider>;
+  return children;
 };
 
 export default GlobalConfigProvider;
-
-export const useGlobalConfig = () => useContext(GlobalConfigCxt);

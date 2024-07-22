@@ -1,4 +1,4 @@
-import { LoginUserDto, TokenDto } from './dto';
+import { GetGlobalConfigDto, LoginUserDto, TokenDto } from './dto';
 
 // update LOGIN when update type
 export type StorageLoginType = {
@@ -7,7 +7,11 @@ export type StorageLoginType = {
   refreshToken: TokenDto;
 };
 
-export type StorageType = StorageLoginType;
+export type StorageOtherType = {
+  globalConfig: GetGlobalConfigDto;
+};
+
+export type StorageType = Partial<StorageLoginType & StorageOtherType>;
 
 const LOGIN: (keyof StorageLoginType)[] = ['user', 'accessToken', 'refreshToken'];
 

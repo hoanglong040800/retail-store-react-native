@@ -4,6 +4,9 @@
   "expo": {
     "experiments": {
       "baseUrl": "/retail-store-react-native"
-    }
+    },
+    "plugins": [
+      "expo-secure-store"
+    ]
   }
 }

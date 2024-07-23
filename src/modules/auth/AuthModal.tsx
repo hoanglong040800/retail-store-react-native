@@ -37,7 +37,6 @@ const AuthModal = ({ isOpen, onClose }: Props) => {
     return true;
   };
 
-  // TODO move to useAuth
   const handleSubmitRegister = async (formData: RegisterForm): Promise<void> => {
     try {
       if (!validateRegisterForm(formData)) {

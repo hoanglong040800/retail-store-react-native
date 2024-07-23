@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { StorageType } from 'types/storage.type';
+import { StorageType } from 'types';
 
 export const setStorageItems = async (storageItems: StorageType): Promise<void> => {
   if (!storageItems) {

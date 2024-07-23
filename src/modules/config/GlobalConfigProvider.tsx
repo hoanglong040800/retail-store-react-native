@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { ActivityIndicator } from 'react-native-paper';
 import { useRecoilState } from 'recoil';
 import { getGlobalConfig } from 'service';
@@ -12,7 +12,7 @@ type Props = {
 const GlobalConfigProvider = ({ children }: Props) => {
   const [globalConfig, setGlobalConfig] = useRecoilState(globalConfigState);
 
-  const initGlobalConfig = async (): Promise<void> => {
+  const initGlobalConfig = useCallback(async () => {
     try {
       const storageGlobalConfig = await getStorageItem('globalConfig');
 
@@ -31,7 +31,7 @@ const GlobalConfigProvider = ({ children }: Props) => {
     } catch (error) {
       console.error(error);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (!globalConfig) {

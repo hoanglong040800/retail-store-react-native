@@ -5,8 +5,7 @@ import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { authLogin, authRegister } from 'service';
 import { loginUserSelector } from 'states';
 import { LoginBody, LoginDto, RegisterBody } from 'types';
-import { STORAGE_KEYS } from 'types/storage.type';
-import { removeStorageItems, setStorageItems } from 'utils';
+import { removeSecureStoreItems, removeStorageItems, setSecureStoreItems, setStorageItems } from 'utils';
 
 export const useAuth = () => {
   // ---- Hooks
@@ -55,9 +54,9 @@ export const useAuth = () => {
 
     const { user, accessToken, refreshToken } = loginData;
 
-    // TODO RSP-45: save token using expo-secure-store
-    await setStorageItems({
-      user,
+    await setStorageItems({ user });
+
+    await setSecureStoreItems({
       accessToken,
       refreshToken,
     });
@@ -81,7 +80,6 @@ export const useAuth = () => {
       }
 
       openSnackbar('success', 'Register successfully');
-
       await processAfterRegister(body);
       onSuccess?.();
     } catch (error) {
@@ -111,7 +109,9 @@ export const useAuth = () => {
   };
 
   const removeFromStorage = async (): Promise<void> => {
-    await removeStorageItems(STORAGE_KEYS.LOGIN);
+    await removeStorageItems(['user']);
+    await removeSecureStoreItems(['accessToken', 'refreshToken']);
+
     refreshLoginUser();
   };
 

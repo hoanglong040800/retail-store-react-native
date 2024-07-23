@@ -1,20 +1,14 @@
 import { GetGlobalConfigDto, LoginUserDto, TokenDto } from './dto';
 
-// update LOGIN when update type
-export type StorageLoginType = {
-  user: LoginUserDto;
-  accessToken: TokenDto;
-  refreshToken: TokenDto;
+// Combine with secure type since expo secure store doesn't work for web
+export type StorageType = SecureStoreType & {
+  user?: LoginUserDto;
+  globalConfig?: GetGlobalConfigDto;
 };
 
-export type StorageOtherType = {
-  globalConfig: GetGlobalConfigDto;
-};
+// ----------------- SECURE STORE -----------------
 
-export type StorageType = Partial<StorageLoginType & StorageOtherType>;
-
-const LOGIN: (keyof StorageLoginType)[] = ['user', 'accessToken', 'refreshToken'];
-
-export const STORAGE_KEYS = {
-  LOGIN,
+export type SecureStoreType = {
+  accessToken?: TokenDto;
+  refreshToken?: TokenDto;
 };

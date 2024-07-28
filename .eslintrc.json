@@ -19,7 +19,7 @@
 
   "overrides": [
     {
-      "files": ["src/types/dto/*.ts"],
+      "files": ["src/types/{dto,input,interface}/*.ts"],
       "rules": {
         "max-classes-per-file": "off"
       }

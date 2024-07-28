@@ -7,6 +7,22 @@ const mkdir = promisify(fs.mkdir);
 const readdir = promisify(fs.readdir);
 const stat = promisify(fs.stat);
 
+/**
+ * Remove import from 'class-validator' and its dectorators
+ * @returns
+ */
+function removeClassValidatorContent(content: string): string {
+  const regex = /(?:import\s*{\s*(?:\w+\s*,?\s*)*\s*} from 'class-validator';)|(?:\s*@\S+)/g;
+  return content.replace(regex, '');
+}
+
+async function modifyAndSaveInputFile(sourceItemPath: string, destinationItemPath: string) {
+  const content: string = await fs.promises.readFile(sourceItemPath, 'utf8');
+  const trimmedContent: string = removeClassValidatorContent(content);
+
+  await fs.promises.writeFile(destinationItemPath, trimmedContent);
+}
+
 async function copyFolder(source: string, destination: string) {
   try {
     await mkdir(destination, { recursive: true });
@@ -21,6 +37,8 @@ async function copyFolder(source: string, destination: string) {
 
       if (stats.isDirectory()) {
         await copyFolder(sourceItemPath, destinationItemPath);
+      } else if (stats.isFile() && entry.endsWith('.input.ts')) {
+        await modifyAndSaveInputFile(sourceItemPath, destinationItemPath);
       } else {
         await copyFile(sourceItemPath, destinationItemPath);
       }

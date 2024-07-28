@@ -18,3 +18,7 @@ export class TokenDto {
 }
 
 export type JwtTokenType = 'access' | 'refresh';
+
+export class RefreshTokenDto {
+  accessToken: TokenDto;
+}

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ENV } from 'const';
+import { TokenDto } from 'types';
+import { getStorageItem } from 'utils';
 
 const axiosClient = axios.create({
   baseURL: ENV.API_URL,
@@ -12,11 +13,12 @@ const axiosClient = axios.create({
 });
 
 const insertAuthToken = async (config: InternalAxiosRequestConfig) => {
-  const token = await AsyncStorage.getItem('auth_token');
+  const accessToken: TokenDto = await getStorageItem('accessToken');
+
   const newConfig = config;
 
-  if (token) {
-    newConfig.headers.Authorization = `Bearer ${token}`;
+  if (accessToken.token) {
+    newConfig.headers.Authorization = `Bearer ${accessToken.token}`;
   }
 
   return newConfig;
@@ -24,7 +26,6 @@ const insertAuthToken = async (config: InternalAxiosRequestConfig) => {
 
 const parseResponse = (response: AxiosResponse<any, any>) => response.data;
 
-// TODO render <Snackbar /> error whenever api throw error
 const handleResponseError = (err: any) => {
   if (err?.response?.data) return err.response.data;
 

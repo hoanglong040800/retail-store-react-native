@@ -4,7 +4,7 @@
   "name": "frontend",
   "homepage": "https://hoanglong040800.github.io/retail-store-react-native",
   "scripts": {
-    "sync-types": "node src/types/script/sync-types.js",
+    "sync-types": "ts-node src/types/script/sync-types.ts",
     "dev": "yarn sync-types && expo start",
     "dev:adr": "expo start --android",
     "dev:ios": "expo start --ios",

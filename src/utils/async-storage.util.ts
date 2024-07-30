@@ -21,7 +21,7 @@ export const getStorageItem = async (key: keyof StorageType): Promise<any | null
 
   const value = await AsyncStorage.getItem(key);
 
-  return value ? JSON.parse(value) : null;
+  return value && value !== 'undefined' ? JSON.parse(value) : null;
 };
 
 export const removeStorageItems = async (keys: (keyof StorageType)[]): Promise<void> => {

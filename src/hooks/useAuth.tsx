@@ -101,10 +101,6 @@ export const useAuth = () => {
   };
 
   const logout = async (): Promise<void> => {
-    processAfterLogout();
-  };
-
-  const processAfterLogout = async (): Promise<void> => {
     await removeFromStorage();
   };
 

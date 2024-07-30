@@ -1,6 +1,5 @@
 import { axiosClient } from 'config';
-import { LoginDto, RegisterDto } from 'types';
-import { LoginBody, RegisterBody } from 'types/input';
+import { LoginBody, LoginDto, RegisterBody, RegisterDto } from 'types';
 
 const ROUTE = '/auth';
 

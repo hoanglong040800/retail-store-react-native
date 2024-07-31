@@ -1,8 +1,25 @@
 import { ViewStyle } from 'react-native';
-import { MD3LightTheme, MD3Theme } from 'react-native-paper';
+import { DefaultTheme, MD3Theme } from 'react-native-paper';
 
 export const THEME: MD3Theme = {
-  ...MD3LightTheme,
+  ...DefaultTheme,
+
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#4caf50', // green
+    primaryContainer: '#35b644',
+
+    secondary: '#ffee59', // yellow
+    secondaryContainer: '#fffde7',
+
+    tertiary: '#f5f5f5', // gray
+    tertiaryContainer: '#f5f5f5',
+
+    onPrimary: '#ffffff',
+    onPrimaryContainer: '#ffffff',
+    onSecondary: '#000000',
+    onSecondaryContainer: '#000000',
+  },
 };
 
 export const CUSTOM_THEME = {

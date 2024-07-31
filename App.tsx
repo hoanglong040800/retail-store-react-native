@@ -3,9 +3,10 @@ import '@expo/metro-runtime';
 import { NavigationContainer } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'components';
+import { THEME } from 'const';
 import { GlobalConfigProvider } from 'modules';
 import { Suspense } from 'react';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
 import { AppNavigator } from 'screens';
@@ -18,15 +19,17 @@ const App = () => {
     <SafeAreaProvider>
       <QueryClientProvider client={queryClient}>
         <RecoilRoot>
-          <Suspense fallback={<ActivityIndicator />}>
-            <GlobalConfigProvider>
-              <SnackbarProvider>
-                <NavigationContainer>
-                  <AppNavigator />
-                </NavigationContainer>
-              </SnackbarProvider>
-            </GlobalConfigProvider>
-          </Suspense>
+          <PaperProvider theme={THEME}>
+            <Suspense fallback={<ActivityIndicator />}>
+              <GlobalConfigProvider>
+                <SnackbarProvider>
+                  <NavigationContainer>
+                    <AppNavigator />
+                  </NavigationContainer>
+                </SnackbarProvider>
+              </GlobalConfigProvider>
+            </Suspense>
+          </PaperProvider>
         </RecoilRoot>
       </QueryClientProvider>
     </SafeAreaProvider>

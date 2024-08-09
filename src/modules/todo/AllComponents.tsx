@@ -12,6 +12,7 @@ const AllComponents = () => {
     {
       backgroundColor: THEME.colors.primaryContainer,
       text: 'Primary Container',
+      textColor: THEME.colors.secondary,
     },
 
     {
@@ -39,6 +40,7 @@ const AllComponents = () => {
     {
       backgroundColor: THEME.colors.secondaryContainer,
       text: 'Secondary Container',
+      textColor: THEME.colors.primary,
     },
 
     {
@@ -116,6 +118,7 @@ const AllComponents = () => {
     {
       backgroundColor: THEME.colors.onSurfaceVariant,
       text: 'On Surface Variant',
+      textColor: 'white',
     },
 
     {
@@ -135,6 +138,18 @@ const AllComponents = () => {
     },
   ];
 
+  const renderList = (list: { backgroundColor: string; text: string; textColor?: string }[]) => {
+    return (
+      <View style={styles.section}>
+        {list.map(({ backgroundColor, text, textColor }) => (
+          <View style={[styles.surface, { backgroundColor }]}>
+            <Text style={[styles.surfaceText, { color: textColor }]}>{text}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.section}>
@@ -145,33 +160,13 @@ const AllComponents = () => {
         <Button mode="elevated">Elevated</Button>
       </View>
 
-      <View style={styles.section}>
-        {primaryColorList.map(({ backgroundColor, text }) => (
-          <View style={[styles.surface, { backgroundColor }]}>{text}</View>
-        ))}
-      </View>
+      {renderList(primaryColorList)}
 
-      <View style={styles.section}>
-        {secondaryColorList.map(({ backgroundColor, text, textColor }) => (
-          <View style={[styles.surface, { backgroundColor }]}>
-            <Text style={{ color: textColor }}>{text}</Text>
-          </View>
-        ))}
-      </View>
+      {renderList(secondaryColorList)}
 
-      <View style={styles.section}>
-        {elevationColorList.map(({ backgroundColor, text }) => (
-          <View style={[styles.surface, { backgroundColor }]}>{text}</View>
-        ))}
-      </View>
+      {renderList(elevationColorList)}
 
-      <View style={styles.section}>
-        {surfaceColorList.map(({ backgroundColor, text, textColor }) => (
-          <View style={[styles.surface, { backgroundColor }]}>
-            <Text style={{ color: textColor }}>{text}</Text>
-          </View>
-        ))}
-      </View>
+      {renderList(surfaceColorList)}
     </ScrollView>
   );
 };
@@ -189,8 +184,15 @@ const styles = StyleSheet.create({
   },
 
   surface: {
-    width: 100,
+    width: 120,
     height: 50,
+    borderRadius: 10,
+    padding: 4,
+    justifyContent: 'center',
+  },
+
+  surfaceText: {
+    textAlign: 'center',
   },
 });
 

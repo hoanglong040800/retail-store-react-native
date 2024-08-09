@@ -8,17 +8,30 @@ export const THEME: MD3Theme = {
     ...DefaultTheme.colors,
     primary: '#4caf50', // green
     primaryContainer: '#35b644',
+    inversePrimary: '#fca063', // orange
 
     secondary: '#ffee59', // yellow
-    secondaryContainer: '#fffde7',
+    secondaryContainer: '#fff9b9',
 
-    tertiary: '#f5f5f5', // gray
-    tertiaryContainer: '#f5f5f5',
+    tertiary: '#a6cf55', // oliver green
+    tertiaryContainer: '#b5c398',
 
     onPrimary: '#ffffff',
     onPrimaryContainer: '#ffffff',
     onSecondary: '#000000',
     onSecondaryContainer: '#000000',
+
+    elevation: {
+      level0: '#edf7ed',
+      level1: '#dbefdc',
+      level2: '#b7dfb9',
+      level3: '#93cf96',
+      level4: '#6fbf72',
+      level5: '#4caf50',
+    },
+
+    surfaceVariant: '#93cf96', // same as elevation lv3
+    inverseOnSurface: '#ffc59f', // based on inverse primary
   },
 };
 

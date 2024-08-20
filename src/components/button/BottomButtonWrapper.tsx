@@ -8,7 +8,7 @@ type Props = {
 
 const BottomButtonWrapper = ({ children }: Props) => {
   return (
-    <Surface elevation={2} style={styles.container}>
+    <Surface elevation={1} style={styles.container}>
       {children}
     </Surface>
   );

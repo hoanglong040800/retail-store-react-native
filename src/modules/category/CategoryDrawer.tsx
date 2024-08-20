@@ -64,7 +64,7 @@ const styles = StyleSheet.create({
   },
 
   leftCate: {
-    backgroundColor: THEME.colors.elevation.level5,
+    backgroundColor: THEME.colors.elevation.level1,
     maxWidth: 150,
     paddingBottom: 16,
   },
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
   rightCate: {
     padding: 8,
     flex: 1,
-    backgroundColor: THEME.colors.elevation.level1,
+    backgroundColor: THEME.colors.elevation.level0,
   },
 });
 

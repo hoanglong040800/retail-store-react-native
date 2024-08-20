@@ -1,19 +1,13 @@
-import { useAuth, useModal } from 'hooks';
-import { AuthModal } from 'modules';
-import { View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 
 const HomeScreen = () => {
-  const { isOpen, onOpen, onClose } = useModal();
-  const { user, logout } = useAuth();
-
-  return (
-    <View style={{ flex: 1 }}>
-      {user ? <Button onPress={logout}>Logout</Button> : <Button onPress={onOpen}>Login</Button>}
-
-      <AuthModal isOpen={isOpen} onClose={onClose} />
-    </View>
-  );
+  return <View style={styles.container} />;
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default HomeScreen;

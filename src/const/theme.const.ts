@@ -7,7 +7,7 @@ export const THEME: MD3Theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#4caf50', // green
-    primaryContainer: '#35b644',
+    primaryContainer: '#6ecf79',
     inversePrimary: '#fca063', // orange
 
     secondary: '#ffee59', // yellow

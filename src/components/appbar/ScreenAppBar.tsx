@@ -14,7 +14,7 @@ const ScreenAppBar = ({ title }: Props) => {
 
   return (
     <Appbar.Header style={{ backgroundColor: 'transparent', height: 40 }}>
-      <Appbar.Action icon="arrow-left" size={20} onPress={onPressBack} />
+      <Appbar.Action icon="chevron-left" size={20} onPress={onPressBack} />
 
       <Text variant="titleMedium">{title}</Text>
     </Appbar.Header>

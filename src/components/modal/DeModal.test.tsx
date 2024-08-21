@@ -10,10 +10,13 @@ jest.mock('../appbar', () => ({
   DeAppBar: () => <div data-testid="DeAppBar" />,
 }));
 
-// UT: mock export default component
-jest.mock('react-native', () => ({
-  Modal: ({ children }) => <div data-testid="Modal">{children}</div>,
-}));
+// UT: mock react-native Modal
+jest.mock('react-native/Libraries/Modal/Modal', () => ({ children }) => <div data-testid="Modal">{children}</div>);
+
+// UT: mock react-native View
+jest.mock('react-native/Libraries/Components/View/View', () => ({ children }) => (
+  <div data-testid="View">{children}</div>
+));
 
 const defaultProps: Props = { isOpen: true, onClose: () => null, children: null };
 

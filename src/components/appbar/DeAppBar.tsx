@@ -5,16 +5,17 @@ import { Appbar, Button } from 'react-native-paper';
 type Props = {
   title: string;
   primaryText: string;
+  isHideRightBtn?: boolean;
   onPressSecondary: () => void;
   onPressPrimary: () => void;
 };
 
-const DeAppBar = ({ title, primaryText, onPressSecondary, onPressPrimary }: Props) => {
+const DeAppBar = ({ title, primaryText, isHideRightBtn, onPressSecondary, onPressPrimary }: Props) => {
   return (
     <Appbar.Header style={styles.header}>
-      <Appbar.Action icon="close" onPress={onPressSecondary} />
+      <Appbar.Action icon="chevron-left" onPress={onPressSecondary} style={styles.leftIcon} />
       <Appbar.Content title={title} />
-      <Button onPress={onPressPrimary}>{primaryText}</Button>
+      {!isHideRightBtn && <Button onPress={onPressPrimary}>{primaryText}</Button>}
     </Appbar.Header>
   );
 };
@@ -23,6 +24,10 @@ const styles = StyleSheet.create({
   header: {
     backgroundColor: THEME.colors.primaryContainer,
     height: CUSTOM_THEME.headerHeight,
+  },
+
+  leftIcon: {
+    backgroundColor: THEME.colors.primaryContainer,
   },
 });
 

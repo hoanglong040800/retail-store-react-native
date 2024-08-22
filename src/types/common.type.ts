@@ -1,3 +1,9 @@
+export type ErrorResponse = {
+  errorCode: string;
+  status: number;
+  message: string;
+};
+
 export type SnackbarType = 'success' | 'error';
 
 export type TSnackbar = {

@@ -1,13 +1,14 @@
+import { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
 
 type Props = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const BottomButtonWrapper = ({ children }: Props) => {
   return (
-    <Surface elevation={2} style={styles.container}>
+    <Surface elevation={1} style={styles.container}>
       {children}
     </Surface>
   );

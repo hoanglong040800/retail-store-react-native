@@ -1,25 +1,49 @@
 import { DeAppBar } from 'components/appbar';
-import { Modal } from 'react-native';
+import { Modal, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
 type Props = {
   isOpen: boolean;
   title?: string;
   children: JSX.Element;
   isHideHeader?: boolean;
+  isHideHeaderButton?: boolean;
+  contentStyles?: StyleProp<ViewStyle>;
+
   onConfirm?: () => void;
   onClose: () => void;
 };
 
-const DeModal = ({ isOpen, title, children, isHideHeader, onConfirm, onClose }: Props) => {
+const DeModal = ({
+  isOpen,
+  title,
+  children,
+  isHideHeader,
+  isHideHeaderButton,
+  contentStyles,
+  onConfirm,
+  onClose,
+}: Props) => {
   return (
     <Modal visible={isOpen} onDismiss={onClose} presentationStyle="overFullScreen" animationType="slide">
       {!isHideHeader && (
-        <DeAppBar title={title} primaryText="Save" onPressPrimary={onConfirm} onPressSecondary={onClose} />
+        <DeAppBar
+          title={title}
+          isHideRightBtn={isHideHeaderButton}
+          primaryText="Save"
+          onPressPrimary={onConfirm}
+          onPressSecondary={onClose}
+        />
       )}
 
-      {children}
+      <View style={[styles.content, contentStyles]}>{children}</View>
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+  },
+});
 
 export default DeModal;

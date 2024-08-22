@@ -1,7 +1,13 @@
-import { Text } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
 
 const HomeScreen = () => {
-  return <Text>Home Screen</Text>;
+  return <View style={styles.container} />;
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default HomeScreen;

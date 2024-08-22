@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack';
 import { AppHeader } from 'components/header';
-import CategoryStack from './Category.stack';
+import HomeStack from './Home.stack';
 
 const AppNavigator = () => {
   const Stack = createStackNavigator();
@@ -9,7 +9,7 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{ header: renderAppHeader }}>
-      <Stack.Screen name="Main" component={CategoryStack} />
+      <Stack.Screen name="Main" component={HomeStack} />
     </Stack.Navigator>
   );
 };

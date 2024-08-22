@@ -1,6 +1,7 @@
 import { CUSTOM_THEME, THEME } from 'const';
 import { HeaderLocation, HeaderSearch } from 'modules';
 import { CategoryDrawerModal } from 'modules/category';
+import HeaderAccount from 'modules/header/HeaderAccount';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Appbar } from 'react-native-paper';
@@ -19,7 +20,7 @@ const AppHeader = () => {
   return (
     <>
       <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="menu" onPress={toggleDrawer} />
+        <Appbar.Action icon="menu" onPress={toggleDrawer} style={styles.leftIcon} />
 
         <View style={styles.search}>
           <HeaderSearch />
@@ -27,6 +28,10 @@ const AppHeader = () => {
 
         <View style={styles.location}>
           <HeaderLocation />
+        </View>
+
+        <View>
+          <HeaderAccount />
         </View>
       </Appbar.Header>
 
@@ -42,6 +47,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  leftIcon: {
+    backgroundColor: THEME.colors.primaryContainer,
   },
 
   search: {

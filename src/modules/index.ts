@@ -4,3 +4,4 @@ export * from './product';
 export * from './header';
 export * from './category';
 export * from './config';
+export * from './auth';

@@ -1,7 +1,8 @@
 import { useReducer } from 'react';
 import { createPortal } from 'react-dom';
 import { TSnackbar } from 'types';
-import { Snackbar, SnackbarDpCxt, snackbarReducer } from '.';
+import { SnackbarDpCxt, snackbarReducer } from './SnackbarDispatchContext';
+import Snackbar from './Snackbar';
 
 const initialState: TSnackbar = {
   visible: false,

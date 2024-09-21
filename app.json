@@ -6,7 +6,8 @@
       "baseUrl": "/retail-store-react-native"
     },
     "plugins": [
-      "expo-secure-store"
+      "expo-secure-store",
+      "@react-native-google-signin/google-signin"
     ]
   }
 }

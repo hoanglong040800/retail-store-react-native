@@ -2,11 +2,12 @@ import { DeModal, useSnackbar } from 'components';
 import { useState } from 'react';
 import { SegmentedButtons } from 'react-native-paper';
 import { toTitleCase } from 'utils';
-import { LoginContent, RegisterContent } from 'modules/auth';
 import { StyleSheet, ViewStyle } from 'react-native';
 import { LoginBody, RegisterBody } from 'types';
 import { useAuth } from 'hooks';
 import { LoginForm, RegisterForm } from './_shared';
+import LoginContent from './LoginContent';
+import RegisterContent from './RegisterContent';
 
 type AuthModeType = 'login' | 'register';
 

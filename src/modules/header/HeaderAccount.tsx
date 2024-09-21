@@ -1,7 +1,9 @@
+import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { useAuth, useModal } from 'hooks';
 import { AuthModal } from 'modules/auth';
-import { useMemo } from 'react';
-import { Button, ButtonProps } from 'react-native-paper';
+import { useGoogleAuth } from 'modules/auth/_shared/useGoogleAuth.hooks';
+import { useEffect, useMemo } from 'react';
+import { ButtonProps } from 'react-native-paper';
 
 type AuthModeType = {
   text: string;
@@ -12,6 +14,7 @@ type AuthModeType = {
 const HeaderAccount = () => {
   const { isOpen, onOpen, onClose } = useModal();
   const { user, logout } = useAuth();
+  const { initConfig, loginGoogle } = useGoogleAuth();
 
   const authMode = useMemo((): AuthModeType => {
     if (user) {
@@ -29,11 +32,21 @@ const HeaderAccount = () => {
     };
   }, [user, logout, onOpen]);
 
+  useEffect(() => {
+    initConfig();
+  }, []);
+
   return (
     <>
-      <Button mode={authMode.mode} onPress={authMode.onPress}>
+      {/* <Button mode={authMode.mode} onPress={authMode.onPress}>
         {authMode.text}
-      </Button>
+      </Button> */}
+
+      <GoogleSigninButton
+        size={GoogleSigninButton.Size.Standard}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={loginGoogle}
+      />
 
       <AuthModal isOpen={isOpen} onClose={onClose} />
     </>

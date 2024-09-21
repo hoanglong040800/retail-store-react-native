@@ -45,3 +45,5 @@ export enum Screen {
   Noti = 'Noti',
   Account = 'Account',
 }
+
+export type EventDataType = ErrorResponse;

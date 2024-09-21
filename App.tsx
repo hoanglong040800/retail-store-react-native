@@ -21,13 +21,13 @@ const App = () => {
         <RecoilRoot>
           <PaperProvider theme={THEME}>
             <Suspense fallback={<ActivityIndicator />}>
-              <GlobalConfigProvider>
-                <SnackbarProvider>
+              <SnackbarProvider>
+                <GlobalConfigProvider>
                   <NavigationContainer>
                     <AppNavigator />
                   </NavigationContainer>
-                </SnackbarProvider>
-              </GlobalConfigProvider>
+                </GlobalConfigProvider>
+              </SnackbarProvider>
             </Suspense>
           </PaperProvider>
         </RecoilRoot>

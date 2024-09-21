@@ -2,8 +2,9 @@
 
 import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { ENV } from 'const';
-import { RefreshTokenBody, RefreshTokenDto, TokenDto } from 'types';
+import { ErrorResponse, RefreshTokenBody, RefreshTokenDto, TokenDto } from 'types';
 import { getSecureStoreItem, setSecureStoreItems } from 'utils';
+import { publishEvent } from 'utils/event.util';
 
 const axiosClient = axios.create({
   baseURL: ENV.API_URL,
@@ -45,7 +46,7 @@ export const refreshAccessToken = async (): Promise<void> => {
 
     await setSecureStoreItems({ accessToken: data.accessToken });
   } catch (error) {
-    console.error(error);
+    throw new Error(error);
   }
 };
 
@@ -117,14 +118,21 @@ const insertAuthToken = async (config: InternalAxiosRequestConfig) => {
 
 const parseResponse = (response: AxiosResponse<any, any>) => response.data;
 
-const handleResponseError = (err: any) => {
-  if (err?.response?.data) return err.response.data;
+const handleResponseError = (err: any): ErrorResponse => {
+  if (err?.response?.data) {
+    publishEvent('show snackbar error', err.response?.data);
 
-  return {
+    return err.response.data;
+  }
+
+  const defErrRes: ErrorResponse = {
     errorCode: 'SERVER_DOWN',
     status: 503,
     message: 'Server Down',
   };
+
+  publishEvent('show snackbar error', defErrRes);
+  return defErrRes;
 };
 
 axiosClient.interceptors.request.use(insertAuthToken);

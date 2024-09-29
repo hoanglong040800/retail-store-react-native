@@ -39,12 +39,12 @@ export type ParamsType = {
 export enum Screen {
   Home = 'Home',
   Category = 'Category',
-  ProductList = 'ProductList',
-  ProductDetail = 'ProductDetail',
+  ProductList = 'Product List',
+  ProductDetail = 'Product Detail',
   Cart = 'Cart',
   Noti = 'Noti',
   Account = 'Account',
-  AllStores = 'AllStores',
+  AllBranches = 'All Branches',
 }
 
 export type EventDataType = ErrorResponse;

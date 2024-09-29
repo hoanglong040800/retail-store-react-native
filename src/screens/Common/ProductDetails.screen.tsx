@@ -6,12 +6,12 @@ import { ProductDetail } from 'modules/product/detail';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button } from 'react-native-paper';
 import { getProductById } from 'service';
-import { ParamsType, ProductDto } from 'types';
+import { ParamsType, ProductDto, Screen } from 'types';
 
 type Params = Pick<ParamsType, 'productId'>;
 
 type Props = {
-  route: Route<'ProductDetails', Params>;
+  route: Route<Screen.ProductDetail, Params>;
 };
 
 const ProductDetailsScreen = ({ route: { params } }: Props) => {

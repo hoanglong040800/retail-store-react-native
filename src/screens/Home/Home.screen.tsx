@@ -6,13 +6,13 @@ import { Screen } from 'types';
 const HomeScreen = () => {
   const { navigate } = useAppNavigation();
 
-  const onPressViewAllStores = () => {
-    navigate(Screen.AllStores);
+  const onPressViewAllBranches = () => {
+    navigate(Screen.AllBranches);
   };
 
   return (
     <View style={styles.container}>
-      <Button onPress={onPressViewAllStores}>View all stores</Button>
+      <Button onPress={onPressViewAllBranches}>View all stores</Button>
     </View>
   );
 };

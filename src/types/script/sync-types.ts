@@ -12,15 +12,31 @@ const stat = promisify(fs.stat);
  * @returns
  */
 function removeClassValidatorContent(content: string): string {
-  const regex = /(?:import\s*{\s*(?:\w+\s*,?\s*)*\s*} from 'class-validator';)|(?:\s*@\S+)/g;
+  const removeImportRegex = /(?:import\s*{\s*(?:\w+\s*,?\s*)*\s*} from 'class-validator';)/;
+  const removeDecoratorRegex = /(?:\s*@\S+)/g;
+
+  const remvoveImportContent = content.replace(removeImportRegex, '');
+  const removeDecoratorsContent = remvoveImportContent.replace(removeDecoratorRegex, '');
+
+  return removeDecoratorsContent;
+}
+
+function removeImportSwagger(content: string): string {
+  const regex = /import\s*{\s*\w+\s*(?:,\s*\w+)*\s*} from '@nestjs\/swagger';/;
+
   return content.replace(regex, '');
 }
 
 async function modifyAndSaveInputFile(sourceItemPath: string, destinationItemPath: string) {
-  const content: string = await fs.promises.readFile(sourceItemPath, 'utf8');
-  const trimmedContent: string = removeClassValidatorContent(content);
+  try {
+    const content: string = await fs.promises.readFile(sourceItemPath, 'utf8');
+    const removedSwaggerContent: string = removeImportSwagger(content);
+    const removedClassValidatorContent: string = removeClassValidatorContent(removedSwaggerContent);
 
-  await fs.promises.writeFile(destinationItemPath, trimmedContent);
+    await fs.promises.writeFile(destinationItemPath, removedClassValidatorContent);
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 async function copyFolder(source: string, destination: string) {
@@ -55,7 +71,7 @@ async function copyFolder(source: string, destination: string) {
 const backendPath = path.resolve(__dirname, '../../../../backend/src/db');
 const desPath = path.resolve(__dirname, '../');
 
-const pathsToCopy = ['dto', 'input', 'interface'];
+const pathsToCopy = ['interface', 'enum', 'dto', 'input'];
 
 Promise.all(
   pathsToCopy.map(folder => {
@@ -64,6 +80,10 @@ Promise.all(
 
     return copyFolder(sourcePath, destinationPath);
   })
-).then(() => {
-  console.log('Folders copied successfully');
-});
+)
+  .then(() => {
+    console.log('Folders copied successfully');
+  })
+  .catch(error => {
+    console.error('Error copying folders:', error);
+  });

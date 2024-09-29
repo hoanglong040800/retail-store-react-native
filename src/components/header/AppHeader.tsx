@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
   },
 
   leftIcon: {

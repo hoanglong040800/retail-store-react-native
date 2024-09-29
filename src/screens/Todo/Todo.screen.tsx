@@ -35,7 +35,7 @@ const TodoScreen = () => {
 
       <FAB size="medium" icon="plus" style={styles.fab} onPress={onClickCreateTodo} />
 
-      <DeModal isOpen={isOpenCreateTodoModal} onClose={onCloseCreateTodoModal} isHideHeader>
+      <DeModal isOpen={isOpenCreateTodoModal} onClose={onCloseCreateTodoModal} hideHeader>
         <CreateTodoContent onCreateTodo={createTodo} onClose={onCloseCreateTodoModal} />
       </DeModal>
     </>

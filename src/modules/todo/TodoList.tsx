@@ -35,7 +35,7 @@ const TodoList = ({
         />
       ))}
 
-      <DeModal isOpen={isOpenEditModal} onClose={onCloseEditModal} isHideHeader>
+      <DeModal isOpen={isOpenEditModal} onClose={onCloseEditModal} hideHeader>
         <EditTodoContext onClose={onCloseEditModal} initialState={editingItem} editTodo={editTodo} />
       </DeModal>
     </View>

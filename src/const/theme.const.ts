@@ -45,3 +45,11 @@ export const CONTAINER_WRAP_BOT_BTN: ViewStyle = {
   // giving space to display bottom button
   paddingBottom: 48,
 };
+
+export const SURFACE_THEME: Record<'default', ViewStyle> = {
+  default: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: 'white',
+  },
+};

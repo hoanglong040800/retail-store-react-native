@@ -1,21 +1,34 @@
+// eslint-disable react/jsx-props-no-spreading
 import { CUSTOM_THEME, THEME } from 'const';
 import { StyleSheet } from 'react-native';
-import { Appbar, Button } from 'react-native-paper';
+import { Appbar, Button, ButtonProps } from 'react-native-paper';
 
 type Props = {
   title: string;
-  primaryText: string;
+  primaryText?: string;
   isHideRightBtn?: boolean;
-  onPressSecondary: () => void;
-  onPressPrimary: () => void;
+  rightButtonProps?: Omit<ButtonProps, 'children'>;
+  onPressSecondary?: () => void;
+  onPressPrimary?: () => void;
 };
 
-const DeAppBar = ({ title, primaryText, isHideRightBtn, onPressSecondary, onPressPrimary }: Props) => {
+const DeAppBar = ({
+  title,
+  primaryText,
+  isHideRightBtn,
+  rightButtonProps,
+  onPressSecondary,
+  onPressPrimary,
+}: Props) => {
   return (
     <Appbar.Header style={styles.header}>
       <Appbar.Action icon="chevron-left" onPress={onPressSecondary} style={styles.leftIcon} />
       <Appbar.Content title={title} />
-      {!isHideRightBtn && <Button onPress={onPressPrimary}>{primaryText}</Button>}
+      {(!isHideRightBtn || !primaryText) && (
+        <Button onPress={onPressPrimary} {...rightButtonProps}>
+          {primaryText}
+        </Button>
+      )}
     </Appbar.Header>
   );
 };

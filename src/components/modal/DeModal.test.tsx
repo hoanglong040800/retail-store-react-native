@@ -31,7 +31,7 @@ describe('DeModal', () => {
   });
 
   it('should not render DeAppBar', () => {
-    const { queryByTestId } = renderComponent({ ...defaultProps, isHideHeader: true });
+    const { queryByTestId } = renderComponent({ ...defaultProps, hideHeader: true });
 
     expect(queryByTestId('DeAppBar')).toBeFalsy();
   });

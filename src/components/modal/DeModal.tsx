@@ -5,7 +5,7 @@ type Props = {
   isOpen: boolean;
   title?: string;
   children: JSX.Element;
-  isHideHeader?: boolean;
+  hideHeader?: boolean;
   isHideHeaderButton?: boolean;
   contentStyles?: StyleProp<ViewStyle>;
 
@@ -17,7 +17,7 @@ const DeModal = ({
   isOpen,
   title,
   children,
-  isHideHeader,
+  hideHeader,
   isHideHeaderButton,
   contentStyles,
   onConfirm,
@@ -25,7 +25,7 @@ const DeModal = ({
 }: Props) => {
   return (
     <Modal visible={isOpen} onDismiss={onClose} presentationStyle="overFullScreen" animationType="slide">
-      {!isHideHeader && (
+      {!hideHeader && (
         <DeAppBar
           title={title}
           isHideRightBtn={isHideHeaderButton}

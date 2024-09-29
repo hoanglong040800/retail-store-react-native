@@ -20,17 +20,8 @@ export const globalConfigState = atom<GetGlobalConfigDto>({
 export const selectedLocationSelector = selector<SelectedLocation>({
   key: 'selectedLocationSelector',
 
-  get: async (): Promise<SelectedLocation> => {
+  get: async () => {
     const selectedLocation = await getStorageItem('selectedLocation');
-
-    if (selectedLocation) {
-      return selectedLocation;
-    }
-
-    return {
-      ward: null,
-      district: null,
-      province: null,
-    };
+    return selectedLocation;
   },
 });

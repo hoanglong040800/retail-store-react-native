@@ -1,6 +1,9 @@
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
+import { useRecoilRefresher_UNSTABLE } from 'recoil';
 import { DeAppBar } from 'components';
+import { selectedLocationSelector } from 'states';
+import { setStorageItems } from 'utils';
 import { AdminDivisionDto, SelectedAdminDivision, SelectedLocation } from 'types';
 import AdminDivisionList from './AdminDivisionList';
 
@@ -8,16 +11,19 @@ type Step = 'province' | 'district' | 'ward';
 
 type Props = {
   provinces: AdminDivisionDto[];
+  manualSaveLocation?: (location: SelectedLocation) => void;
   onClose: () => void;
 };
 
-const AdminDivisionSelector = ({ provinces, onClose }: Props) => {
+const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props) => {
   const [selectedLocation, setSelectedLocation] = useState<SelectedLocation>({
     ward: null,
     district: null,
     province: null,
   });
   const [step, setStep] = useState<Step>(getDefaultStep(selectedLocation));
+  // eslint-disable-next-line camelcase
+  const refreshSelectedLocationSelector = useRecoilRefresher_UNSTABLE(selectedLocationSelector);
 
   const curDisplayAdminDivisions = useMemo((): AdminDivisionDto[] => {
     if (selectedLocation.province) {
@@ -56,15 +62,34 @@ const AdminDivisionSelector = ({ provinces, onClose }: Props) => {
       name: adminDiv.name,
     };
 
-    setSelectedLocation({ ...selectedLocation, [step]: parseAdminDiv });
+    const newSelectedLocation: SelectedLocation = {
+      ...selectedLocation,
+      [step]: parseAdminDiv,
+    };
+
+    setSelectedLocation(newSelectedLocation);
 
     if (step === 'province') {
-      setStep('district');
-    } else if (step === 'district') {
-      setStep('ward');
-    } else {
-      onClose();
+      return setStep('district');
     }
+
+    if (step === 'district') {
+      return setStep('ward');
+    }
+
+    return handleSaveLocation(newSelectedLocation);
+  };
+
+  const handleSaveLocation = async (selectedLocationPar: SelectedLocation): Promise<void> => {
+    if (manualSaveLocation) {
+      return manualSaveLocation(selectedLocationPar);
+    }
+
+    await setStorageItems({ selectedLocation: selectedLocationPar });
+
+    // trigger get new data from storage
+    refreshSelectedLocationSelector();
+    return onClose();
   };
 
   const handlePressBack = () => {

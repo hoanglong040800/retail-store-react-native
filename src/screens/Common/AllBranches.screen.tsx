@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { ScreenAppBar } from 'components';
 import { BranchList } from 'modules/branch';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { getBranchesByFitler } from 'service';
 import { BranchDto } from 'types';
@@ -17,12 +17,24 @@ const AllBranchesScreen = () => {
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScreenAppBar title="All Branches location" />
 
-      <BranchList branches={allBranches} />
+      <View style={styles.branchListContainer}>
+        <BranchList branches={allBranches} />
+      </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+
+  branchListContainer: {
+    marginHorizontal: 'auto',
+  },
+});
 
 export default AllBranchesScreen;

@@ -44,6 +44,7 @@ export enum Screen {
   Cart = 'Cart',
   Noti = 'Noti',
   Account = 'Account',
+  AllStores = 'AllStores',
 }
 
 export type EventDataType = ErrorResponse;

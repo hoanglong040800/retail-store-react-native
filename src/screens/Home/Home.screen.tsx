@@ -1,7 +1,20 @@
+import { useAppNavigation } from 'hooks';
 import { StyleSheet, View } from 'react-native';
+import { Button } from 'react-native-paper';
+import { Screen } from 'types';
 
 const HomeScreen = () => {
-  return <View style={styles.container} />;
+  const { navigate } = useAppNavigation();
+
+  const onPressViewAllBranches = () => {
+    navigate(Screen.AllBranches);
+  };
+
+  return (
+    <View style={styles.container}>
+      <Button onPress={onPressViewAllBranches}>View all stores</Button>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

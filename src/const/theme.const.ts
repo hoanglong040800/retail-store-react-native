@@ -23,11 +23,11 @@ export const THEME: MD3Theme = {
 
     elevation: {
       level0: '#edf7ed',
-      level1: '#dbefdc',
-      level2: '#b7dfb9',
-      level3: '#93cf96',
-      level4: '#6fbf72',
-      level5: '#4caf50',
+      level1: '#fff',
+      level2: '#f4f4f4',
+      level3: '#ececec',
+      level4: '#e3e3e3',
+      level5: '#dddddd',
     },
 
     surfaceVariant: '#93cf96', // same as elevation lv3
@@ -44,4 +44,12 @@ export const CONTAINER_WRAP_BOT_BTN: ViewStyle = {
   flex: 1,
   // giving space to display bottom button
   paddingBottom: 48,
+};
+
+export const SURFACE_THEME: Record<'default', ViewStyle> = {
+  default: {
+    padding: 8,
+    borderRadius: 8,
+    backgroundColor: 'white',
+  },
 };

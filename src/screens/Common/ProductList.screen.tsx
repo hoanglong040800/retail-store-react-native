@@ -7,12 +7,12 @@ import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { getCategoryById } from 'service';
-import { CategoryDto, ParamsType } from 'types';
+import { CategoryDto, ParamsType, Screen } from 'types';
 
 type Params = Pick<ParamsType, 'mainCate' | 'subCate'>;
 
 type Props = {
-  route: Route<'ProductList', Params>;
+  route: Route<Screen.ProductList, Params>;
 };
 
 const ProductListScreen = ({ route: { params } }: Props) => {

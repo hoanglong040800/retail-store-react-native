@@ -13,10 +13,12 @@ const stat = promisify(fs.stat);
  */
 function removeClassValidatorContent(content: string): string {
   const removeImportRegex = /(?:import\s*{\s*(?:\w+\s*,?\s*)*\s*} from 'class-validator';)/;
-  const removeDecoratorRegex = /(?:\s*@\S+)/g;
+  const removeClassTransformerRegex = /(?:import\s*{\s*(?:\w+\s*,?\s*)*\s*} from 'class-transformer';)/;
+  const removeDecoratorRegex = /^[\s]*@\S+(?:\(\s*\)\s*)*(?:[\s\S]*?)$/gm;
 
   const remvoveImportContent = content.replace(removeImportRegex, '');
-  const removeDecoratorsContent = remvoveImportContent.replace(removeDecoratorRegex, '');
+  const rmeoveClassTransformer = remvoveImportContent.replace(removeClassTransformerRegex, '');
+  const removeDecoratorsContent = rmeoveClassTransformer.replace(removeDecoratorRegex, '');
 
   return removeDecoratorsContent;
 }
@@ -27,11 +29,18 @@ function removeImportSwagger(content: string): string {
   return content.replace(regex, '');
 }
 
+function removeCustomValidator(content: string): string {
+  const regex = /import\s*{\s*\w+\s*(?:,\s*\w+)*\s*} from '@\/modules\/_base';/;
+
+  return content.replace(regex, '');
+}
+
 async function modifyAndSaveInputFile(sourceItemPath: string, destinationItemPath: string) {
   try {
     const content: string = await fs.promises.readFile(sourceItemPath, 'utf8');
     const removedSwaggerContent: string = removeImportSwagger(content);
-    const removedClassValidatorContent: string = removeClassValidatorContent(removedSwaggerContent);
+    const removedCustomValidatorContent: string = removeCustomValidator(removedSwaggerContent);
+    const removedClassValidatorContent: string = removeClassValidatorContent(removedCustomValidatorContent);
 
     await fs.promises.writeFile(destinationItemPath, removedClassValidatorContent);
   } catch (err) {

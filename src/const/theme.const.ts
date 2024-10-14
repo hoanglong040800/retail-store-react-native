@@ -22,15 +22,15 @@ export const THEME: MD3Theme = {
     onSecondaryContainer: '#000000',
 
     elevation: {
-      level0: '#edf7ed',
-      level1: '#fff',
+      level0: '#fff',
+      level1: '#f9f9f9',
       level2: '#f4f4f4',
       level3: '#ececec',
       level4: '#e3e3e3',
       level5: '#dddddd',
     },
 
-    surfaceVariant: '#93cf96', // same as elevation lv3
+    surfaceVariant: '#fff', // input background
     inverseOnSurface: '#ffc59f', // based on inverse primary
   },
 };

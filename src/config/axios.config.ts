@@ -65,7 +65,6 @@ export const checkAccessTokenNeedRefresh = async (): Promise<boolean> => {
   const now = new Date().getTime();
   const canRefreshDateTime = new Date(accessToken.expireAt).getTime() - expireDuration;
 
-  // TODO resolve mismatch timezone
   if (canRefreshDateTime < now) {
     return true;
   }

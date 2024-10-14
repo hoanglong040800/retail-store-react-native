@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { NumericInput } from 'components';
+import { useState } from 'react';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Divider, Subheading, Text } from 'react-native-paper';
 import { formatCurrency } from 'utils';
 
@@ -10,6 +12,8 @@ type Props = {
 };
 
 const ProductCard = ({ name, image, price, onPress = () => null }: Props) => {
+  const [state, setState] = useState(0);
+
   return (
     <Card style={styles.container} onPress={onPress}>
       <Card.Cover source={{ uri: image }} style={styles.cover} resizeMode="contain" />
@@ -23,6 +27,14 @@ const ProductCard = ({ name, image, price, onPress = () => null }: Props) => {
 
         <Subheading style={styles.price}>{formatCurrency(price)}</Subheading>
       </Card.Content>
+
+      {/* add touchable here to prevent action inside trigger press card */}
+      <TouchableOpacity onPress={() => null} activeOpacity={1}>
+        <Card.Actions style={styles.actionContainer}>
+          {/* <Button onPress={onPressAddToCart}>Add to cart</Button> */}
+          <NumericInput value={state} onChange={setState} />
+        </Card.Actions>
+      </TouchableOpacity>
     </Card>
   );
 };
@@ -44,6 +56,10 @@ const styles = StyleSheet.create({
 
   price: {
     textAlign: 'right',
+  },
+
+  actionContainer: {
+    marginTop: 12,
   },
 });
 

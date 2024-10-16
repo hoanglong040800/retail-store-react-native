@@ -26,10 +26,18 @@ export const selectedLocationSelector = selector<SelectedLocation>({
   },
 });
 
-export const inUseCartState = atom<InUseCart>({
-  key: 'InUseCartState',
+export const inUseCartSelector = selector<InUseCart>({
+  key: 'inUseCartSelector',
 
-  default: {
-    cartItems: {},
+  get: async () => {
+    const inUseCart = await getStorageItem('inUseCart');
+
+    if (!inUseCart) {
+      return {
+        cartItems: {},
+      };
+    }
+
+    return inUseCart;
   },
 });

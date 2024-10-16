@@ -1,9 +1,12 @@
-import { useRecoilState } from 'recoil';
-import { inUseCartState } from 'states';
+/* eslint-disable camelcase */
+import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
+import { inUseCartSelector } from 'states';
 import { CartItemDto, InUseCart } from 'types';
+import { printAsyncStorage, setStorageItems } from 'utils';
 
 export const useCart = () => {
-  const [inUseCart, setInUseCart] = useRecoilState<InUseCart>(inUseCartState);
+  const inUseCart = useRecoilValue<InUseCart>(inUseCartSelector);
+  const refreshInUseCart = useRecoilRefresher_UNSTABLE(inUseCartSelector);
 
   const adjustQuantity = async (productId: string, quantity: number): Promise<void> => {
     const adjustingCartItem: CartItemDto = {
@@ -14,14 +17,17 @@ export const useCart = () => {
       },
     };
 
-    setInUseCart({
+    const newInUseCart: InUseCart = {
       ...inUseCart,
-
       cartItems: {
         ...inUseCart.cartItems,
         [productId]: adjustingCartItem,
       },
-    });
+    };
+
+    await setStorageItems({ inUseCart: newInUseCart });
+    refreshInUseCart();
+    printAsyncStorage();
   };
 
   return {

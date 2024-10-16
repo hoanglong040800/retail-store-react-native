@@ -1,7 +1,7 @@
 import { Text } from 'react-native-paper';
 import { FlatList, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
-import { useAppNavigation, useCart } from 'hooks';
+import { useAppNavigation } from 'hooks';
 import { Screen } from 'types';
 import ProductCard from './ProductCard';
 
@@ -11,8 +11,9 @@ type Props = {
 };
 
 const ProductList = ({ products, style }: Props) => {
+  const colNum = 2;
+
   const { navigate } = useAppNavigation();
-  const { inUseCart, adjustQuantity } = useCart();
 
   const onPressProductCard = (id: string) => {
     navigate(Screen.ProductDetail, { productId: id });
@@ -24,9 +25,8 @@ const ProductList = ({ products, style }: Props) => {
       name={item.name}
       image={item.image}
       price={item.price}
-      inCartQuantity={inUseCart.cartItems[item.id]?.quantity}
       onPress={() => onPressProductCard(item.id)}
-      onAdjustQuantity={adjustQuantity}
+      style={{ width: `${100 / colNum}%` }}
     />
   );
 
@@ -41,7 +41,7 @@ const ProductList = ({ products, style }: Props) => {
   return (
     <FlatList
       data={products}
-      numColumns={3}
+      numColumns={colNum}
       contentContainerStyle={styles.listGap}
       columnWrapperStyle={styles.listGap}
       renderItem={renderProductCard}

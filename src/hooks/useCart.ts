@@ -2,7 +2,7 @@
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { inUseCartSelector } from 'states';
 import { CartItemDto, InUseCart } from 'types';
-import { printAsyncStorage, setStorageItems } from 'utils';
+import { setStorageItems } from 'utils';
 
 export const useCart = () => {
   const inUseCart = useRecoilValue<InUseCart>(inUseCartSelector);
@@ -27,7 +27,6 @@ export const useCart = () => {
 
     await setStorageItems({ inUseCart: newInUseCart });
     refreshInUseCart();
-    printAsyncStorage();
   };
 
   return {

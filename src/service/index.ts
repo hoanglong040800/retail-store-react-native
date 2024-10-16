@@ -4,3 +4,4 @@ export * from './config.service';
 export * from './auth.service';
 export * from './users.service';
 export * from './branches.service';
+export * from './cart.service';

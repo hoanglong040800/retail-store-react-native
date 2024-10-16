@@ -121,7 +121,7 @@ const handleResponseError = (err: any): ErrorResponse => {
   if (err?.response?.data) {
     publishEvent('show snackbar error', err.response?.data);
 
-    return err.response.data;
+    throw err.response.data;
   }
 
   const defErrRes: ErrorResponse = {
@@ -131,7 +131,7 @@ const handleResponseError = (err: any): ErrorResponse => {
   };
 
   publishEvent('show snackbar error', defErrRes);
-  return defErrRes;
+  throw defErrRes;
 };
 
 axiosClient.interceptors.request.use(insertAuthToken);

@@ -1,18 +1,28 @@
 import { NumericInput } from 'components';
-import { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import { Card, Divider, Subheading, Text } from 'react-native-paper';
+import { Button, Card, Divider, Subheading, Text } from 'react-native-paper';
 import { formatCurrency } from 'utils';
 
 type Props = {
+  id: string;
   name: string;
   image: string;
   price: number;
+  inCartQuantity: number;
   onPress: () => void;
+  onAdjustQuantity: (productId: string, quantity: number) => Promise<void>;
 };
 
-const ProductCard = ({ name, image, price, onPress = () => null }: Props) => {
-  const [state, setState] = useState(0);
+const ProductCard = ({ id, name, image, price, inCartQuantity = 0, onPress, onAdjustQuantity }: Props) => {
+  const offsetQuantity = 1;
+
+  const handlePressAddCart = () => {
+    onAdjustQuantity(id, offsetQuantity);
+  };
+
+  const handleAdjustQuantity = (newVal: number) => {
+    onAdjustQuantity(id, newVal);
+  };
 
   return (
     <Card style={styles.container} onPress={onPress}>
@@ -31,8 +41,13 @@ const ProductCard = ({ name, image, price, onPress = () => null }: Props) => {
       {/* add touchable here to prevent action inside trigger press card */}
       <TouchableOpacity onPress={() => null} activeOpacity={1}>
         <Card.Actions style={styles.actionContainer}>
-          {/* <Button onPress={onPressAddToCart}>Add to cart</Button> */}
-          <NumericInput value={state} onChange={setState} />
+          {inCartQuantity === 0 ? (
+            <Button style={styles.addToCart} onPress={handlePressAddCart}>
+              Add to cart
+            </Button>
+          ) : (
+            <NumericInput value={inCartQuantity} offset={offsetQuantity} onChange={handleAdjustQuantity} />
+          )}
         </Card.Actions>
       </TouchableOpacity>
     </Card>
@@ -60,6 +75,11 @@ const styles = StyleSheet.create({
 
   actionContainer: {
     marginTop: 12,
+  },
+
+  addToCart: {
+    flex: 1,
+    height: '100%',
   },
 });
 

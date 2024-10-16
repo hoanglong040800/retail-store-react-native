@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil';
-import { GetGlobalConfigDto, LoginUserDto, SelectedLocation } from 'types';
+import { GetGlobalConfigDto, InUseCart, LoginUserDto, SelectedLocation } from 'types';
 import { getStorageItem } from 'utils';
 
 export const loginUserSelector = selector<LoginUserDto>({
@@ -23,5 +23,13 @@ export const selectedLocationSelector = selector<SelectedLocation>({
   get: async () => {
     const selectedLocation = await getStorageItem('selectedLocation');
     return selectedLocation;
+  },
+});
+
+export const inUseCartState = atom<InUseCart>({
+  key: 'InUseCartState',
+
+  default: {
+    cartItems: {},
   },
 });

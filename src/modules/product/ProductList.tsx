@@ -1,7 +1,7 @@
 import { Text } from 'react-native-paper';
 import { FlatList, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
-import { useAppNavigation } from 'hooks';
+import { useAppNavigation, useCart } from 'hooks';
 import { Screen } from 'types';
 import ProductCard from './ProductCard';
 
@@ -12,13 +12,22 @@ type Props = {
 
 const ProductList = ({ products, style }: Props) => {
   const { navigate } = useAppNavigation();
+  const { inUseCart, adjustQuantity } = useCart();
 
   const onPressProductCard = (id: string) => {
     navigate(Screen.ProductDetail, { productId: id });
   };
 
   const renderProductCard = ({ item }: { item: ProductDto }) => (
-    <ProductCard name={item.name} image={item.image} price={item.price} onPress={() => onPressProductCard(item.id)} />
+    <ProductCard
+      id={item.id}
+      name={item.name}
+      image={item.image}
+      price={item.price}
+      inCartQuantity={inUseCart.cartItems[item.id]?.quantity}
+      onPress={() => onPressProductCard(item.id)}
+      onAdjustQuantity={adjustQuantity}
+    />
   );
 
   if (!products || products.length === 0) {

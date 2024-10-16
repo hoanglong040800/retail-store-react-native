@@ -3,21 +3,22 @@ import { IconButton, TextInput } from 'react-native-paper';
 
 type Props = {
   value: number;
+  offset?: number;
   onChange: (newNum: number) => void;
 };
 
-const NumericInput = ({ value, onChange }: Props) => {
+const NumericInput = ({ value, offset = 1, onChange }: Props) => {
   const handleOnChangeInput = (text: string) => {
     onChange(+text);
   };
 
   const handleClickIcon = (type: 'plus' | 'minus'): void => {
     if (type === 'plus') {
-      onChange(value + 1);
+      onChange(value + offset);
       return;
     }
 
-    onChange(value - 1);
+    onChange(value - offset);
   };
 
   return (

@@ -54,10 +54,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
         onPressItem={onPressCateItem}
       />
 
-      <ProductList
-        products={lv1Category.childCategories[selectedSubCate?.index]?.products}
-        style={styles.productList}
-      />
+      <ProductList products={lv1Category.childCategories[selectedSubCate?.index]?.products} />
     </View>
   );
 };
@@ -66,10 +63,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, // allow page to extend -> allow scroll
     paddingHorizontal: 8,
-  },
-
-  productList: {
-    marginTop: 20,
   },
 });
 

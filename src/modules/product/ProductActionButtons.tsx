@@ -13,9 +13,14 @@ type Props = {
 const ProductActionButtons = ({ productId, productName, offsetQuantity = 1 }: Props) => {
   const { inUseCart, adjustQuantity } = useCart();
 
-  const inCartQuantity = useMemo(() => {
-    return inUseCart.cartItems[productId]?.quantity || 0;
-  }, [JSON.stringify(inUseCart.cartItems), productId]);
+  const inCartQuantity = useMemo(
+    () => {
+      return inUseCart.cartItems[productId]?.quantity || 0;
+    },
+    // object will create new address each render -> re-render n cart item's times
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [JSON.stringify(inUseCart.cartItems?.[productId]), productId]
+  );
 
   const handlePressAddCart = () => {
     adjustQuantity({ productId, quantity: offsetQuantity, productName });

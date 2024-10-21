@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-import { useMemo } from 'react';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { addCartItems } from 'service';
 import { inUseCartSelector, loginUserSelector } from 'states';
@@ -16,12 +15,6 @@ export const useCart = () => {
   // });
 
   // --------- STATES ----------
-
-  const cartProperties = useMemo(() => {
-    const totalItems = Object.keys(inUseCart.cartItems).length;
-
-    return { totalItems };
-  }, [JSON.stringify(inUseCart.cartItems)]);
 
   // ---------- FUNCTIONS ----------
 
@@ -53,7 +46,6 @@ export const useCart = () => {
 
     await handleServerAddCartItems(newInUseCart);
     await handleSetCartItemsToStorage(newInUseCart);
-    refreshInUseCart();
   };
 
   const handleSetCartItemsToStorage = async (inUseCartPar: InUseCart) => {
@@ -70,6 +62,7 @@ export const useCart = () => {
     }, {});
 
     await setStorageItems({ inUseCart: cleanedInUseCart });
+    refreshInUseCart();
   };
 
   const handleServerAddCartItems = async (newInUseCart: InUseCart): Promise<void> => {
@@ -99,7 +92,6 @@ export const useCart = () => {
 
   return {
     inUseCart,
-    cartProperties,
     adjustQuantity,
   };
 };

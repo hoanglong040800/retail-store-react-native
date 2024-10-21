@@ -30,7 +30,7 @@ const ProductCard = ({ id, name, image, price, style, onPress }: Props) => {
       {/* add touchable here to prevent action inside trigger press card */}
       <TouchableOpacity onPress={() => null} activeOpacity={1}>
         <Card.Actions style={styles.actionContainer}>
-          <ProductActionButtons productId={id} offsetQuantity={1} />
+          <ProductActionButtons productId={id} offsetQuantity={1} productName={name} />
         </Card.Actions>
       </TouchableOpacity>
     </Card>

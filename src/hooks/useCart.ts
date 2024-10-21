@@ -1,8 +1,9 @@
 /* eslint-disable camelcase */
+import { useMemo } from 'react';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { addCartItems } from 'service';
 import { inUseCartSelector, loginUserSelector } from 'states';
-import { AddCartItemBody, CartItemDto, InUseCart, LoginUserDto, MutateCartItem } from 'types';
+import { AddCartItemBody, CartItemByProductId, CartItemDto, InUseCart, LoginUserDto, MutateCartItem } from 'types';
 import { setStorageItems } from 'utils';
 
 export const useCart = () => {
@@ -14,14 +15,31 @@ export const useCart = () => {
   //   mutationFn: addCartItems,
   // });
 
+  // --------- STATES ----------
+
+  const cartProperties = useMemo(() => {
+    const totalItems = Object.keys(inUseCart.cartItems).length;
+
+    return { totalItems };
+  }, [JSON.stringify(inUseCart.cartItems)]);
+
   // ---------- FUNCTIONS ----------
 
-  const adjustQuantity = async (productId: string, quantity: number): Promise<void> => {
+  const adjustQuantity = async ({
+    productId,
+    productName,
+    quantity,
+  }: {
+    productId: string;
+    quantity: number;
+    productName?: string;
+  }): Promise<void> => {
     const adjustingCartItem: CartItemDto = {
       id: 'random',
       quantity,
       product: {
         id: productId,
+        name: productName,
       },
     };
 
@@ -34,16 +52,38 @@ export const useCart = () => {
     };
 
     await handleServerAddCartItems(newInUseCart);
-    await setStorageItems({ inUseCart: newInUseCart });
+    await handleSetCartItemsToStorage(newInUseCart);
     refreshInUseCart();
   };
 
+  const handleSetCartItemsToStorage = async (inUseCartPar: InUseCart) => {
+    const cleanedInUseCart: InUseCart = inUseCartPar;
+
+    cleanedInUseCart.cartItems = Object.values(cleanedInUseCart.cartItems).reduce((prev, cur) => {
+      if (cur.quantity > 0) {
+        const newCartItems: CartItemByProductId = { ...prev, [cur.product.id]: cur };
+
+        return newCartItems;
+      }
+
+      return prev;
+    }, {});
+
+    await setStorageItems({ inUseCart: cleanedInUseCart });
+  };
+
   const handleServerAddCartItems = async (newInUseCart: InUseCart): Promise<void> => {
-    const allCartItems: MutateCartItem[] = Object.values(newInUseCart.cartItems)?.map((cartItem: CartItemDto) => {
-      return {
-        productId: cartItem.product.id,
+    const allCartItems = Object.values(newInUseCart.cartItems)?.map((cartItem: CartItemDto) => {
+      const mutateCartItem: MutateCartItem = {
         quantity: cartItem.quantity,
+        productId: cartItem.product.id,
+        product: {
+          id: cartItem.product.id,
+          name: cartItem.product.name,
+        },
       };
+
+      return mutateCartItem;
     });
 
     const body: AddCartItemBody = {
@@ -59,6 +99,7 @@ export const useCart = () => {
 
   return {
     inUseCart,
+    cartProperties,
     adjustQuantity,
   };
 };

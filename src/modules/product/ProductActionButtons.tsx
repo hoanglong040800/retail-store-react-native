@@ -6,22 +6,23 @@ import { Button } from 'react-native-paper';
 
 type Props = {
   productId: string;
+  productName?: string;
   offsetQuantity: number;
 };
 
-const ProductActionButtons = ({ productId, offsetQuantity = 1 }: Props) => {
+const ProductActionButtons = ({ productId, productName, offsetQuantity = 1 }: Props) => {
   const { inUseCart, adjustQuantity } = useCart();
 
   const inCartQuantity = useMemo(() => {
     return inUseCart.cartItems[productId]?.quantity || 0;
-  }, [inUseCart.cartItems[productId]]);
+  }, [JSON.stringify(inUseCart.cartItems), productId]);
 
   const handlePressAddCart = () => {
-    adjustQuantity(productId, offsetQuantity);
+    adjustQuantity({ productId, quantity: offsetQuantity, productName });
   };
 
   const handleAdjustQuantity = (newVal: number) => {
-    adjustQuantity(productId, newVal);
+    adjustQuantity({ productId, quantity: newVal, productName });
   };
 
   return (

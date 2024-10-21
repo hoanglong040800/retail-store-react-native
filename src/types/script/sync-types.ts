@@ -91,7 +91,7 @@ Promise.all(
   })
 )
   .then(() => {
-    console.log('Folders copied successfully');
+    console.info('Folders copied successfully');
   })
   .catch(error => {
     console.error('Error copying folders:', error);

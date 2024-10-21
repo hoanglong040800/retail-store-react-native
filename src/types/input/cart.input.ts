@@ -1,4 +1,10 @@
-import { ICartItem } from '../interface';
+import { ICartItem, IProduct } from '../interface';
+
+export class MutateCartItemProduct implements IProduct {
+  id?: string;
+
+  name?: string;
+}
 
 export class MutateCartItem implements ICartItem {
   id?: string;
@@ -6,6 +12,8 @@ export class MutateCartItem implements ICartItem {
   quantity: number;
 
   productId: string;
+
+  product?: MutateCartItemProduct;
 }
 
 export class AddCartItemBody {

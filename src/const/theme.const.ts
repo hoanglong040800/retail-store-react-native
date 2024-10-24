@@ -39,17 +39,27 @@ export const CUSTOM_THEME = {
   headerHeight: 60,
 };
 
-export const CONTAINER_WRAP_BOT_BTN: ViewStyle = {
-  // container full -> allow bottom button stick at end
-  flex: 1,
-  // giving space to display bottom button
-  paddingBottom: 48,
-};
-
 export const SURFACE_THEME: Record<'default', ViewStyle> = {
   default: {
     padding: 8,
     borderRadius: 8,
     backgroundColor: 'white',
+  },
+};
+
+type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT';
+type BASE_STYPE_TYPE = Record<BASE_STYLE_KEY, ViewStyle>;
+
+export const BASE_STYLE: BASE_STYPE_TYPE = {
+  CONTAINER_WRAP_BOT_BTN: {
+    // container full -> allow bottom button stick at end
+    flex: 1,
+    // giving space to display bottom button
+    paddingBottom: 48,
+  },
+
+  SCROLL_VIEW_DEFAULT: {
+    flex: 1,
+    padding: 16,
   },
 };

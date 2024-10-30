@@ -9,6 +9,7 @@ import { DeliveryTypeEnum } from 'types/enum';
 const CartScreen = () => {
   const {
     control,
+    watch,
     formState: { errors },
     handleSubmit,
   } = useForm<CheckoutForm>({
@@ -24,7 +25,7 @@ const CartScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView}>
-        <CartBasicInfo control={control} errors={errors} />
+        <CartBasicInfo control={control} errors={errors} deliveryType={watch('deliveryType')} />
       </ScrollView>
 
       <BottomButton text="Checkout" onPress={handleSubmit(handleSubmitCheckout)} />

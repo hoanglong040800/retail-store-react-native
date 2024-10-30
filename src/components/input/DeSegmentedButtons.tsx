@@ -4,11 +4,10 @@ import { View, ViewProps } from 'react-native';
 import { SegmentedButtons, SegmentedButtonsProps } from 'react-native-paper';
 import InputError from './InputError';
 
-type Props<T> = SegmentedButtonsProps & {
-  value?: string | string[];
+// Remove type so TS won't throw error. These type is not need since it replaced by react hook form
+type Props<T> = Omit<SegmentedButtonsProps, 'value' | 'onValueChange'> & {
   ctrlProps: UseControllerProps<T>;
   wrapperProps?: ViewProps;
-  onValueChange?: (value: string) => void;
 };
 
 // Example: define dynamic form type for input component

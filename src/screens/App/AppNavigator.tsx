@@ -12,11 +12,11 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{ header: renderAppHeader }}>
+      <Stack.Screen name={Screen.Cart} component={CartScreen} />
       <Stack.Screen name={Screen.Home} component={HomeScreen} />
       <Stack.Screen name={Screen.ProductList} component={ProductListScreen} />
       <Stack.Screen name={Screen.ProductDetail} component={ProductDetailsScreen} />
       <Stack.Screen name={Screen.AllBranches} component={AllBranchesScreen} />
-      <Stack.Screen name={Screen.Cart} component={CartScreen} />
     </Stack.Navigator>
   );
 };

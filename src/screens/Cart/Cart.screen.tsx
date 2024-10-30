@@ -4,13 +4,18 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { CartBasicInfo } from 'modules/cart';
 import { BottomButton } from 'components';
 import { CheckoutForm } from 'modules/cart/shared';
+import { DeliveryTypeEnum } from 'types/enum';
 
 const CartScreen = () => {
   const {
     control,
     formState: { errors },
     handleSubmit,
-  } = useForm<CheckoutForm>();
+  } = useForm<CheckoutForm>({
+    defaultValues: {
+      deliveryType: DeliveryTypeEnum.delivery,
+    },
+  });
 
   const handleSubmitCheckout = (formData: CheckoutForm) => {
     console.log('formData', formData);

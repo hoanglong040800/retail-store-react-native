@@ -1,9 +1,9 @@
 import { Control, FieldErrors } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
 import { useState } from 'react';
-import { DeSurface, DeTextInput } from 'components';
+import { DeSegmentedButtons, DeSurface, DeTextInput } from 'components';
 import { HeaderLocation } from 'modules/header';
-import { SegmentedButtons, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { DeliveryTypeEnum } from 'types/enum';
 import { CheckoutForm } from './shared';
 
@@ -14,11 +14,7 @@ type Props = {
 
 const CartBasicInfo = ({ control, errors }: Props) => {
   // TODO use useForm instead
-  const [deliveryType, setDeliveryType] = useState(DeliveryTypeEnum.delivery);
-
-  const handleChangeDeliveryType = (deliveryTypePar: DeliveryTypeEnum) => {
-    setDeliveryType(deliveryTypePar);
-  };
+  const [deliveryType] = useState(DeliveryTypeEnum.delivery);
 
   const deliveryTypeOptions: { value: string; label: string }[] = [
     { value: DeliveryTypeEnum.delivery, label: 'Delivery' },
@@ -29,11 +25,12 @@ const CartBasicInfo = ({ control, errors }: Props) => {
     <DeSurface style={styles.container}>
       <Text variant="headlineSmall">Delivery information</Text>
 
-      <SegmentedButtons
-        value={deliveryType}
-        multiSelect={false}
-        onValueChange={handleChangeDeliveryType}
+      <DeSegmentedButtons<CheckoutForm>
+        ctrlProps={{ control, name: 'deliveryType' }}
         buttons={deliveryTypeOptions}
+        multiSelect={false}
+        value={null}
+        onValueChange={() => {}}
       />
 
       <HeaderLocation />

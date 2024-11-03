@@ -9,8 +9,6 @@ type Props = {
 };
 
 const BottomButton = ({ text, isLoading, onPress }: Props) => {
-  console.log('isLoading', isLoading);
-
   return (
     <BottomButtonWrapper>
       <Button mode="contained" onPress={onPress} disabled={isLoading} labelStyle={style.buttonContent}>

@@ -6,8 +6,8 @@ import { BottomButton } from 'components';
 import { CheckoutForm } from 'modules/cart/shared';
 import { DeliveryTypeEnum } from 'types/enum';
 import CartLinesSection from 'modules/cart/CartLinesSection';
-import { LoginUserDto } from 'types';
-import { useQuery } from '@tanstack/react-query';
+import { CartDto, LoginUserDto } from 'types';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Text } from 'react-native-paper';
 import { getCartById } from 'service';
 import { useRecoilValue } from 'recoil';
@@ -29,8 +29,11 @@ const CartScreen = () => {
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
   const { inUseCart } = useCart();
 
-  const { data: userCart, isFetching } = useQuery({
-    queryKey: [loginUser.cartId, watch('deliveryType'), inUseCart?.cartItems],
+  const { data: userCart, isFetching } = useQuery<CartDto, null, CartDto>({
+    queryKey: ['userCart', loginUser.cartId, watch('deliveryType'), inUseCart?.cartItems],
+
+    // resolve bug data is undefined when refetch
+    placeholderData: keepPreviousData,
 
     queryFn: () =>
       getCartById(loginUser.cartId, {

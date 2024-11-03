@@ -1,16 +1,17 @@
 import { NumericInput } from 'components';
 import { useCart } from 'hooks';
 import { useMemo } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Button } from 'react-native-paper';
 
 type Props = {
   productId: string;
   productName?: string;
   offsetQuantity: number;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
-const ProductActionButtons = ({ productId, productName, offsetQuantity = 1 }: Props) => {
+const ProductActionButtons = ({ productId, productName, offsetQuantity = 1, containerStyle }: Props) => {
   const { inUseCart, adjustQuantity } = useCart();
 
   const inCartQuantity = useMemo(
@@ -31,7 +32,7 @@ const ProductActionButtons = ({ productId, productName, offsetQuantity = 1 }: Pr
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       {inCartQuantity === 0 ? (
         <Button mode="outlined" style={styles.addToCart} onPress={handlePressAddCart}>
           Add to cart

@@ -1,13 +1,14 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { IconButton, TextInput } from 'react-native-paper';
 
 type Props = {
   value: number;
   offset?: number;
   onChange: (newNum: number) => void;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
-const NumericInput = ({ value, offset = 1, onChange }: Props) => {
+const NumericInput = ({ value, offset = 1, containerStyle, onChange }: Props) => {
   const handleOnChangeInput = (text: string) => {
     onChange(+text);
   };
@@ -22,7 +23,7 @@ const NumericInput = ({ value, offset = 1, onChange }: Props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       <IconButton icon="minus" mode="outlined" style={styles.icon} onPress={() => handleClickIcon('minus')} />
 
       <TextInput
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    width: 80,
+    maxWidth: 80,
     height: 30, // same as input height
     borderRadius: 8,
   },

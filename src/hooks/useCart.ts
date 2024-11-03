@@ -53,13 +53,6 @@ export const useCart = () => {
     await handleSetInUseCartToStorage(resCart.cartItems);
   };
 
-  /**
-   * Recalculate cart, get latest image and save to storage
-   */
-  const syncLocalCart = async (cartItems: CartItemDto[]): Promise<void> => {
-    await handleSetInUseCartToStorage(cartItems);
-  };
-
   const handleSetInUseCartToStorage = async (cartItems: CartItemDto[]) => {
     const cartItemByProductId: Record<string, CartItemDto> = keyBy(cartItems, 'product.id');
 
@@ -100,6 +93,5 @@ export const useCart = () => {
   return {
     inUseCart,
     adjustQuantity,
-    syncLocalCart,
   };
 };

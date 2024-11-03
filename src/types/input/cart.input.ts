@@ -1,5 +1,7 @@
 import { ICartItem, IProduct } from '../interface';
 
+import { DeliveryTypeEnum } from '../enum';
+
 export class MutateCartItemProduct implements IProduct {
   id?: string;
 
@@ -18,4 +20,8 @@ export class MutateCartItem implements ICartItem {
 
 export class AddCartItemBody {
   mutateCartItems: MutateCartItem[];
+}
+
+export class GetCartByIdQuery {
+  deliveryType: DeliveryTypeEnum;
 }

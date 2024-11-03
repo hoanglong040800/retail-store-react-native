@@ -2,8 +2,8 @@
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { addCartItems } from 'service';
 import { inUseCartSelector, loginUserSelector } from 'states';
-import { AddCartItemBody, CartItemByProductId, CartItemDto, InUseCart, LoginUserDto, MutateCartItem } from 'types';
-import { setStorageItems } from 'utils';
+import { AddCartItemBody, CartDto, CartItemDto, InUseCart, LoginUserDto, MutateCartItem } from 'types';
+import { keyBy, setStorageItems } from 'utils';
 
 export const useCart = () => {
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
@@ -44,28 +44,34 @@ export const useCart = () => {
       },
     };
 
-    await handleServerAddCartItems(newInUseCart);
-    await handleSetCartItemsToStorage(newInUseCart);
+    const resCart: CartDto = await handleServerAddCartItems(newInUseCart);
+
+    if (!resCart?.cartItems) {
+      throw new Error('Add/Update cart failed');
+    }
+
+    await handleSetInUseCartToStorage(resCart.cartItems);
   };
 
-  const handleSetCartItemsToStorage = async (inUseCartPar: InUseCart) => {
-    const cleanedInUseCart: InUseCart = inUseCartPar;
+  /**
+   * Recalculate cart, get latest image and save to storage
+   */
+  const syncLocalCart = async (cartItems: CartItemDto[]): Promise<void> => {
+    await handleSetInUseCartToStorage(cartItems);
+  };
 
-    cleanedInUseCart.cartItems = Object.values(cleanedInUseCart.cartItems).reduce((prev, cur) => {
-      if (cur.quantity > 0) {
-        const newCartItems: CartItemByProductId = { ...prev, [cur.product.id]: cur };
+  const handleSetInUseCartToStorage = async (cartItems: CartItemDto[]) => {
+    const cartItemByProductId: Record<string, CartItemDto> = keyBy(cartItems, 'product.id');
 
-        return newCartItems;
-      }
+    const newInUseCart: InUseCart = {
+      cartItems: cartItemByProductId,
+    };
 
-      return prev;
-    }, {});
-
-    await setStorageItems({ inUseCart: cleanedInUseCart });
+    await setStorageItems({ inUseCart: newInUseCart });
     refreshInUseCart();
   };
 
-  const handleServerAddCartItems = async (newInUseCart: InUseCart): Promise<void> => {
+  const handleServerAddCartItems = async (newInUseCart: InUseCart): Promise<CartDto> => {
     const allCartItems = Object.values(newInUseCart.cartItems)?.map((cartItem: CartItemDto) => {
       const mutateCartItem: MutateCartItem = {
         quantity: cartItem.quantity,
@@ -84,14 +90,16 @@ export const useCart = () => {
     };
 
     if (loginUser?.cartId) {
-      await addCartItems(loginUser.cartId, body);
+      return addCartItems(loginUser.cartId, body);
     }
 
     // TODO RSP-71 add to cart anonymous
+    return null;
   };
 
   return {
     inUseCart,
     adjustQuantity,
+    syncLocalCart,
   };
 };

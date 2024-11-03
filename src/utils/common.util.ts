@@ -28,3 +28,28 @@ export function toTitleCase(str: string): string {
 
   return str.replace(/\w\S*/g, text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase());
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const keyBy = (array: any[], keyPath: string): Record<string, any> => {
+  const result = {};
+
+  array.forEach(x => {
+    let value = x;
+
+    const keyPaths: string[] = keyPath.split('.');
+
+    keyPaths.forEach(key => {
+      if (value === undefined) {
+        return;
+      }
+
+      value = value[key];
+    });
+
+    if (value !== undefined) {
+      result[value] = x;
+    }
+  });
+
+  return result;
+};

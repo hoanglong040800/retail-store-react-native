@@ -1,5 +1,6 @@
 import CartBasicInfo from './CartBasicInfo';
+import CartSummary from './CartSummary';
 
-export { CartBasicInfo };
+export { CartBasicInfo, CartSummary };
 
 export * from './shared';

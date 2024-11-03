@@ -13,7 +13,7 @@ const CartItemList = ({ cartItems }: Props) => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {cartItems.map(cartItem => (
         <CartItem key={cartItem.id} item={cartItem} />
       ))}
@@ -24,6 +24,9 @@ const CartItemList = ({ cartItems }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  contentContainer: {
     gap: 16,
   },
 });

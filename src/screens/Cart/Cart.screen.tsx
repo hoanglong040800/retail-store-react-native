@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { BASE_STYLE } from 'const';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { CartBasicInfo } from 'modules/cart';
+import { CartBasicInfo, CartSummary } from 'modules/cart';
 import { BottomButton } from 'components';
 import { CheckoutForm } from 'modules/cart/shared';
 import { DeliveryTypeEnum } from 'types/enum';
@@ -54,7 +54,7 @@ const CartScreen = () => {
 
     // syncLocalCart cause endless loop
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userCart]);
+  }, [userCart?.cartItems]);
 
   // -------- RENDER ---------
 
@@ -72,6 +72,8 @@ const CartScreen = () => {
         <CartBasicInfo control={control} errors={errors} deliveryType={watch('deliveryType')} />
 
         <CartLinesSection cartItems={flattenedCartItems} />
+
+        <CartSummary />
       </ScrollView>
 
       <BottomButton text="Checkout" onPress={handleSubmit(handleSubmitCheckout)} />

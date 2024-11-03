@@ -2,7 +2,7 @@ import { ProductActionButtons } from 'modules/product';
 import { Image, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { CartItemDto } from 'types';
-import { displayProductPrice } from 'utils';
+import { displayProductPrice, formatCurrency } from 'utils';
 
 type Props = {
   item: CartItemDto;
@@ -17,6 +17,9 @@ const CartItem = ({ item }: Props) => {
         <View>
           <Text variant="bodyMedium">{item.product.name}</Text>
           <Text variant="bodySmall">{displayProductPrice(item.product)}</Text>
+          <Text variant="bodyLarge" style={styles.totalPriceText}>
+            {formatCurrency(item.price)}
+          </Text>
         </View>
       </View>
 
@@ -51,6 +54,10 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 8,
+  },
+
+  totalPriceText: {
+    marginTop: 8,
   },
 
   productActionButtons: {

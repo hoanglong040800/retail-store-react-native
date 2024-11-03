@@ -1,6 +1,4 @@
-import { BASE_STYLE } from 'const';
-import { StyleSheet, View } from 'react-native';
-import { Surface } from 'react-native-paper';
+import { View } from 'react-native';
 import { CartItemDto } from 'types';
 import { CartItemList } from './cart-item';
 
@@ -10,18 +8,10 @@ type Props = {
 
 const CartLinesSection = ({ cartItems }: Props) => {
   return (
-    <Surface style={styles.container}>
-      <View>
-        <CartItemList cartItems={cartItems} />
-      </View>
-    </Surface>
+    <View>
+      <CartItemList cartItems={cartItems} />
+    </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    ...BASE_STYLE.SURFACE_DEFAULT,
-  },
-});
 
 export default CartLinesSection;

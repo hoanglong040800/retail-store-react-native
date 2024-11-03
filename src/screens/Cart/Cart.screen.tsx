@@ -1,18 +1,20 @@
 import { useForm } from 'react-hook-form';
 import { BASE_STYLE } from 'const';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { CartBasicInfo, CartSummary } from 'modules/cart';
+import { CartBasicInfo, CartSummary, PaymentSelector } from 'modules/cart';
 import { BottomButton } from 'components';
 import { CheckoutForm } from 'modules/cart/shared';
 import { DeliveryTypeEnum } from 'types/enum';
 import CartLinesSection from 'modules/cart/CartLinesSection';
 import { CartDto, LoginUserDto } from 'types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Text } from 'react-native-paper';
+import { Surface, Text } from 'react-native-paper';
 import { getCartById } from 'service';
 import { useRecoilValue } from 'recoil';
 import { loginUserSelector } from 'states';
 import { useCart } from 'hooks';
+import { formatCurrency } from 'utils';
+import { useMemo } from 'react';
 
 const CartScreen = () => {
   const {
@@ -41,6 +43,11 @@ const CartScreen = () => {
       }),
   });
 
+  const checkoutText = useMemo(
+    () => `Checkout (${formatCurrency(userCart?.calculation?.totalAmount)})`,
+    [userCart?.calculation?.totalAmount]
+  );
+
   // ------- FUNCTIONS -------
 
   const handleSubmitCheckout = (formData: CheckoutForm) => {
@@ -56,20 +63,34 @@ const CartScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
-        <CartBasicInfo control={control} errors={errors} deliveryType={watch('deliveryType')} />
+        <Surface style={styles.sectionContainer}>
+          <CartBasicInfo control={control} errors={errors} deliveryType={watch('deliveryType')} />
+        </Surface>
 
-        <CartLinesSection cartItems={userCart.cartItems} />
+        <Surface style={styles.sectionContainer}>
+          <CartLinesSection cartItems={userCart.cartItems} />
+        </Surface>
 
-        <CartSummary cartCalculation={userCart.calculation} />
+        <Surface style={styles.sectionContainer}>
+          <CartSummary cartCalculation={userCart.calculation} />
+        </Surface>
+
+        <Surface style={styles.sectionContainer}>
+          <PaymentSelector />
+        </Surface>
       </ScrollView>
 
-      <BottomButton text="Checkout" onPress={handleSubmit(handleSubmitCheckout)} isLoading={isFetching} />
+      <BottomButton text={checkoutText} onPress={handleSubmit(handleSubmitCheckout)} isLoading={isFetching} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: BASE_STYLE.CONTAINER_WRAP_BOT_BTN,
+
+  sectionContainer: {
+    ...BASE_STYLE.SURFACE_DEFAULT,
+  },
 
   scrollView: {
     ...BASE_STYLE.SCROLL_VIEW_DEFAULT,

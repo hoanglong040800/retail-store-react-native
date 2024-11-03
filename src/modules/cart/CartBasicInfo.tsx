@@ -1,10 +1,8 @@
 import { Control, FieldErrors } from 'react-hook-form';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { DeSegmentedButtons, DeTextInput } from 'components';
 import { HeaderLocation } from 'modules/header';
-import { Surface } from 'react-native-paper';
 import { DeliveryTypeEnum } from 'types/enum';
-import { BASE_STYLE } from 'const';
 import { CheckoutForm } from './shared';
 
 const DELIVERY_TYPE_OPTIONS: { value: string; label: string }[] = [
@@ -20,7 +18,7 @@ type Props = {
 
 const CartBasicInfo = ({ control, errors, deliveryType }: Props) => {
   return (
-    <Surface style={styles.container}>
+    <View style={styles.container}>
       <DeSegmentedButtons<CheckoutForm>
         ctrlProps={{ control, name: 'deliveryType' }}
         buttons={DELIVERY_TYPE_OPTIONS}
@@ -32,13 +30,12 @@ const CartBasicInfo = ({ control, errors, deliveryType }: Props) => {
       {deliveryType === DeliveryTypeEnum.delivery && (
         <DeTextInput control={control} errors={errors} name="address" label="Address" />
       )}
-    </Surface>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    ...BASE_STYLE.SURFACE_DEFAULT,
     gap: 16,
   },
 });

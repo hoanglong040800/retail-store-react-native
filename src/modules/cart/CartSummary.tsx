@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { Divider, Surface, Text } from 'react-native-paper';
-import { BASE_STYLE } from 'const';
+import { Divider, Text } from 'react-native-paper';
 import { CartCalculationDto } from 'types';
 import { formatCurrency } from 'utils';
 
@@ -10,7 +9,7 @@ type Props = {
 
 const CartSummary = ({ cartCalculation }: Props) => {
   return (
-    <Surface style={styles.container}>
+    <View>
       <View style={styles.infoSection}>
         <View style={styles.infoLine}>
           <Text>Sub Total</Text>
@@ -32,15 +31,11 @@ const CartSummary = ({ cartCalculation }: Props) => {
           <Text variant="bodyLarge">{formatCurrency(cartCalculation.totalAmount)}</Text>
         </View>
       </View>
-    </Surface>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    ...BASE_STYLE.SURFACE_DEFAULT,
-  },
-
   infoSection: {
     gap: 8,
   },

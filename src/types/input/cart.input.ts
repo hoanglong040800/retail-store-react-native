@@ -25,3 +25,11 @@ export class AddCartItemBody {
 export class GetCartByIdQuery {
   deliveryType: DeliveryTypeEnum;
 }
+
+export class CheckoutBody {
+  deliveryType: DeliveryTypeEnum;
+
+  address?: string;
+
+  deliveryWardId: string;
+}

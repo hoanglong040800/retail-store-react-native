@@ -60,6 +60,7 @@ const CartScreen = () => {
     return <Text>There is problem when getting your cart. Please try again</Text>;
   }
 
+  // TODO fix scroll
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>

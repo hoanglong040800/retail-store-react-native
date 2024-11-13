@@ -7,10 +7,11 @@ import { Button } from 'react-native-paper';
 type Props = {
   productId: string;
   productName?: string;
-  offsetQuantity: number;
+  offsetQuantity?: number;
   containerStyle?: StyleProp<ViewStyle>;
 };
 
+// TODO long.t refactor to receive whole product object
 const ProductActionButtons = ({ productId, productName, offsetQuantity = 1, containerStyle }: Props) => {
   const { inUseCart, adjustQuantity } = useCart();
 

@@ -54,7 +54,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
         onPressItem={onPressCateItem}
       />
 
-{/* TODO fix scroll view */}
+      {/* TODO fix scroll view */}
       <ProductList products={lv1Category.childCategories[selectedSubCate?.index]?.products} />
     </View>
   );

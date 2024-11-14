@@ -1,4 +1,4 @@
-import { ViewStyle } from 'react-native';
+import { Dimensions, ViewStyle } from 'react-native';
 import { DefaultTheme, MD3Theme } from 'react-native-paper';
 
 export const THEME: MD3Theme = {
@@ -39,7 +39,13 @@ export const CUSTOM_THEME = {
   headerHeight: 60,
 };
 
-type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT' | 'SURFACE_DEFAULT';
+const SCROLL_VIEW_DEFAULT: ViewStyle = {
+  flex: 1,
+  maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight - 16,
+  padding: 16,
+};
+
+type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT' | 'SCROLL_VIEW_BOT_BTN' | 'SURFACE_DEFAULT';
 type BASE_STYPE_TYPE = Record<BASE_STYLE_KEY, ViewStyle>;
 
 export const BASE_STYLE: BASE_STYPE_TYPE = {
@@ -50,9 +56,12 @@ export const BASE_STYLE: BASE_STYPE_TYPE = {
     paddingBottom: 48,
   },
 
-  SCROLL_VIEW_DEFAULT: {
-    flex: 1,
-    padding: 16,
+  SCROLL_VIEW_DEFAULT,
+
+  SCROLL_VIEW_BOT_BTN: {
+    ...SCROLL_VIEW_DEFAULT,
+    // def pad-bot: 16, bot btn pat bot 48
+    maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight - 16 - 48,
   },
 
   SURFACE_DEFAULT: {

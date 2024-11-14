@@ -18,7 +18,7 @@ const CartItem = ({ item }: Props) => {
           <Text variant="bodyMedium">{item.product.name}</Text>
           <Text variant="bodySmall">{displayProductPrice(item.product)}</Text>
           <Text variant="bodyLarge" style={styles.totalPriceText}>
-            {formatCurrency(item.price)}
+            {formatCurrency(item.totalPrice)}
           </Text>
         </View>
       </View>

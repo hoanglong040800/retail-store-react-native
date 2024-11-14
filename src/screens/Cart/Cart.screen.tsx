@@ -60,10 +60,14 @@ const CartScreen = () => {
     return <Text>There is problem when getting your cart. Please try again</Text>;
   }
 
-  // TODO fix scroll
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
+      <ScrollView
+        scrollEnabled
+        nestedScrollEnabled
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollViewContentContainer}
+      >
         <Surface style={styles.sectionContainer}>
           <CartBasicInfo control={control} errors={errors} deliveryType={watch('deliveryType')} />
         </Surface>
@@ -87,14 +91,14 @@ const CartScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: BASE_STYLE.CONTAINER_WRAP_BOT_BTN,
+  container: { ...BASE_STYLE.CONTAINER_WRAP_BOT_BTN },
 
   sectionContainer: {
     ...BASE_STYLE.SURFACE_DEFAULT,
   },
 
   scrollView: {
-    ...BASE_STYLE.SCROLL_VIEW_DEFAULT,
+    ...BASE_STYLE.SCROLL_VIEW_BOT_BTN,
   },
 
   scrollViewContentContainer: {

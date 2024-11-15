@@ -26,7 +26,7 @@ const PaymentSelector = () => {
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <Icon source={paymentOptions[0].icon} size={20} />
 
-          {paymentOptions[0].text}
+          <Text>{paymentOptions[0].text}</Text>
         </View>
       </Button>
 

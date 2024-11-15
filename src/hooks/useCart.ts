@@ -1,20 +1,43 @@
 /* eslint-disable camelcase */
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
-import { addCartItems } from 'service';
-import { inUseCartSelector, loginUserSelector } from 'states';
-import { AddCartItemBody, CartDto, CartItemDto, InUseCart, LoginUserDto, MutateCartItem } from 'types';
-import { keyBy, setStorageItems } from 'utils';
+import { useMutation } from '@tanstack/react-query';
+import { addCartItems, checkout } from 'service';
+import { inUseCartSelector, loginUserSelector, selectedLocationSelector } from 'states';
+import {
+  AddCartItemBody,
+  CartDto,
+  CartItemDto,
+  CheckoutBody,
+  CheckoutDto,
+  InUseCart,
+  LoginUserDto,
+  MutateCartItem,
+  Screen,
+  SelectedLocation,
+} from 'types';
+import { keyBy, removeStorageItems, setStorageItems } from 'utils';
+import { DeliveryTypeEnum } from 'types/enum';
+import { CheckoutForm } from 'modules/cart';
+import { useSnackbar } from 'components';
+import { useAuth } from './useAuth';
+import { useAppNavigation } from './useAppNavigation';
 
 export const useCart = () => {
+  // --------- RECOIL ----------
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
   const inUseCart = useRecoilValue<InUseCart>(inUseCartSelector);
+  const selectedLocation = useRecoilValue<SelectedLocation>(selectedLocationSelector);
   const refreshInUseCart = useRecoilRefresher_UNSTABLE(inUseCartSelector);
 
-  // const { mutateAsync: addCartItemsMutate } = useMutation({
-  //   mutationFn: addCartItems,
-  // });
+  // --------- HOOKS ----------
 
-  // --------- STATES ----------
+  const { syncUserInfo } = useAuth();
+  const { openSnackbar } = useSnackbar();
+  const { navigate } = useAppNavigation();
+
+  const { mutateAsync: checkoutMutate, isPending: isCheckoutPending } = useMutation<CheckoutDto, null, CheckoutBody>({
+    mutationFn: body => checkout(loginUser.cartId, body),
+  });
 
   // ---------- FUNCTIONS ----------
 
@@ -90,8 +113,37 @@ export const useCart = () => {
     return null;
   };
 
+  const handleCheckout = async (formData: CheckoutForm): Promise<void> => {
+    if (!selectedLocation?.ward?.id) {
+      openSnackbar('error', 'Please select delivery location');
+      return;
+    }
+
+    const checkoutBody: CheckoutBody = {
+      deliveryType: formData.deliveryType,
+      address: formData.deliveryType === DeliveryTypeEnum.delivery ? formData.address : undefined,
+      deliveryWardId: selectedLocation.ward?.id,
+    };
+
+    await checkoutMutate(checkoutBody);
+    await handleAfterCheckout();
+  };
+
+  const handleAfterCheckout = async () => {
+    await clearCart();
+    await syncUserInfo();
+    navigate(Screen.Home);
+  };
+
+  const clearCart = async () => {
+    await removeStorageItems(['inUseCart']);
+    refreshInUseCart();
+  };
+
   return {
     inUseCart,
+    isCheckoutPending,
     adjustQuantity,
+    handleCheckout,
   };
 };

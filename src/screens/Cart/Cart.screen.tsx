@@ -1,20 +1,24 @@
 import { useForm } from 'react-hook-form';
 import { BASE_STYLE } from 'const';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { CartBasicInfo, CartSummary, PaymentSelector } from 'modules/cart';
 import { BottomButton } from 'components';
-import { CheckoutForm } from 'modules/cart/shared';
+import { CheckoutForm, checkoutFormSchema } from 'modules/cart/shared';
 import { DeliveryTypeEnum } from 'types/enum';
-import CartLinesSection from 'modules/cart/CartLinesSection';
-import { CartDto, LoginUserDto } from 'types';
+import { CartDto, LoginUserDto, Screen } from 'types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { Surface, Text } from 'react-native-paper';
 import { getCartById } from 'service';
 import { useRecoilValue } from 'recoil';
 import { loginUserSelector } from 'states';
-import { useCart } from 'hooks';
+import { useAppNavigation, useCart } from 'hooks';
 import { formatCurrency } from 'utils';
 import { useMemo } from 'react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { object } from 'yup';
+import { Surface, Text } from 'react-native-paper';
+import { CartBasicInfo, CartSummary, PaymentSelector } from 'modules/cart';
+import CartLinesSection from 'modules/cart/CartLinesSection';
+
+const resolvedCheckoutFormSchema = yupResolver(object(checkoutFormSchema));
 
 const CartScreen = () => {
   const {
@@ -23,36 +27,46 @@ const CartScreen = () => {
     formState: { errors },
     handleSubmit,
   } = useForm<CheckoutForm>({
+    resolver: resolvedCheckoutFormSchema,
     defaultValues: {
       deliveryType: DeliveryTypeEnum.delivery,
     },
   });
 
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
-  const { inUseCart } = useCart();
+
+  // ---- HOOKS ----
+
+  const { navigate } = useAppNavigation();
+
+  const { inUseCart, isCheckoutPending, handleCheckout } = useCart();
+
+  const handleGetCartById = (): Promise<CartDto> => {
+    if (!loginUser?.cartId) {
+      navigate(Screen.Home);
+      return null;
+    }
+
+    return getCartById(loginUser.cartId, {
+      deliveryType: watch('deliveryType'),
+    });
+  };
 
   const { data: userCart, isFetching } = useQuery<CartDto, null, CartDto>({
-    queryKey: ['userCart', loginUser.cartId, watch('deliveryType'), inUseCart?.cartItems],
+    queryKey: ['userCart', loginUser?.cartId, watch('deliveryType'), inUseCart?.cartItems],
 
     // resolve bug data is undefined when refetch
     placeholderData: keepPreviousData,
 
-    queryFn: () =>
-      getCartById(loginUser.cartId, {
-        deliveryType: watch('deliveryType'),
-      }),
+    queryFn: handleGetCartById,
   });
+
+  // ------- STATES -------
 
   const checkoutText = useMemo(
     () => `Checkout (${formatCurrency(userCart?.calculation?.totalAmount)})`,
     [userCart?.calculation?.totalAmount]
   );
-
-  // ------- FUNCTIONS -------
-
-  const handleSubmitCheckout = (formData: CheckoutForm) => {
-    console.log('formData', formData);
-  };
 
   // -------- RENDER ---------
 
@@ -85,7 +99,11 @@ const CartScreen = () => {
         </Surface>
       </ScrollView>
 
-      <BottomButton text={checkoutText} onPress={handleSubmit(handleSubmitCheckout)} isLoading={isFetching} />
+      <BottomButton
+        text={checkoutText}
+        onPress={handleSubmit(handleCheckout)}
+        isLoading={isFetching || isCheckoutPending}
+      />
     </View>
   );
 };

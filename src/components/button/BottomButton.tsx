@@ -4,14 +4,15 @@ import BottomButtonWrapper from './BottomButtonWrapper';
 
 type Props = {
   text: string;
+  disabled?: boolean;
   isLoading?: boolean;
   onPress: () => void;
 };
 
-const BottomButton = ({ text, isLoading, onPress }: Props) => {
+const BottomButton = ({ text, isLoading, disabled, onPress }: Props) => {
   return (
     <BottomButtonWrapper>
-      <Button mode="contained" onPress={onPress} disabled={isLoading} labelStyle={style.buttonContent}>
+      <Button mode="contained" onPress={onPress} disabled={disabled || isLoading} labelStyle={style.buttonContent}>
         {isLoading && <ActivityIndicator animating />}
 
         {text}

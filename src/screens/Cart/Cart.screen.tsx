@@ -68,7 +68,19 @@ const CartScreen = () => {
     [userCart?.calculation?.totalAmount]
   );
 
+  const isCheckoutDisabled = useMemo(() => {
+    if (!userCart?.cartItems?.length) {
+      return true;
+    }
+
+    return false;
+  }, [userCart?.cartItems?.length]);
+
   // -------- RENDER ---------
+
+  if (!loginUser?.cartId) {
+    return <Text>Please try to logout and login again so cart can load properly</Text>;
+  }
 
   if (!userCart) {
     return <Text>There is problem when getting your cart. Please try again</Text>;
@@ -102,6 +114,7 @@ const CartScreen = () => {
       <BottomButton
         text={checkoutText}
         onPress={handleSubmit(handleCheckout)}
+        disabled={isCheckoutDisabled}
         isLoading={isFetching || isCheckoutPending}
       />
     </View>

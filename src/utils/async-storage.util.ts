@@ -29,6 +29,8 @@ export const removeStorageItems = async (keys: (keyof StorageType)[]): Promise<v
     return;
   }
 
+  AsyncStorage.clear();
+
   await AsyncStorage.multiRemove(keys);
 };
 

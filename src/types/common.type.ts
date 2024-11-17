@@ -1,3 +1,5 @@
+import { DeliveryTypeEnum } from './enum';
+
 export type ErrorResponse = {
   errorCode: string;
   status: number;
@@ -27,6 +29,12 @@ type CateParms = {
   name: string;
 };
 
+type CheckoutFinishParams = {
+  deliveryType: DeliveryTypeEnum;
+  address?: string;
+  storeAddress: string;
+};
+
 export type ParamsType = {
   mainCate?: CateParms;
   subCate?: CateParms;
@@ -34,6 +42,7 @@ export type ParamsType = {
 
   price?: number;
   active?: boolean;
+  checkoutFinish?: CheckoutFinishParams;
 };
 
 export enum Screen {
@@ -45,6 +54,7 @@ export enum Screen {
   Noti = 'Noti',
   Account = 'Account',
   AllBranches = 'All Branches',
+  CheckoutFinish = 'CheckoutFinish',
 }
 
 export type EventDataType = ErrorResponse;

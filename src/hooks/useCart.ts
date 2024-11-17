@@ -114,6 +114,18 @@ export const useCart = () => {
   };
 
   const handleCheckout = async (formData: CheckoutForm): Promise<void> => {
+    navigate(Screen.CheckoutFinish, {
+      checkoutFinish: {
+        deliveryType: formData.deliveryType,
+        address: formData.address,
+        storeAddress: selectedLocation
+          ? `${selectedLocation?.ward?.fullname}, ${selectedLocation?.district?.fullname}, ${selectedLocation?.province?.fullname}`
+          : '',
+      },
+    });
+
+    return;
+
     if (!selectedLocation?.ward?.id) {
       openSnackbar('error', 'Please select delivery location');
       return;
@@ -132,7 +144,6 @@ export const useCart = () => {
   const handleAfterCheckout = async () => {
     await clearCart();
     await syncUserInfo();
-    navigate(Screen.Home);
   };
 
   const clearCart = async () => {

@@ -5,6 +5,8 @@ import { useAppNavigation } from 'hooks';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
+import { useRecoilValue } from 'recoil';
+import { selectedLocationSelector } from 'states';
 import { ParamsType, Screen } from 'types';
 import { DeliveryTypeEnum } from 'types/enum';
 
@@ -26,6 +28,7 @@ const CheckoutFinishScreen = ({
     params: { checkoutFinish: pageParams },
   },
 }: Props) => {
+  const selectedLocation = useRecoilValue(selectedLocationSelector);
   const { navigate } = useAppNavigation();
 
   const textByDeliveryMethod: Record<DeliveryTypeEnum, DeliveryContent> = {
@@ -47,10 +50,18 @@ const CheckoutFinishScreen = ({
   const contentObj = useMemo(() => {
     const selectedContent: DeliveryContent = textByDeliveryMethod[pageParams.deliveryType];
 
+    const { name: branchName, ward, district, province } = pageParams.selectedBranch;
+
+    const fullStoreAddress = `${branchName}, ${ward?.fullname}, ${district?.fullname}, ${province?.fullname}`;
+
+    const customerAddress = pageParams.address
+      ? ` ${pageParams.address}, ${selectedLocation.ward.fullname}, ${selectedLocation.district.fullname}, ${selectedLocation.province.fullname}`
+      : '';
+
     if (pageParams.deliveryType === DeliveryTypeEnum.delivery) {
-      selectedContent.address += ` ${pageParams.address}`;
+      selectedContent.address += ` ${customerAddress}`;
     } else {
-      selectedContent.address += ` ${pageParams.storeAddress}`;
+      selectedContent.address += ` ${fullStoreAddress}`;
     }
 
     return selectedContent;

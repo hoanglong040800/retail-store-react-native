@@ -1,3 +1,4 @@
+import { BranchDto } from './dto';
 import { DeliveryTypeEnum } from './enum';
 
 export type ErrorResponse = {
@@ -32,7 +33,7 @@ type CateParms = {
 type CheckoutFinishParams = {
   deliveryType: DeliveryTypeEnum;
   address?: string;
-  storeAddress: string;
+  selectedBranch: BranchDto;
 };
 
 export type ParamsType = {

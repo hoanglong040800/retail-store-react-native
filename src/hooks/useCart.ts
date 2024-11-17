@@ -5,6 +5,7 @@ import { addCartItems, checkout } from 'service';
 import { inUseCartSelector, loginUserSelector, selectedLocationSelector } from 'states';
 import {
   AddCartItemBody,
+  BranchDto,
   CartDto,
   CartItemDto,
   CheckoutBody,
@@ -15,7 +16,7 @@ import {
   Screen,
   SelectedLocation,
 } from 'types';
-import { keyBy, removeStorageItems, setStorageItems } from 'utils';
+import { keyBy, printAsyncStorage, removeStorageItems, setStorageItems } from 'utils';
 import { DeliveryTypeEnum } from 'types/enum';
 import { CheckoutForm } from 'modules/cart';
 import { useSnackbar } from 'components';
@@ -109,23 +110,10 @@ export const useCart = () => {
       return addCartItems(loginUser.cartId, body);
     }
 
-    // TODO RSP-71 add to cart anonymous
     return null;
   };
 
   const handleCheckout = async (formData: CheckoutForm): Promise<void> => {
-    navigate(Screen.CheckoutFinish, {
-      checkoutFinish: {
-        deliveryType: formData.deliveryType,
-        address: formData.address,
-        storeAddress: selectedLocation
-          ? `${selectedLocation?.ward?.fullname}, ${selectedLocation?.district?.fullname}, ${selectedLocation?.province?.fullname}`
-          : '',
-      },
-    });
-
-    return;
-
     if (!selectedLocation?.ward?.id) {
       openSnackbar('error', 'Please select delivery location');
       return;
@@ -137,13 +125,23 @@ export const useCart = () => {
       deliveryWardId: selectedLocation.ward?.id,
     };
 
-    await checkoutMutate(checkoutBody);
-    await handleAfterCheckout();
+    const checkoutResult: CheckoutDto = await checkoutMutate(checkoutBody);
+    await handleAfterCheckout(formData, checkoutResult.selectedBranch);
   };
 
-  const handleAfterCheckout = async () => {
+  const handleAfterCheckout = async (formData: CheckoutForm, selectedBranch: BranchDto) => {
     await clearCart();
     await syncUserInfo();
+
+    printAsyncStorage();
+
+    navigate(Screen.CheckoutFinish, {
+      checkoutFinish: {
+        deliveryType: formData.deliveryType,
+        address: formData.address,
+        selectedBranch,
+      },
+    });
   };
 
   const clearCart = async () => {

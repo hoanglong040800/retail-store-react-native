@@ -65,7 +65,6 @@ export const checkAccessTokenNeedRefresh = async (): Promise<boolean> => {
   const now = new Date().getTime();
   const canRefreshDateTime = new Date(accessToken.expireAt).getTime() - expireDuration;
 
-  // TODO resolve mismatch timezone
   if (canRefreshDateTime < now) {
     return true;
   }
@@ -122,7 +121,7 @@ const handleResponseError = (err: any): ErrorResponse => {
   if (err?.response?.data) {
     publishEvent('show snackbar error', err.response?.data);
 
-    return err.response.data;
+    throw err.response.data;
   }
 
   const defErrRes: ErrorResponse = {
@@ -132,7 +131,7 @@ const handleResponseError = (err: any): ErrorResponse => {
   };
 
   publishEvent('show snackbar error', defErrRes);
-  return defErrRes;
+  throw defErrRes;
 };
 
 axiosClient.interceptors.request.use(insertAuthToken);

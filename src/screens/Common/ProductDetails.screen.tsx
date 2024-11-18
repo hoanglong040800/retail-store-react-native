@@ -1,10 +1,11 @@
 import { Route } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { BottomButtonWrapper, ScreenAppBar } from 'components';
-import { CONTAINER_WRAP_BOT_BTN } from 'const';
+import { BASE_STYLE } from 'const';
+import { ProductActionButtons } from 'modules';
 import { ProductDetail } from 'modules/product/detail';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { ActivityIndicator, Button } from 'react-native-paper';
+import { ActivityIndicator } from 'react-native-paper';
 import { getProductById } from 'service';
 import { ParamsType, ProductDto, Screen } from 'types';
 
@@ -42,16 +43,14 @@ const ProductDetailsScreen = ({ route: { params } }: Props) => {
       </ScrollView>
 
       <BottomButtonWrapper>
-        <Button mode="contained" onPress={onPressAddToCart}>
-          Add to cart
-        </Button>
+        <ProductActionButtons productId={product.id} productName={product.name} />
       </BottomButtonWrapper>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: CONTAINER_WRAP_BOT_BTN,
+  container: BASE_STYLE.CONTAINER_WRAP_BOT_BTN,
 });
 
 export default ProductDetailsScreen;

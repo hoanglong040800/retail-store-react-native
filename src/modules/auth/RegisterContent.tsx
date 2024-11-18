@@ -4,7 +4,7 @@ import { Button } from 'react-native-paper';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object } from 'yup';
 import { BottomButtonWrapper, DeTextInput } from 'components';
-import { CONTAINER_WRAP_BOT_BTN } from 'const';
+import { BASE_STYLE } from 'const';
 import { RegisterForm, registerSchema } from './_shared';
 
 const resolvedRegisterSchema = yupResolver(object(registerSchema));
@@ -51,12 +51,9 @@ const RegisterContent = ({ containerStyle, onSubmit }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: CONTAINER_WRAP_BOT_BTN,
+  container: { ...BASE_STYLE.CONTAINER_WRAP_BOT_BTN, paddingHorizontal: 16 },
 
-  content: {
-    flex: 1,
-    padding: 16,
-  },
+  content: BASE_STYLE.SCROLL_VIEW_DEFAULT,
 });
 
 export default RegisterContent;

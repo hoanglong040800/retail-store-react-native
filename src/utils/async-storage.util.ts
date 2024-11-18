@@ -31,3 +31,20 @@ export const removeStorageItems = async (keys: (keyof StorageType)[]): Promise<v
 
   await AsyncStorage.multiRemove(keys);
 };
+
+// only use when debug
+export const printAsyncStorage = () => {
+  AsyncStorage.getAllKeys((err, keys) => {
+    AsyncStorage.multiGet(keys, (error, stores) => {
+      const asyncStorage = {};
+
+      stores.forEach((result, i, store) => {
+        // eslint-disable-next-line prefer-destructuring
+        asyncStorage[store[i][0]] = store[i][1];
+      });
+
+      // eslint-disable-next-line no-console
+      console.table(asyncStorage);
+    });
+  });
+};

@@ -1,8 +1,9 @@
-import { CommonActions, useNavigation } from '@react-navigation/native';
+import { CommonActions, useNavigation, useRoute } from '@react-navigation/native';
 import { ParamsType, Screen } from 'types';
 
 export const useAppNavigation = () => {
   const navigation = useNavigation();
+  const route = useRoute();
 
   const navigate = (screen: Screen, params?: ParamsType) => {
     const action = CommonActions.navigate(screen, params);
@@ -12,5 +13,5 @@ export const useAppNavigation = () => {
 
   const goBack = () => navigation.goBack();
 
-  return { navigate, goBack };
+  return { route, navigate, goBack };
 };

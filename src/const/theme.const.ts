@@ -41,6 +41,7 @@ export const CUSTOM_THEME = {
 
 const SCROLL_VIEW_DEFAULT: ViewStyle = {
   flex: 1,
+  paddingBottom: 16,
   maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight - 16,
 };
 
@@ -59,9 +60,8 @@ export const BASE_STYLE: BASE_STYPE_TYPE = {
 
   SCROLL_VIEW_BOT_BTN: {
     ...SCROLL_VIEW_DEFAULT,
-    padding: 16,
     // def pad-bot: 16, bot btn pat bot 48
-    maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight - 16 - 48,
+    maxHeight: (SCROLL_VIEW_DEFAULT.maxHeight as number) - 48,
   },
 
   SURFACE_DEFAULT: {

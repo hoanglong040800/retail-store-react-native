@@ -37,7 +37,7 @@ export const useCart = () => {
   const { navigate } = useAppNavigation();
 
   const { mutateAsync: checkoutMutate, isPending: isCheckoutPending } = useMutation<CheckoutDto, null, CheckoutBody>({
-    mutationFn: body => checkout(loginUser.cartId, body),
+    mutationFn: body => checkout(body),
   });
 
   // ---------- FUNCTIONS ----------

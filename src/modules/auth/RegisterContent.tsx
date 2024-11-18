@@ -51,7 +51,7 @@ const RegisterContent = ({ containerStyle, onSubmit }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: BASE_STYLE.CONTAINER_WRAP_BOT_BTN,
+  container: { ...BASE_STYLE.CONTAINER_WRAP_BOT_BTN, paddingHorizontal: 16 },
 
   content: BASE_STYLE.SCROLL_VIEW_DEFAULT,
 });

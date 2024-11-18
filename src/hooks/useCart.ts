@@ -16,7 +16,7 @@ import {
   Screen,
   SelectedLocation,
 } from 'types';
-import { keyBy, printAsyncStorage, removeStorageItems, setStorageItems } from 'utils';
+import { keyBy, removeStorageItems, setStorageItems } from 'utils';
 import { DeliveryTypeEnum } from 'types/enum';
 import { CheckoutForm } from 'modules/cart';
 import { useSnackbar } from 'components';
@@ -132,8 +132,6 @@ export const useCart = () => {
   const handleAfterCheckout = async (formData: CheckoutForm, selectedBranch: BranchDto) => {
     await clearCart();
     await syncUserInfo();
-
-    printAsyncStorage();
 
     navigate(Screen.CheckoutFinish, {
       checkoutFinish: {

@@ -42,7 +42,6 @@ export const CUSTOM_THEME = {
 const SCROLL_VIEW_DEFAULT: ViewStyle = {
   flex: 1,
   maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight - 16,
-  padding: 16,
 };
 
 type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT' | 'SCROLL_VIEW_BOT_BTN' | 'SURFACE_DEFAULT';
@@ -60,6 +59,7 @@ export const BASE_STYLE: BASE_STYPE_TYPE = {
 
   SCROLL_VIEW_BOT_BTN: {
     ...SCROLL_VIEW_DEFAULT,
+    padding: 16,
     // def pad-bot: 16, bot btn pat bot 48
     maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight - 16 - 48,
   },

@@ -1,5 +1,5 @@
 import { Text } from 'react-native-paper';
-import { FlatList, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
+import { FlatList, StyleSheet, ViewStyle, StyleProp, View, Dimensions } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
 import { useAppNavigation } from 'hooks';
 import { Screen } from 'types';
@@ -26,7 +26,7 @@ const ProductList = ({ products, style }: Props) => {
       image={item.image}
       price={item.price}
       onPress={() => onPressProductCard(item.id)}
-      style={{ width: `${100 / colNum}%` }}
+      style={{ width: Dimensions.get('window').width / colNum - 16 }}
     />
   );
 
@@ -42,16 +42,23 @@ const ProductList = ({ products, style }: Props) => {
     <FlatList
       data={products}
       numColumns={colNum}
-      contentContainerStyle={styles.listGap}
-      columnWrapperStyle={styles.listGap}
       renderItem={renderProductCard}
+      keyExtractor={item => item.id}
       style={style}
+      contentContainerStyle={styles.contentContainer}
+      columnWrapperStyle={styles.columnWrapper}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  listGap: {
+  contentContainer: {
+    // make flatlist scrollable
+    maxHeight: 0,
+    gap: 16,
+  },
+
+  columnWrapper: {
     gap: 16,
   },
 });

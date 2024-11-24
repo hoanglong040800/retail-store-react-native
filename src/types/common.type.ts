@@ -56,6 +56,7 @@ export enum Screen {
   Account = 'Account',
   AllBranches = 'All Branches',
   CheckoutFinish = 'CheckoutFinish',
+  Payment = 'Payment',
 }
 
 export type EventDataType = ErrorResponse;

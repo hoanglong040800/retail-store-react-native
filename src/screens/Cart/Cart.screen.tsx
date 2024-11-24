@@ -76,6 +76,12 @@ const CartScreen = () => {
     return false;
   }, [userCart?.cartItems?.length]);
 
+  // ------- FUNCTIONS --------
+
+  const handleClickCheckout = () => {
+    navigate(Screen.Payment);
+  };
+
   // -------- RENDER ---------
 
   if (!loginUser?.cartId) {
@@ -89,8 +95,6 @@ const CartScreen = () => {
   return (
     <View style={styles.container}>
       <ScrollView
-        scrollEnabled
-        nestedScrollEnabled
         style={styles.scrollView}
         contentContainerStyle={styles.scrollViewContentContainer}
       >
@@ -113,8 +117,9 @@ const CartScreen = () => {
 
       <BottomButton
         text={checkoutText}
-        onPress={handleSubmit(handleCheckout)}
-        disabled={isCheckoutDisabled}
+        onPress={handleClickCheckout}
+        // TODO revert
+        // disabled={isCheckoutDisabled}
         isLoading={isFetching || isCheckoutPending}
       />
     </View>

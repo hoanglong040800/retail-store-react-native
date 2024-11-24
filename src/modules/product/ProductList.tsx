@@ -1,5 +1,5 @@
 import { Text } from 'react-native-paper';
-import { FlatList, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
+import { FlatList, StyleSheet, ViewStyle, StyleProp, View, Dimensions } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
 import { useAppNavigation } from 'hooks';
 import { Screen } from 'types';
@@ -11,6 +11,8 @@ type Props = {
 };
 
 const ProductList = ({ products, style }: Props) => {
+  const colNum = 2;
+
   const { navigate } = useAppNavigation();
 
   const onPressProductCard = (id: string) => {
@@ -18,7 +20,14 @@ const ProductList = ({ products, style }: Props) => {
   };
 
   const renderProductCard = ({ item }: { item: ProductDto }) => (
-    <ProductCard name={item.name} image={item.image} price={item.price} onPress={() => onPressProductCard(item.id)} />
+    <ProductCard
+      id={item.id}
+      name={item.name}
+      image={item.image}
+      price={item.price}
+      onPress={() => onPressProductCard(item.id)}
+      style={{ width: Dimensions.get('window').width / colNum - 16 }}
+    />
   );
 
   if (!products || products.length === 0) {
@@ -32,17 +41,24 @@ const ProductList = ({ products, style }: Props) => {
   return (
     <FlatList
       data={products}
-      numColumns={3}
-      contentContainerStyle={styles.listGap}
-      columnWrapperStyle={styles.listGap}
+      numColumns={colNum}
       renderItem={renderProductCard}
+      keyExtractor={item => item.id}
       style={style}
+      contentContainerStyle={styles.contentContainer}
+      columnWrapperStyle={styles.columnWrapper}
     />
   );
 };
 
 const styles = StyleSheet.create({
-  listGap: {
+  contentContainer: {
+    // make flatlist scrollable
+    maxHeight: 0,
+    gap: 16,
+  },
+
+  columnWrapper: {
     gap: 16,
   },
 });

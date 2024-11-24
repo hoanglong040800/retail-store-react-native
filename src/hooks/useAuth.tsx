@@ -2,9 +2,9 @@
 import { useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'components';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
-import { authLogin, authRegister } from 'service';
+import { authLogin, authRegister, getUserById } from 'service';
 import { loginUserSelector } from 'states';
-import { LoginBody, LoginDto, RegisterBody } from 'types';
+import { LoginBody, LoginDto, LoginUserDto, RegisterBody, UserDto } from 'types';
 import { removeSecureStoreItems, removeStorageItems, setSecureStoreItems, setStorageItems } from 'utils';
 
 export const useAuth = () => {
@@ -111,10 +111,27 @@ export const useAuth = () => {
     refreshLoginUser();
   };
 
+  const syncUserInfo = async () => {
+    if (!loginUser?.id) {
+      throw new Error('Not logged in yet');
+    }
+
+    const user: UserDto = await getUserById(loginUser.id);
+
+    const newLoginUser: LoginUserDto = {
+      ...loginUser,
+      cartId: user.cartId,
+    };
+
+    await setStorageItems({ user: newLoginUser });
+    refreshLoginUser();
+  };
+
   return {
     user: loginUser,
     register,
     login,
     logout,
+    syncUserInfo,
   };
 };

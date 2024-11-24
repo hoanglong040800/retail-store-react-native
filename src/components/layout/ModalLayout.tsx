@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { BottomButton } from 'components/button';
-import { CONTAINER_WRAP_BOT_BTN } from 'const';
+import { BASE_STYLE } from 'const';
 import { ComponentProps, ReactNode } from 'react';
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -21,7 +21,7 @@ const ModalLayout = ({ children, bottomButton, containerStyle }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container: CONTAINER_WRAP_BOT_BTN,
+  container: BASE_STYLE.CONTAINER_WRAP_BOT_BTN,
 
   content: {
     flex: 1,

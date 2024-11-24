@@ -1,5 +1,5 @@
 import { CUSTOM_THEME, THEME } from 'const';
-import { HeaderLocation, HeaderSearch } from 'modules';
+import { HeaderCart, HeaderLocation, HeaderSearch } from 'modules';
 import { CategoryDrawerModal } from 'modules/category';
 import HeaderAccount from 'modules/header/HeaderAccount';
 import { useState } from 'react';
@@ -24,6 +24,8 @@ const AppHeader = () => {
 
         <View style={styles.search}>
           <HeaderSearch />
+
+          <HeaderCart />
         </View>
 
         <View style={styles.location}>
@@ -56,6 +58,10 @@ const styles = StyleSheet.create({
 
   search: {
     flex: 2,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
 
   location: {

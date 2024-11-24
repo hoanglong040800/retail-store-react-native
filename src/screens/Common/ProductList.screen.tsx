@@ -69,7 +69,8 @@ const styles = StyleSheet.create({
   },
 
   productList: {
-    marginTop: 20,
+    paddingTop: 12,
+    marginBottom: 20,
   },
 });
 

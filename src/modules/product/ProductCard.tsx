@@ -1,17 +1,20 @@
-import { StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { Card, Divider, Subheading, Text } from 'react-native-paper';
 import { formatCurrency } from 'utils';
+import ProductActionButtons from './ProductActionButtons';
 
 type Props = {
+  id: string;
   name: string;
   image: string;
   price: number;
+  style?: StyleProp<ViewStyle>;
   onPress: () => void;
 };
 
-const ProductCard = ({ name, image, price, onPress = () => null }: Props) => {
+const ProductCard = ({ id, name, image, price, style, onPress }: Props) => {
   return (
-    <Card style={styles.container} onPress={onPress}>
+    <Card style={[style, styles.container]} onPress={onPress}>
       <Card.Cover source={{ uri: image }} style={styles.cover} resizeMode="contain" />
 
       <Card.Content>
@@ -23,14 +26,19 @@ const ProductCard = ({ name, image, price, onPress = () => null }: Props) => {
 
         <Subheading style={styles.price}>{formatCurrency(price)}</Subheading>
       </Card.Content>
+
+      {/* add touchable here to prevent action inside trigger press card */}
+      <TouchableOpacity onPress={() => null} activeOpacity={1}>
+        <Card.Actions style={styles.actionContainer}>
+          <ProductActionButtons productId={id} offsetQuantity={1} productName={name} />
+        </Card.Actions>
+      </TouchableOpacity>
     </Card>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    width: '30%',
-  },
+  container: {},
 
   cover: {
     height: 100,
@@ -44,6 +52,10 @@ const styles = StyleSheet.create({
 
   price: {
     textAlign: 'right',
+  },
+
+  actionContainer: {
+    marginTop: 12,
   },
 });
 

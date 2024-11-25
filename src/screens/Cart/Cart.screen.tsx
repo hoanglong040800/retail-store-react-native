@@ -94,10 +94,7 @@ const CartScreen = () => {
 
   return (
     <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollViewContentContainer}
-      >
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollViewContentContainer}>
         <Surface style={styles.sectionContainer}>
           <CartBasicInfo control={control} errors={errors} deliveryType={watch('deliveryType')} />
         </Surface>

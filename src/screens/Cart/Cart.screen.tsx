@@ -9,7 +9,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getCartById } from 'service';
 import { useRecoilValue } from 'recoil';
 import { loginUserSelector } from 'states';
-import { useAppNavigation, useCart } from 'hooks';
+import { useAppNavigation, useCart, useCheckout } from 'hooks';
 import { formatCurrency } from 'utils';
 import { useMemo } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -39,7 +39,8 @@ const CartScreen = () => {
 
   const { navigate } = useAppNavigation();
 
-  const { inUseCart, isCheckoutPending, handleCheckout } = useCart();
+  const { inUseCart } = useCart();
+  const { isCheckoutPending, handleClickCheckout } = useCheckout();
 
   const handleGetCartById = (): Promise<CartDto> => {
     if (!loginUser?.cartId) {
@@ -78,10 +79,6 @@ const CartScreen = () => {
 
   // ------- FUNCTIONS --------
 
-  const handleClickCheckout = () => {
-    navigate(Screen.Payment);
-  };
-
   // -------- RENDER ---------
 
   if (!loginUser?.cartId) {
@@ -114,9 +111,8 @@ const CartScreen = () => {
 
       <BottomButton
         text={checkoutText}
-        onPress={handleClickCheckout}
-        // TODO revert
-        // disabled={isCheckoutDisabled}
+        onPress={handleSubmit(handleClickCheckout)}
+        disabled={isCheckoutDisabled}
         isLoading={isFetching || isCheckoutPending}
       />
     </View>

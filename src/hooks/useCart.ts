@@ -1,44 +1,17 @@
 /* eslint-disable camelcase */
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
-import { useMutation } from '@tanstack/react-query';
-import { addCartItems, checkout } from 'service';
-import { inUseCartSelector, loginUserSelector, selectedLocationSelector } from 'states';
-import {
-  AddCartItemBody,
-  BranchDto,
-  CartDto,
-  CartItemDto,
-  CheckoutBody,
-  CheckoutDto,
-  InUseCart,
-  LoginUserDto,
-  MutateCartItem,
-  Screen,
-  SelectedLocation,
-} from 'types';
+import { addCartItems } from 'service';
+import { inUseCartSelector, loginUserSelector } from 'states';
+import { AddCartItemBody, CartDto, CartItemDto, InUseCart, LoginUserDto, MutateCartItem } from 'types';
 import { keyBy, removeStorageItems, setStorageItems } from 'utils';
-import { DeliveryTypeEnum } from 'types/enum';
-import { CheckoutForm } from 'modules/cart';
-import { useSnackbar } from 'components';
-import { useAuth } from './useAuth';
-import { useAppNavigation } from './useAppNavigation';
 
 export const useCart = () => {
   // --------- RECOIL ----------
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
   const inUseCart = useRecoilValue<InUseCart>(inUseCartSelector);
-  const selectedLocation = useRecoilValue<SelectedLocation>(selectedLocationSelector);
   const refreshInUseCart = useRecoilRefresher_UNSTABLE(inUseCartSelector);
 
   // --------- HOOKS ----------
-
-  const { syncUserInfo } = useAuth();
-  const { openSnackbar } = useSnackbar();
-  const { navigate } = useAppNavigation();
-
-  const { mutateAsync: checkoutMutate, isPending: isCheckoutPending } = useMutation<CheckoutDto, null, CheckoutBody>({
-    mutationFn: body => checkout(body),
-  });
 
   // ---------- FUNCTIONS ----------
 
@@ -113,35 +86,6 @@ export const useCart = () => {
     return null;
   };
 
-  const handleCheckout = async (formData: CheckoutForm): Promise<void> => {
-    if (!selectedLocation?.ward?.id) {
-      openSnackbar('error', 'Please select delivery location');
-      return;
-    }
-
-    const checkoutBody: CheckoutBody = {
-      deliveryType: formData.deliveryType,
-      address: formData.deliveryType === DeliveryTypeEnum.delivery ? formData.address : undefined,
-      deliveryWardId: selectedLocation.ward?.id,
-    };
-
-    const checkoutResult: CheckoutDto = await checkoutMutate(checkoutBody);
-    await handleAfterCheckout(formData, checkoutResult.selectedBranch);
-  };
-
-  const handleAfterCheckout = async (formData: CheckoutForm, selectedBranch: BranchDto) => {
-    await clearCart();
-    await syncUserInfo();
-
-    navigate(Screen.CheckoutFinish, {
-      checkoutFinish: {
-        deliveryType: formData.deliveryType,
-        address: formData.address,
-        selectedBranch,
-      },
-    });
-  };
-
   const clearCart = async () => {
     await removeStorageItems(['inUseCart']);
     refreshInUseCart();
@@ -149,8 +93,7 @@ export const useCart = () => {
 
   return {
     inUseCart,
-    isCheckoutPending,
     adjustQuantity,
-    handleCheckout,
+    clearCart,
   };
 };

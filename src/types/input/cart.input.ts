@@ -32,4 +32,6 @@ export class CheckoutBody {
   address?: string;
 
   deliveryWardId: string;
+
+  stripePaymentMethodId?: string;
 }

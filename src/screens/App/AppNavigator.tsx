@@ -4,17 +4,24 @@ import { Screen } from 'types';
 import { CartScreen, CheckoutFinishScreen, PaymentScreen } from 'screens/Cart';
 import { AllBranchesScreen, ProductDetailsScreen, ProductListScreen } from 'screens/Common';
 import { HomeScreen } from 'screens/Home';
+import { DeAppBar } from 'components';
 
 const AppNavigator = () => {
   const Stack = createStackNavigator();
 
   const renderAppHeader = () => <AppHeader />;
+  const renderAppBar = (title: string) => <DeAppBar title={title} />;
 
   return (
     <Stack.Navigator screenOptions={{ header: renderAppHeader }}>
       <Stack.Screen name={Screen.Home} component={HomeScreen} />
       <Stack.Screen name={Screen.Cart} component={CartScreen} />
-      <Stack.Screen name={Screen.Payment} component={PaymentScreen} />
+      <Stack.Screen
+        name={Screen.Payment}
+        component={PaymentScreen}
+        options={{ header: () => renderAppBar('Payment') }}
+      />
+
       <Stack.Screen name={Screen.CheckoutFinish} component={CheckoutFinishScreen} />
       <Stack.Screen name={Screen.ProductList} component={ProductListScreen} />
       <Stack.Screen name={Screen.ProductDetail} component={ProductDetailsScreen} />

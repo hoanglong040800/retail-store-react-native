@@ -1,4 +1,3 @@
-import { PaymentMethodResult } from '@stripe/stripe-js';
 import { useMutation } from '@tanstack/react-query';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { BranchDto, CheckoutBody, CheckoutDto, Screen, SelectedLocation } from 'types';
@@ -10,7 +9,6 @@ import { CheckoutForm } from 'modules/cart';
 import { useAppNavigation } from './useAppNavigation';
 import { useCart } from './useCart';
 import { useAuth } from './useAuth';
-import { usePayment } from './usePayment';
 
 export const useCheckout = () => {
   const selectedLocation = useRecoilValue<SelectedLocation>(selectedLocationSelector);
@@ -23,7 +21,6 @@ export const useCheckout = () => {
   const { openSnackbar } = useSnackbar();
   const { clearCart } = useCart();
   const { syncUserInfo } = useAuth();
-  const { savePaymentMethod } = usePayment();
 
   const { mutateAsync: checkoutMutate, isPending: isCheckoutPending } = useMutation<CheckoutDto, null, CheckoutBody>({
     mutationFn: body => checkout(body),
@@ -37,10 +34,8 @@ export const useCheckout = () => {
     navigate(Screen.Payment);
   };
 
-  const handleClickSavePayment = async () => {
-    const paymentMethodResult: PaymentMethodResult = await savePaymentMethod();
-
-    await handleCheckout(checkoutFormRS, { paymentMethodId: paymentMethodResult.paymentMethod.id });
+  const handleClickSavePayment = async ({ paymentMethodId }: { paymentMethodId: string }) => {
+    await handleCheckout(checkoutFormRS, { paymentMethodId });
   };
 
   const handleCheckout = async (

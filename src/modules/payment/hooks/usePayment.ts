@@ -1,4 +1,4 @@
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { CardNumberElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { PaymentMethodResult } from '@stripe/stripe-js';
 import { useSnackbar } from 'components';
 
@@ -14,7 +14,7 @@ export const usePayment = () => {
   const createStripePaymentMethod = async (): Promise<PaymentMethodResult> => {
     const result: PaymentMethodResult = await stripe.createPaymentMethod({
       type: 'card',
-      card: stripeElements.getElement(CardElement),
+      card: stripeElements.getElement(CardNumberElement),
     });
 
     if (result.error) {

@@ -8,6 +8,7 @@ import { SnackbarProvider } from 'components';
 import { ENV, THEME } from 'const';
 import { GlobalConfigProvider } from 'modules';
 import { Suspense } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { RecoilRoot } from 'recoil';
@@ -28,11 +29,13 @@ const App = () => {
             <Suspense fallback={<ActivityIndicator />}>
               <SnackbarProvider>
                 <GlobalConfigProvider>
-                  <NavigationContainer>
-                    <Elements stripe={stripePromise}>
-                      <AppNavigator />
-                    </Elements>
-                  </NavigationContainer>
+                  <GestureHandlerRootView style={{ flex: 1 }}>
+                    <NavigationContainer>
+                      <Elements stripe={stripePromise}>
+                        <AppNavigator />
+                      </Elements>
+                    </NavigationContainer>
+                  </GestureHandlerRootView>
                 </GlobalConfigProvider>
               </SnackbarProvider>
             </Suspense>

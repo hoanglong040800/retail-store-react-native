@@ -11,12 +11,14 @@ import { useRecoilValue } from 'recoil';
 import { loginUserSelector } from 'states';
 import { useAppNavigation, useCart, useCheckout } from 'hooks';
 import { formatCurrency } from 'utils';
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object } from 'yup';
 import { Surface, Text } from 'react-native-paper';
 import { CartBasicInfo, CartSummary, PaymentSelector } from 'modules/cart';
 import CartLinesSection from 'modules/cart/CartLinesSection';
+import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
+import PaymentSelectorBottom from 'modules/cart/PaymentSelectorBottom';
 
 const resolvedCheckoutFormSchema = yupResolver(object(checkoutFormSchema));
 
@@ -34,6 +36,7 @@ const CartScreen = () => {
   });
 
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
+  const paymentSelectorRef = useRef<BottomSheet>(null);
 
   // ---- HOOKS ----
 
@@ -79,6 +82,10 @@ const CartScreen = () => {
 
   // ------- FUNCTIONS --------
 
+  const handleClickPaymentSelector = () => {
+    paymentSelectorRef.current?.snapToIndex(1);
+  };
+
   // -------- RENDER ---------
 
   if (!loginUser?.cartId) {
@@ -105,7 +112,7 @@ const CartScreen = () => {
         </Surface>
 
         <Surface style={styles.sectionContainer}>
-          <PaymentSelector />
+          <PaymentSelector onClick={handleClickPaymentSelector} />
         </Surface>
       </ScrollView>
 
@@ -115,6 +122,8 @@ const CartScreen = () => {
         disabled={isCheckoutDisabled}
         isLoading={isFetching || isCheckoutPending}
       />
+
+      <PaymentSelectorBottom botSheetRef={paymentSelectorRef} />
     </View>
   );
 };

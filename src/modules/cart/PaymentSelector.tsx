@@ -8,7 +8,11 @@ type PaymentOptionType = {
   text: string;
 };
 
-const PaymentSelector = () => {
+type Props = {
+  onClick: () => void;
+};
+
+const PaymentSelector = ({ onClick }: Props) => {
   const paymentOptions: PaymentOptionType[] = [
     {
       icon: 'cash',
@@ -20,7 +24,7 @@ const PaymentSelector = () => {
 
   return (
     <>
-      <Button onPress={() => {}} labelStyle={styles.buttonLabel} contentStyle={styles.buttonContent}>
+      <Button onPress={onClick} labelStyle={styles.buttonLabel} contentStyle={styles.buttonContent}>
         <Text variant="labelLarge">Payment method:</Text>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>

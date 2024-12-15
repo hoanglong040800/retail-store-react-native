@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { BASE_STYLE } from 'const';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { BottomButton } from 'components';
+import { BottomButton, useBottomSheet } from 'components';
 import { CheckoutForm, checkoutFormSchema } from 'modules/cart/shared';
 import { DeliveryTypeEnum } from 'types/enum';
 import { CartDto, LoginUserDto, Screen } from 'types';
@@ -11,13 +11,12 @@ import { useRecoilValue } from 'recoil';
 import { loginUserSelector } from 'states';
 import { useAppNavigation, useCart, useCheckout } from 'hooks';
 import { formatCurrency } from 'utils';
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object } from 'yup';
 import { Surface, Text } from 'react-native-paper';
 import { CartBasicInfo, CartSummary, PaymentSelector } from 'modules/cart';
 import CartLinesSection from 'modules/cart/CartLinesSection';
-import BottomSheet from '@gorhom/bottom-sheet/lib/typescript/components/bottomSheet/BottomSheet';
 import PaymentSelectorBottom from 'modules/cart/PaymentSelectorBottom';
 
 const resolvedCheckoutFormSchema = yupResolver(object(checkoutFormSchema));
@@ -36,11 +35,11 @@ const CartScreen = () => {
   });
 
   const loginUser = useRecoilValue<LoginUserDto>(loginUserSelector);
-  const paymentSelectorRef = useRef<BottomSheet>(null);
 
   // ---- HOOKS ----
 
   const { navigate } = useAppNavigation();
+  const { botSheetRef, onOpenBotSheet } = useBottomSheet({});
 
   const { inUseCart } = useCart();
   const { isCheckoutPending, handleClickCheckout } = useCheckout();
@@ -82,10 +81,6 @@ const CartScreen = () => {
 
   // ------- FUNCTIONS --------
 
-  const handleClickPaymentSelector = () => {
-    paymentSelectorRef.current?.snapToIndex(1);
-  };
-
   // -------- RENDER ---------
 
   if (!loginUser?.cartId) {
@@ -112,7 +107,7 @@ const CartScreen = () => {
         </Surface>
 
         <Surface style={styles.sectionContainer}>
-          <PaymentSelector onClick={handleClickPaymentSelector} />
+          <PaymentSelector onClick={onOpenBotSheet} />
         </Surface>
       </ScrollView>
 
@@ -123,7 +118,7 @@ const CartScreen = () => {
         isLoading={isFetching || isCheckoutPending}
       />
 
-      <PaymentSelectorBottom botSheetRef={paymentSelectorRef} />
+      <PaymentSelectorBottom botSheetRef={botSheetRef} />
     </View>
   );
 };

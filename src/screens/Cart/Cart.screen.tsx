@@ -3,7 +3,7 @@ import { BASE_STYLE } from 'const';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { BottomButton, useBottomSheet } from 'components';
 import { CheckoutForm, checkoutFormSchema } from 'modules/cart/shared';
-import { DeliveryTypeEnum } from 'types/enum';
+import { DeliveryTypeEnum, PaymentMethodEnum } from 'types/enum';
 import { CartDto, LoginUserDto, Screen } from 'types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getCartById } from 'service';
@@ -118,7 +118,7 @@ const CartScreen = () => {
         isLoading={isFetching || isCheckoutPending}
       />
 
-      <PaymentSelectorBottom botSheetRef={botSheetRef} />
+      <PaymentSelectorBottom botSheetRef={botSheetRef} selectedMethod={PaymentMethodEnum.cash} />
     </View>
   );
 };

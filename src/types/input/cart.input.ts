@@ -1,6 +1,6 @@
 import { ICartItem, IProduct } from '../interface';
 
-import { DeliveryTypeEnum } from '../enum';
+import { DeliveryTypeEnum, PaymentMethodEnum } from '../enum';
 
 export class MutateCartItemProduct implements IProduct {
   id?: string;
@@ -34,4 +34,6 @@ export class CheckoutBody {
   deliveryWardId: string;
 
   stripePaymentMethodId?: string;
+
+  paymentMethod: PaymentMethodEnum;
 }

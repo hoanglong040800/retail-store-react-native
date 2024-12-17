@@ -1,45 +1,42 @@
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { BottomSheet } from 'components';
+import { PAYMENT_OPTIONS } from 'const';
 import { MutableRefObject } from 'react';
+import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { PaymentMethodEnum } from 'types/enum';
 
-type PaymentOptionType = {
-  method: PaymentMethodEnum;
-  icon: string;
-  text: string;
-};
-
-type Props = {
-  selectedMethod: PaymentMethodEnum;
+type Props<T> = {
+  ctrlProps: UseControllerProps<T>;
   botSheetRef: MutableRefObject<BottomSheetMethods>;
+  onClose: () => void;
 };
 
-const PaymentSelectorBottom = ({ botSheetRef, selectedMethod = PaymentMethodEnum.cash }: Props) => {
-  const paymentOptions: PaymentOptionType[] = [
-    {
-      method: PaymentMethodEnum.cash,
-      icon: 'cash',
-      text: 'Cash on delivery',
-    },
-    {
-      method: PaymentMethodEnum.creditCard,
-      icon: 'credit-card',
-      text: 'Credit Card',
-    },
-  ];
+const PaymentSelectorBottom = <FormT extends FieldValues = FieldValues>({
+  botSheetRef,
+  ctrlProps,
+  onClose,
+}: Props<FormT>) => {
+  const {
+    field: { value, onChange },
+  } = useController(ctrlProps);
+
+  const handleSelectPayment = (method: PaymentMethodEnum) => {
+    onChange(method);
+    setTimeout(() => onClose(), 300);
+  };
 
   return (
     <BottomSheet botSheetRef={botSheetRef}>
       <View style={styles.content}>
-        {paymentOptions.map(({ icon, text, method }) => (
+        {PAYMENT_OPTIONS.map(({ icon, text, method }) => (
           <Button
             key={text}
-            onPress={() => {}}
+            onPress={() => handleSelectPayment(method)}
             icon={icon}
             contentStyle={styles.buttonContent}
-            mode={selectedMethod === method ? 'contained' : 'outlined'}
+            mode={value === method ? 'contained' : 'outlined'}
             labelStyle={styles.buttonLabel}
           >
             {text}

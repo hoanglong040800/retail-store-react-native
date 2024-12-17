@@ -12,8 +12,13 @@ export const useBottomSheet = ({ openIndex = 0 }: Props) => {
     botSheetRef.current?.snapToIndex(openIndex);
   };
 
+  const onCloseBotSheet = () => {
+    botSheetRef.current?.close();
+  };
+
   return {
     botSheetRef,
     onOpenBotSheet,
+    onCloseBotSheet,
   };
 };

@@ -31,6 +31,7 @@ const CartScreen = () => {
     resolver: resolvedCheckoutFormSchema,
     defaultValues: {
       deliveryType: DeliveryTypeEnum.delivery,
+      paymentMethod: PaymentMethodEnum.cash,
     },
   });
 
@@ -39,7 +40,7 @@ const CartScreen = () => {
   // ---- HOOKS ----
 
   const { navigate } = useAppNavigation();
-  const { botSheetRef, onOpenBotSheet } = useBottomSheet({});
+  const { botSheetRef, onOpenBotSheet, onCloseBotSheet } = useBottomSheet({});
 
   const { inUseCart } = useCart();
   const { isCheckoutPending, handleClickCheckout } = useCheckout();
@@ -107,7 +108,7 @@ const CartScreen = () => {
         </Surface>
 
         <Surface style={styles.sectionContainer}>
-          <PaymentSelector onClick={onOpenBotSheet} />
+          <PaymentSelector selectedMethod={watch('paymentMethod')} onClick={onOpenBotSheet} />
         </Surface>
       </ScrollView>
 
@@ -118,7 +119,11 @@ const CartScreen = () => {
         isLoading={isFetching || isCheckoutPending}
       />
 
-      <PaymentSelectorBottom botSheetRef={botSheetRef} selectedMethod={PaymentMethodEnum.cash} />
+      <PaymentSelectorBottom
+        botSheetRef={botSheetRef}
+        ctrlProps={{ control, name: 'paymentMethod' }}
+        onClose={onCloseBotSheet}
+      />
     </View>
   );
 };

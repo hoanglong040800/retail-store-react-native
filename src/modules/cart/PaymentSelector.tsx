@@ -1,51 +1,30 @@
-import { DeModal } from 'components';
-import { useModal } from 'hooks';
+import { PAYMENT_OPTIONS } from 'const';
+import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Icon, Text } from 'react-native-paper';
-
-type PaymentOptionType = {
-  icon: 'cash';
-  text: string;
-};
+import { PaymentOptionType } from 'types';
+import { PaymentMethodEnum } from 'types/enum';
 
 type Props = {
+  selectedMethod: PaymentMethodEnum;
   onClick: () => void;
 };
 
-const PaymentSelector = ({ onClick }: Props) => {
-  const paymentOptions: PaymentOptionType[] = [
-    {
-      icon: 'cash',
-      text: 'Cash on delivery',
-    },
-  ];
-
-  const { isOpen, onClose } = useModal();
+const PaymentSelector = ({ selectedMethod, onClick }: Props) => {
+  const selectedPaymentMethod: PaymentOptionType = useMemo(() => {
+    return PAYMENT_OPTIONS.find(({ method }) => method === selectedMethod);
+  }, [selectedMethod]);
 
   return (
-    <>
-      <Button onPress={onClick} labelStyle={styles.buttonLabel} contentStyle={styles.buttonContent}>
-        <Text variant="labelLarge">Payment method:</Text>
+    <Button onPress={onClick} labelStyle={styles.buttonLabel} contentStyle={styles.buttonContent}>
+      <Text variant="labelLarge">Payment method:</Text>
 
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Icon source={paymentOptions[0].icon} size={20} />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Icon source={selectedPaymentMethod.icon} size={20} />
 
-          <Text>{paymentOptions[0].text}</Text>
-        </View>
-      </Button>
-
-      <DeModal isOpen={isOpen} onClose={onClose}>
-        <>
-          {paymentOptions.map(({ icon, text }) => (
-            <View style={styles.paymentLine} key={text}>
-              <Icon source={icon} size={20} />
-
-              <Text>{text}</Text>
-            </View>
-          ))}
-        </>
-      </DeModal>
-    </>
+        <Text>{selectedPaymentMethod.text}</Text>
+      </View>
+    </Button>
   );
 };
 

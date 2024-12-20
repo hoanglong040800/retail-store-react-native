@@ -22,6 +22,7 @@ const DeTextInput = ({ control, errors, label, name, ...props }: Props) => {
             mode="outlined"
             label={label}
             onChangeText={onChange}
+            error={!!errors?.[name]}
             // add empty text to avoid changing uncontrolled -> controlled which caused by value changing undefined -> define
             value={value || ''}
             // eslint-disable-next-line react/jsx-props-no-spreading
@@ -30,7 +31,7 @@ const DeTextInput = ({ control, errors, label, name, ...props }: Props) => {
         )}
       />
 
-      <InputError errors={errors} name={name} />
+      <InputError errors={errors?.[name]} name={name} />
     </View>
   );
 };

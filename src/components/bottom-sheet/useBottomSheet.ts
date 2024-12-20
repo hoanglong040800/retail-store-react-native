@@ -9,11 +9,11 @@ export const useBottomSheet = ({ openIndex = 0 }: Props) => {
   const botSheetRef = useRef<BottomSheet>(null);
 
   const onOpenBotSheet = () => {
-    botSheetRef.current?.snapToIndex(openIndex);
+    botSheetRef?.current?.snapToIndex(openIndex);
   };
 
   const onCloseBotSheet = () => {
-    botSheetRef.current?.close();
+    botSheetRef?.current?.close();
   };
 
   return {

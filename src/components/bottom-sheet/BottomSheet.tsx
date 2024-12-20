@@ -23,6 +23,7 @@ const BottomSheet = ({ children, botSheetRef, onSheetChange }: Props) => {
     props => <BottomSheetBackdrop {...props} disappearsOnIndex={-1} appearsOnIndex={0} />,
     []
   );
+
   return (
     <BottomSheetLib
       ref={botSheetRef}

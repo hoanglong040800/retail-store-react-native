@@ -22,7 +22,11 @@ const AppNavigator = () => {
         options={{ header: () => renderAppBar('Payment') }}
       />
 
-      <Stack.Screen name={Screen.CheckoutFinish} component={CheckoutFinishScreen} />
+      <Stack.Screen
+        name={Screen.CheckoutFinish}
+        component={CheckoutFinishScreen}
+        options={{ header: () => renderAppBar('Checkout Finish') }}
+      />
       <Stack.Screen name={Screen.ProductList} component={ProductListScreen} />
       <Stack.Screen name={Screen.ProductDetail} component={ProductDetailsScreen} />
       <Stack.Screen name={Screen.AllBranches} component={AllBranchesScreen} />

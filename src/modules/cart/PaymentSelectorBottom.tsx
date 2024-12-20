@@ -27,6 +27,11 @@ const PaymentSelectorBottom = <FormT extends FieldValues = FieldValues>({
     setTimeout(() => onClose(), 300);
   };
 
+  // add this to avoid TypeError: Cannot read property 'getBoundingClientRect' since ref.current is null
+  if (!botSheetRef?.current) {
+    return <View />;
+  }
+
   return (
     <BottomSheet botSheetRef={botSheetRef}>
       <View style={styles.content}>

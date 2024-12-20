@@ -3,7 +3,7 @@ import { useRecoilState, useRecoilValue } from 'recoil';
 import { BranchDto, CheckoutBody, CheckoutDto, Screen, SelectedLocation } from 'types';
 import { checkoutFormState, selectedLocationSelector } from 'states';
 import { useSnackbar } from 'components';
-import { DeliveryTypeEnum } from 'types/enum';
+import { DeliveryTypeEnum, PaymentMethodEnum } from 'types/enum';
 import { checkout } from 'service';
 import { CheckoutForm } from 'modules/cart';
 import { useAppNavigation } from './useAppNavigation';
@@ -28,10 +28,15 @@ export const useCheckout = () => {
 
   // ---------- FUNCTIONS ----------
 
-  const handleClickCheckout = (checkoutFormData: CheckoutForm) => {
-    // TODO check for payment method
+  const handleClickCheckout = async (checkoutFormData: CheckoutForm) => {
     setCheckoutForm(checkoutFormData);
-    navigate(Screen.Payment);
+
+    if ([PaymentMethodEnum.creditCard].includes(checkoutFormData.paymentMethod)) {
+      navigate(Screen.Payment);
+      return;
+    }
+
+    await handleCheckout(checkoutFormData, {});
   };
 
   const handleClickSavePayment = async ({ paymentMethodId }: { paymentMethodId: string }) => {
@@ -40,7 +45,7 @@ export const useCheckout = () => {
 
   const handleCheckout = async (
     formData: CheckoutForm,
-    { paymentMethodId }: { paymentMethodId: string }
+    { paymentMethodId }: { paymentMethodId?: string }
   ): Promise<void> => {
     if (!selectedLocation?.ward?.id) {
       openSnackbar('error', 'Please select delivery location');
@@ -51,6 +56,7 @@ export const useCheckout = () => {
       deliveryType: formData.deliveryType,
       address: formData.deliveryType === DeliveryTypeEnum.delivery ? formData.address : undefined,
       deliveryWardId: selectedLocation.ward?.id,
+      paymentMethod: formData.paymentMethod,
       stripePaymentMethodId: paymentMethodId,
     };
 

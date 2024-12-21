@@ -82,7 +82,7 @@ const CheckoutFinishScreen = ({
     return selectedContent;
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pageParams]);
 
   const paymentText: PaymentMethodContent = useMemo(() => {
     const baseContent = PAYMENT_OPTIONS.find(({ method }) => method === pageParams.paymentMethod);
@@ -97,7 +97,7 @@ const CheckoutFinishScreen = ({
     };
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [pageParams]);
 
   const handlePressGoHomeBtn = () => {
     navigate(Screen.Home);

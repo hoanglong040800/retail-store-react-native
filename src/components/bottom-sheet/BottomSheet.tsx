@@ -24,6 +24,7 @@ const BottomSheet = ({ children, botSheetRef, onSheetChange }: Props) => {
     []
   );
 
+  // TODO fix bug add product -> go cart -> auto show bottom sheet
   return (
     <BottomSheetLib
       ref={botSheetRef}

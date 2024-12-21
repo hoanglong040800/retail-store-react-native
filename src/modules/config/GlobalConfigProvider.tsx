@@ -48,7 +48,7 @@ const GlobalConfigProvider = ({ children }: Props) => {
 
   useEffect(() => {
     // uncomment to reset config
-    // removeStorageItems(['globalConfig']);
+    // removeStorageItems(['globalConfig', 'selectedLocation', 'inUseCart', 'user']);
 
     if (!globalConfig) {
       initGlobalConfig();

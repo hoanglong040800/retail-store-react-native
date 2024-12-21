@@ -7,6 +7,7 @@ export const getPaymentTypeByMethod = (paymentMethod: PaymentMethodEnum | undefi
     return null;
   }
 
+  // TODO fix bug not return payment type
   Object.entries(PAYMENT_METHOD_BY_TYPE).forEach(([paymentType, paymentMethods]) => {
     if (paymentMethods.includes(paymentMethod)) {
       return paymentType;

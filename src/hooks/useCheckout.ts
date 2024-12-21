@@ -73,6 +73,7 @@ export const useCheckout = () => {
         deliveryType: formData.deliveryType,
         address: formData.address,
         selectedBranch,
+        paymentMethod: formData.paymentMethod,
       },
     });
   };

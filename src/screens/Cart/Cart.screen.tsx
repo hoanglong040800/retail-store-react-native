@@ -114,7 +114,10 @@ const CartScreen = () => {
 
       <BottomButton
         text={checkoutText}
-        onPress={handleSubmit(handleClickCheckout)}
+        onPress={handleSubmit(formData => {
+          onCloseBotSheet();
+          handleClickCheckout(formData);
+        })}
         disabled={isCheckoutDisabled}
         isLoading={isFetching || isCheckoutPending}
       />

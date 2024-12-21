@@ -1,5 +1,6 @@
-import { PaymentOptionType } from 'types';
+import { PaymentOptionType, PaymentType } from 'types';
 import { PaymentMethodEnum } from 'types/enum';
+import { keyBy } from 'utils';
 
 export const PAYMENT_OPTIONS: PaymentOptionType[] = [
   {
@@ -13,3 +14,10 @@ export const PAYMENT_OPTIONS: PaymentOptionType[] = [
     text: 'Credit Card',
   },
 ];
+
+export const PROPS_BY_PAYMENT_METHOD: Record<PaymentMethodEnum, PaymentOptionType> = keyBy(PAYMENT_OPTIONS, 'method');
+
+export const PAYMENT_METHOD_BY_TYPE: Record<PaymentType, PaymentMethodEnum[]> = {
+  [PaymentType.online]: [PaymentMethodEnum.creditCard],
+  [PaymentType.offline]: [PaymentMethodEnum.cash],
+};

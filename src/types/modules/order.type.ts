@@ -5,3 +5,8 @@ export type PaymentOptionType = {
   icon: string;
   text: string;
 };
+
+export enum PaymentType {
+  online = 'online',
+  offline = 'offline',
+}

@@ -1,5 +1,5 @@
 import { BranchDto } from './dto';
-import { DeliveryTypeEnum } from './enum';
+import { DeliveryTypeEnum, PaymentMethodEnum } from './enum';
 
 export type ErrorResponse = {
   errorCode: string;
@@ -34,6 +34,7 @@ type CheckoutFinishParams = {
   deliveryType: DeliveryTypeEnum;
   address?: string;
   selectedBranch: BranchDto;
+  paymentMethod: PaymentMethodEnum;
 };
 
 export type ParamsType = {

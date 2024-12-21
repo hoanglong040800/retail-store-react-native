@@ -53,3 +53,15 @@ export const keyBy = (array: any[], keyPath: string): Record<string, any> => {
 
   return result;
 };
+
+export const flipObject = <T extends string | number | symbol, K extends string | number | symbol>(
+  obj: Record<T, K>
+): Record<string, string> => {
+  return Object.assign(
+    {},
+
+    ...Object.entries(obj).map(([a, b]) => ({
+      [`${b}`]: a,
+    }))
+  );
+};

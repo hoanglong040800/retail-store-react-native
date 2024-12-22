@@ -2,19 +2,20 @@ import { PAYMENT_METHOD_BY_TYPE } from 'const';
 import { PaymentType } from 'types';
 import { PaymentMethodEnum } from 'types/enum';
 
-export const getPaymentTypeByMethod = (paymentMethod: PaymentMethodEnum | undefined | null): PaymentType | null => {
+export const getPaymentTypeByMethod = (paymentMethod: PaymentMethodEnum): PaymentType | null => {
   if (!paymentMethod) {
     return null;
   }
 
-  // TODO fix bug not return payment type
-  Object.entries(PAYMENT_METHOD_BY_TYPE).forEach(([paymentType, paymentMethods]) => {
-    if (paymentMethods.includes(paymentMethod)) {
-      return paymentType;
-    }
+  const paymentMethodArr = Object.entries(PAYMENT_METHOD_BY_TYPE);
 
-    return null;
+  let result: PaymentType | null = null;
+
+  paymentMethodArr.forEach(([paymentType, paymentMethods]) => {
+    if (paymentMethods.includes(paymentMethod)) {
+      result = paymentType as PaymentType;
+    }
   });
 
-  return null;
+  return result;
 };

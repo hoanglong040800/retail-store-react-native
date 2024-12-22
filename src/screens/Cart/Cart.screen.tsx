@@ -31,7 +31,7 @@ const CartScreen = () => {
     resolver: resolvedCheckoutFormSchema,
     defaultValues: {
       deliveryType: DeliveryTypeEnum.delivery,
-      paymentMethod: PaymentMethodEnum.creditCard,
+      paymentMethod: PaymentMethodEnum.cash,
     },
   });
 

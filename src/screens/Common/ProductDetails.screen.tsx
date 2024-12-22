@@ -21,10 +21,6 @@ const ProductDetailsScreen = ({ route: { params } }: Props) => {
     queryFn: () => getProductById(params.productId),
   });
 
-  const onPressAddToCart = () => {
-    // TOOD
-  };
-
   if (isLoading || !product) {
     return <ActivityIndicator animating />;
   }
@@ -43,7 +39,7 @@ const ProductDetailsScreen = ({ route: { params } }: Props) => {
       </ScrollView>
 
       <BottomButtonWrapper>
-        <ProductActionButtons productId={product.id} productName={product.name} />
+        <ProductActionButtons product={product} />
       </BottomButtonWrapper>
     </View>
   );

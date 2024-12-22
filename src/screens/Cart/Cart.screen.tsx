@@ -140,6 +140,7 @@ const styles = StyleSheet.create({
 
   scrollView: {
     ...BASE_STYLE.SCROLL_VIEW_BOT_BTN,
+    paddingTop: 16,
   },
 
   scrollViewContentContainer: {

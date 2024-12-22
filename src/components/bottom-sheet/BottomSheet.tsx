@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import BottomSheetLib from '@gorhom/bottom-sheet';
 import { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { Portal } from 'react-native-paper';
 
 type Props = {
   children?: ReactNode;
@@ -24,18 +25,20 @@ const BottomSheet = ({ children, botSheetRef, onSheetChange }: Props) => {
     []
   );
 
-  // TODO fix bug add product -> go cart -> auto show bottom sheet
+  // Add Portal to fix bug: https://github.com/gorhom/react-native-bottom-sheet/issues/972#issuecomment-1986381407
   return (
-    <BottomSheetLib
-      ref={botSheetRef}
-      index={-1}
-      snapPoints={snapPoints}
-      backdropComponent={renderBackdrop}
-      enableDynamicSizing={false}
-      onChange={handleSheetChanges}
-    >
-      <BottomSheetScrollView style={styles.contentContainer}>{children}</BottomSheetScrollView>
-    </BottomSheetLib>
+    <Portal>
+      <BottomSheetLib
+        ref={botSheetRef}
+        index={-1}
+        snapPoints={snapPoints}
+        backdropComponent={renderBackdrop}
+        enableDynamicSizing={false}
+        onChange={handleSheetChanges}
+      >
+        <BottomSheetScrollView style={styles.contentContainer}>{children}</BottomSheetScrollView>
+      </BottomSheetLib>
+    </Portal>
   );
 };
 

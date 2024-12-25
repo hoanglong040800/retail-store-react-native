@@ -65,3 +65,20 @@ export const flipObject = <T extends string | number | symbol, K extends string 
     }))
   );
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getObj = (obj: object, path: string): any => {
+  const fields = path.split('.');
+
+  let curObj = obj;
+
+  for (let i = 0; i < fields.length; i += 1) {
+    if (curObj[fields[i]] === undefined) {
+      return curObj;
+    }
+
+    curObj = curObj[fields[i]];
+  }
+
+  return curObj;
+};

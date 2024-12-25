@@ -1,3 +1,5 @@
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from 'const';
+
 export function generateRandomString(length = 16) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -81,4 +83,20 @@ export const getObj = (obj: object, path: string): any => {
   }
 
   return curObj;
+};
+
+export const formatDate = (value: string | Date, formatType: 'date' | 'time' | 'datetime') => {
+  let finalFormat: Intl.DateTimeFormatOptions = null;
+
+  if (formatType === 'date') {
+    finalFormat = DATE_FORMAT;
+  } else if (formatType === 'time') {
+    finalFormat = TIME_FORMAT;
+  } else if (formatType === 'datetime') {
+    finalFormat = DATE_TIME_FORMAT;
+  }
+
+  const formattedDate = new Date(value).toLocaleDateString('vi-VN', finalFormat);
+
+  return formattedDate;
 };

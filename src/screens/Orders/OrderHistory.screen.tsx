@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { ActivityIndicator, DataTable, Text } from 'react-native-paper';
 import { getUserOrders } from 'service';
 import { GetUserOrdersDto, UserOrderDto } from 'types';
-import { formatCurrency, getObj } from 'utils';
+import { formatCurrency, formatDate, getObj } from 'utils';
 
 type DeepKeys<T> = T extends object
   ? {
@@ -21,6 +21,7 @@ type DeepKeys<T> = T extends object
 type TableColumnConfig = {
   title: string;
   field: DeepKeys<UserOrderDto>;
+  flex?: number;
   render?: (value: string | number | boolean | Date) => ReactNode | string;
 };
 
@@ -42,16 +43,17 @@ const OrderHistoryScreen = () => {
     {
       title: 'Order ID',
       field: 'id',
+      flex: 2,
     },
     {
       title: 'Placed At',
       field: 'createdAt',
-      render: value => value.toString(),
+      render: value => formatDate(value as string, 'datetime'),
     },
     {
       title: 'Delivery Time',
       field: 'createdAt',
-      render: value => value.toString(),
+      render: value => formatDate(value as string, 'date'),
     },
     {
       title: 'Total Amount',
@@ -69,24 +71,29 @@ const OrderHistoryScreen = () => {
     },
   ];
 
+  // TODO move to common components
   const renderTableColumn = (order: UserOrderDto, colCfg: TableColumnConfig): ReactNode => {
     const value = getObj(order, colCfg.field);
 
-    if (colCfg.render) {
-      return <TableCell key={colCfg.title}>{colCfg.render(value)}</TableCell>;
-    }
+    return (
+      <TableCell key={colCfg.title} style={{ flex: colCfg.flex }}>
+        {colCfg.render?.(value) || value}
+      </TableCell>
+    );
+  };
 
-    return <TableCell key={colCfg.title}>{value}</TableCell>;
+  const renderTableHeader = (colCfg: TableColumnConfig[]) => {
+    return colCfg.map(item => (
+      <TableTitle key={item.title} style={{ flex: item.flex }}>
+        {item.title}
+      </TableTitle>
+    ));
   };
 
   return (
     <ScrollView style={styles.scrollView}>
       <DataTable>
-        <TableHeader>
-          {tableColumnConfig.map(item => (
-            <TableTitle key={item.title}>{item.title}</TableTitle>
-          ))}
-        </TableHeader>
+        <TableHeader>{renderTableHeader(tableColumnConfig)}</TableHeader>
 
         {isFetching && <ActivityIndicator animating />}
 

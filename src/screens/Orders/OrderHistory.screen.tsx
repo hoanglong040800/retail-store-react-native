@@ -1,8 +1,11 @@
+import { useQuery } from '@tanstack/react-query';
+import { BASE_STYLE } from 'const';
+import { useAuth } from 'hooks';
 import { ReactNode } from 'react';
-import { View } from 'react-native';
-import { DataTable, Text } from 'react-native-paper';
-import { UserOrderDto } from 'types';
-import { DeliveryTypeEnum, OrderStatusEnum } from 'types/enum';
+import { ScrollView, StyleSheet } from 'react-native';
+import { ActivityIndicator, DataTable, Text } from 'react-native-paper';
+import { getUserOrders } from 'service';
+import { GetUserOrdersDto, UserOrderDto } from 'types';
 import { formatCurrency, getObj } from 'utils';
 
 type DeepKeys<T> = T extends object
@@ -26,6 +29,14 @@ const OrderHistoryScreen = () => {
   const TableTitle = DataTable.Title;
   const TableRow = DataTable.Row;
   const TableCell = DataTable.Cell;
+
+  // ---- HOOKS ----
+  const { user } = useAuth();
+
+  const { data: userOrders, isLoading: isFetching } = useQuery<GetUserOrdersDto, null, GetUserOrdersDto>({
+    queryKey: ['userOrders'],
+    queryFn: () => getUserOrders(user.id),
+  });
 
   const tableColumnConfig: TableColumnConfig[] = [
     {
@@ -58,58 +69,8 @@ const OrderHistoryScreen = () => {
     },
   ];
 
-  const mockOrders: UserOrderDto[] = [
-    {
-      id: '1',
-      createdAt: new Date(),
-      status: OrderStatusEnum.pending,
-      deliveryType: DeliveryTypeEnum.delivery,
-      cart: {
-        id: '1',
-        calculation: {
-          subTotal: 100,
-          shippingFee: 0,
-          totalAmount: 12345,
-        },
-        cartItems: [
-          {
-            id: '1',
-            quantity: 1,
-            totalPrice: 100,
-          },
-        ],
-      },
-    },
-    {
-      id: '2',
-      createdAt: new Date(),
-      status: OrderStatusEnum.pending,
-      deliveryType: DeliveryTypeEnum.delivery,
-      cart: {
-        id: '1',
-        calculation: {
-          subTotal: 100,
-          shippingFee: 0,
-          totalAmount: 98765,
-        },
-        cartItems: [
-          {
-            id: '1',
-            quantity: 1,
-            totalPrice: 100,
-          },
-        ],
-      },
-    },
-  ];
-
   const renderTableColumn = (order: UserOrderDto, colCfg: TableColumnConfig): ReactNode => {
     const value = getObj(order, colCfg.field);
-
-    if (colCfg.field === 'cart.calculation.totalAmount') {
-      console.log(colCfg.field, value);
-      console.log(order.cart.calculation);
-    }
 
     if (colCfg.render) {
       return <TableCell key={colCfg.title}>{colCfg.render(value)}</TableCell>;
@@ -119,7 +80,7 @@ const OrderHistoryScreen = () => {
   };
 
   return (
-    <View>
+    <ScrollView style={styles.scrollView}>
       <DataTable>
         <TableHeader>
           {tableColumnConfig.map(item => (
@@ -127,12 +88,21 @@ const OrderHistoryScreen = () => {
           ))}
         </TableHeader>
 
-        {mockOrders.map(order => (
+        {isFetching && <ActivityIndicator animating />}
+
+        {userOrders?.orders?.map(order => (
           <TableRow key={order.id}>{tableColumnConfig.map(tcc => renderTableColumn(order, tcc))}</TableRow>
         ))}
       </DataTable>
-    </View>
+    </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  scrollView: {
+    ...BASE_STYLE.SCROLL_VIEW_DEFAULT,
+    paddingVertical: 16,
+  },
+});
 
 export default OrderHistoryScreen;

@@ -5,3 +5,4 @@ export * from './snackbar';
 export * from './button';
 export * from './layout';
 export * from './bottom-sheet';
+export * from './table';

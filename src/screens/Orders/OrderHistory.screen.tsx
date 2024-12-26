@@ -1,36 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { BASE_STYLE } from 'const';
+import { AppTable, TableColumnConfig } from 'components';
 import { useAuth } from 'hooks';
-import { ReactNode } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { ActivityIndicator, DataTable, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { getUserOrders } from 'service';
 import { GetUserOrdersDto, UserOrderDto } from 'types';
-import { formatCurrency, formatDate, getObj } from 'utils';
-
-type DeepKeys<T> = T extends object
-  ? {
-      [K in keyof T]: K extends string | number ? K | `${K}.${DeepKeys<T[K]>}` : never; // Exclude symbol keys
-    }[keyof T] extends infer D
-    ? D extends string
-      ? D
-      : never
-    : never
-  : '';
-
-type TableColumnConfig = {
-  title: string;
-  field: DeepKeys<UserOrderDto>;
-  flex?: number;
-  render?: (value: string | number | boolean | Date) => ReactNode | string;
-};
+import { formatCurrency, formatDate } from 'utils';
 
 const OrderHistoryScreen = () => {
-  const TableHeader = DataTable.Header;
-  const TableTitle = DataTable.Title;
-  const TableRow = DataTable.Row;
-  const TableCell = DataTable.Cell;
-
   // ---- HOOKS ----
   const { user } = useAuth();
 
@@ -39,21 +15,16 @@ const OrderHistoryScreen = () => {
     queryFn: () => getUserOrders(user.id),
   });
 
-  const tableColumnConfig: TableColumnConfig[] = [
+  const tableColumnConfig: TableColumnConfig<UserOrderDto>[] = [
     {
       title: 'Order ID',
       field: 'id',
-      flex: 2,
+      flex: 0.5,
     },
     {
       title: 'Placed At',
       field: 'createdAt',
       render: value => formatDate(value as string, 'datetime'),
-    },
-    {
-      title: 'Delivery Time',
-      field: 'createdAt',
-      render: value => formatDate(value as string, 'date'),
     },
     {
       title: 'Total Amount',
@@ -71,45 +42,9 @@ const OrderHistoryScreen = () => {
     },
   ];
 
-  // TODO move to common components
-  const renderTableColumn = (order: UserOrderDto, colCfg: TableColumnConfig): ReactNode => {
-    const value = getObj(order, colCfg.field);
-
-    return (
-      <TableCell key={colCfg.title} style={{ flex: colCfg.flex }}>
-        {colCfg.render?.(value) || value}
-      </TableCell>
-    );
-  };
-
-  const renderTableHeader = (colCfg: TableColumnConfig[]) => {
-    return colCfg.map(item => (
-      <TableTitle key={item.title} style={{ flex: item.flex }}>
-        {item.title}
-      </TableTitle>
-    ));
-  };
-
   return (
-    <ScrollView style={styles.scrollView}>
-      <DataTable>
-        <TableHeader>{renderTableHeader(tableColumnConfig)}</TableHeader>
-
-        {isFetching && <ActivityIndicator animating />}
-
-        {userOrders?.orders?.map(order => (
-          <TableRow key={order.id}>{tableColumnConfig.map(tcc => renderTableColumn(order, tcc))}</TableRow>
-        ))}
-      </DataTable>
-    </ScrollView>
+    <AppTable<UserOrderDto> columnConfigs={tableColumnConfig} dataList={userOrders?.orders} isLoading={isFetching} />
   );
 };
-
-const styles = StyleSheet.create({
-  scrollView: {
-    ...BASE_STYLE.SCROLL_VIEW_DEFAULT,
-    paddingVertical: 16,
-  },
-});
 
 export default OrderHistoryScreen;

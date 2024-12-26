@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { AppTable, TableColumnConfig } from 'components';
+import { OrderStatusChip } from 'components/chip';
 import { useAuth } from 'hooks';
 import { Text } from 'react-native-paper';
 import { getUserOrders } from 'service';
 import { GetUserOrdersDto, UserOrderDto } from 'types';
+import { OrderStatusEnum } from 'types/enum';
 import { formatCurrency, formatDate } from 'utils';
 
 const OrderHistoryScreen = () => {
@@ -34,6 +36,7 @@ const OrderHistoryScreen = () => {
     {
       title: 'Status',
       field: 'status',
+      render: value => <OrderStatusChip orderStatus={value as OrderStatusEnum} />,
     },
     {
       title: 'Actions',

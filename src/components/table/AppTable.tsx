@@ -25,9 +25,10 @@ type Props<T> = {
   columnConfigs: TableColumnConfig<T>[];
   dataList: T[];
   isLoading?: boolean;
+  onClickRow?: (data: T) => void;
 };
 
-const AppTable = <T extends object>({ columnConfigs, dataList = [], isLoading }: Props<T>) => {
+const AppTable = <T extends object>({ columnConfigs, dataList = [], isLoading, onClickRow = () => {} }: Props<T>) => {
   const TableHeader = DataTable.Header;
   const TableTitle = DataTable.Title;
   const TableRow = DataTable.Row;
@@ -48,7 +49,7 @@ const AppTable = <T extends object>({ columnConfigs, dataList = [], isLoading }:
   };
 
   const renderTableRow = (colCfgs: TableColumnConfig<T>[], data: T) => {
-    return <TableRow>{colCfgs.map(tcc => renderSingleTableCell(data, tcc))}</TableRow>;
+    return <TableRow onPress={() => onClickRow(data)}>{colCfgs.map(tcc => renderSingleTableCell(data, tcc))}</TableRow>;
   };
 
   return (

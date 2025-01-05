@@ -7,3 +7,7 @@ export type UserOrderDto = Pick<Required<OrderDto>, 'id' | 'deliveryType' | 'car
 export type GetUserOrdersDto = {
   orders: UserOrderDto[];
 };
+
+export class GetUserOrderDetailDto {
+  order: Pick<OrderDto, 'id' | 'deliveryType' | 'cart' | 'status'>;
+}

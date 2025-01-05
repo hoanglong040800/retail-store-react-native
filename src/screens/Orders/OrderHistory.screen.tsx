@@ -1,18 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
 import { AppTable, BottomSheet, ChoiceList, ChoiceListType, TableColumnConfig, useBottomSheet } from 'components';
 import { OrderStatusChip } from 'components/chip';
-import { useAuth } from 'hooks';
+import { useAppNavigation, useAuth } from 'hooks';
+import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { getUserOrders } from 'service';
-import { GetUserOrdersDto, UserOrderDto } from 'types';
+import { GetUserOrdersDto, Screen, UserOrderDto } from 'types';
 import { OrderStatusEnum } from 'types/enum';
 import { formatCurrency, formatDate } from 'utils';
 
 const OrderHistoryScreen = () => {
   // ---- HOOKS ----
   const { user } = useAuth();
+  const { navigate } = useAppNavigation();
   const { onOpenBotSheet, botSheetRef } = useBottomSheet({});
+  const [curRowBotSheet, setCurRowBotSheet] = useState<UserOrderDto | null>(null);
 
   const { data: userOrders, isLoading: isFetching } = useQuery<GetUserOrdersDto, null, GetUserOrdersDto>({
     queryKey: ['userOrders'],
@@ -43,15 +46,35 @@ const OrderHistoryScreen = () => {
     {
       title: 'Actions',
       field: 'id',
-      render: () => <IconButton icon="dots-horizontal" onPress={handlePressAction} size={20} style={styles.action} />,
+      render: value => (
+        <IconButton icon="dots-horizontal" onPress={() => handlePressAction(value)} size={20} style={styles.action} />
+      ),
     },
   ];
+
+  // ---- FUNCTIONS ----
+
+  const navigateToOrderDetail = (orderId: string) => {
+    if (!orderId) {
+      return;
+    }
+
+    navigate(Screen.OrderDetail, { orderId });
+  };
+
+  const handlePressView = () => {
+    navigateToOrderDetail(curRowBotSheet?.id as string);
+  };
+
+  const handlePressRow = (userOrder: UserOrderDto) => {
+    navigateToOrderDetail(userOrder.id);
+  };
 
   const actionList: ChoiceListType[] = [
     {
       text: 'View',
       value: 'view',
-      onPress: () => {},
+      onPress: handlePressView,
     },
     {
       text: 'Edit',
@@ -67,13 +90,8 @@ const OrderHistoryScreen = () => {
     },
   ];
 
-  // ---- FUNCTIONS ----
-
-  const handlePressRow = (userOrder: UserOrderDto) => {
-    console.log(userOrder);
-  };
-
-  const handlePressAction = () => {
+  const handlePressAction = (userOrder: UserOrderDto) => {
+    setCurRowBotSheet(userOrder);
     onOpenBotSheet();
   };
 

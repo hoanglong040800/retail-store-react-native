@@ -7,7 +7,7 @@ export type ChoiceListType = {
   icon?: string;
   mode?: ButtonProps['mode'];
   textColor?: ButtonProps['textColor'];
-  onPress?: () => void;
+  onPress?: (value: string) => void;
 };
 
 type Props<T> = {

@@ -5,7 +5,7 @@ import { CartScreen, CheckoutFinishScreen, PaymentScreen } from 'screens/Cart';
 import { AllBranchesScreen, ProductDetailsScreen, ProductListScreen } from 'screens/Common';
 import { HomeScreen } from 'screens/Home';
 import { DeAppBar } from 'components';
-import { OrderHistoryScreen } from 'screens/Orders';
+import { OrderDetailScreen, OrderHistoryScreen } from 'screens/Orders';
 
 const AppNavigator = () => {
   const Stack = createStackNavigator();
@@ -32,6 +32,7 @@ const AppNavigator = () => {
       <Stack.Screen name={Screen.ProductList} component={ProductListScreen} />
       <Stack.Screen name={Screen.ProductDetail} component={ProductDetailsScreen} />
       <Stack.Screen name={Screen.AllBranches} component={AllBranchesScreen} />
+      <Stack.Screen name={Screen.OrderDetail} component={OrderDetailScreen} />
     </Stack.Navigator>
   );
 };

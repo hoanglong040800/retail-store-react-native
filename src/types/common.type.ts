@@ -45,6 +45,8 @@ export type ParamsType = {
   price?: number;
   active?: boolean;
   checkoutFinish?: CheckoutFinishParams;
+
+  orderId?: string;
 };
 
 export enum Screen {
@@ -59,6 +61,7 @@ export enum Screen {
   CheckoutFinish = 'CheckoutFinish',
   Payment = 'Payment',
   OrderHistory = 'OrderHistory',
+  OrderDetail = 'OrderDetail',
 }
 
 export type EventDataType = ErrorResponse;

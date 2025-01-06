@@ -15,7 +15,7 @@ const OrderHistoryScreen = () => {
   const { user } = useAuth();
   const { navigate } = useAppNavigation();
   const { onOpenBotSheet, botSheetRef } = useBottomSheet({});
-  const [curRowBotSheet, setCurRowBotSheet] = useState<UserOrderDto | null>(null);
+  const [curRowBotSheet, setCurRowBotSheet] = useState<string | null>(null);
 
   const { data: userOrders, isLoading: isFetching } = useQuery<GetUserOrdersDto, null, GetUserOrdersDto>({
     queryKey: ['userOrders'],
@@ -47,7 +47,12 @@ const OrderHistoryScreen = () => {
       title: 'Actions',
       field: 'id',
       render: value => (
-        <IconButton icon="dots-horizontal" onPress={() => handlePressAction(value)} size={20} style={styles.action} />
+        <IconButton
+          icon="dots-horizontal"
+          onPress={() => handlePressAction(value as string)}
+          size={20}
+          style={styles.action}
+        />
       ),
     },
   ];
@@ -63,7 +68,7 @@ const OrderHistoryScreen = () => {
   };
 
   const handlePressView = () => {
-    navigateToOrderDetail(curRowBotSheet?.id as string);
+    navigateToOrderDetail(curRowBotSheet);
   };
 
   const handlePressRow = (userOrder: UserOrderDto) => {
@@ -90,8 +95,8 @@ const OrderHistoryScreen = () => {
     },
   ];
 
-  const handlePressAction = (userOrder: UserOrderDto) => {
-    setCurRowBotSheet(userOrder);
+  const handlePressAction = (orderId: string) => {
+    setCurRowBotSheet(orderId);
     onOpenBotSheet();
   };
 

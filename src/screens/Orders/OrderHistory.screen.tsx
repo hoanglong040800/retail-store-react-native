@@ -2,20 +2,20 @@ import { useQuery } from '@tanstack/react-query';
 import { AppTable, BottomSheet, ChoiceList, ChoiceListType, TableColumnConfig, useBottomSheet } from 'components';
 import { OrderStatusChip } from 'components/chip';
 import { useAppNavigation, useAuth } from 'hooks';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { getUserOrders } from 'service';
 import { GetUserOrdersDto, Screen, UserOrderDto } from 'types';
-import { OrderStatusEnum } from 'types/enum';
-import { formatCurrency, formatDate } from 'utils';
+import { OrderActionEnum, OrderStatusEnum } from 'types/enum';
+import { checkCanDoOrderAction, formatCurrency, formatDate } from 'utils';
 
 const OrderHistoryScreen = () => {
   // ---- HOOKS ----
   const { user } = useAuth();
   const { navigate } = useAppNavigation();
   const { onOpenBotSheet, botSheetRef } = useBottomSheet({});
-  const [curRowBotSheet, setCurRowBotSheet] = useState<string | null>(null);
+  const [curRowBotSheet, setCurRowBotSheet] = useState<UserOrderDto>(null);
 
   const { data: userOrders, isLoading: isFetching } = useQuery<GetUserOrdersDto, null, GetUserOrdersDto>({
     queryKey: ['userOrders'],
@@ -68,35 +68,41 @@ const OrderHistoryScreen = () => {
   };
 
   const handlePressView = () => {
-    navigateToOrderDetail(curRowBotSheet);
+    navigateToOrderDetail(curRowBotSheet.id);
   };
 
   const handlePressRow = (userOrder: UserOrderDto) => {
     navigateToOrderDetail(userOrder.id);
   };
 
-  const actionList: ChoiceListType[] = [
-    {
-      text: 'View',
-      value: 'view',
-      onPress: handlePressView,
-    },
-    {
-      text: 'Edit',
-      value: 'edit',
-      onPress: () => {},
-    },
-    {
-      text: 'Cancel',
-      value: 'cancel',
-      mode: 'text',
-      textColor: 'red',
-      onPress: () => {},
-    },
-  ];
+  const actionList: ChoiceListType[] = useMemo(() => {
+    return [
+      {
+        text: 'View',
+        value: 'view',
+        onPress: handlePressView,
+      },
+      {
+        text: 'Edit',
+        value: 'edit',
+        disabled: !checkCanDoOrderAction(OrderActionEnum.editCart, curRowBotSheet?.status),
+        onPress: () => {},
+      },
+      {
+        text: 'Cancel',
+        value: 'cancel',
+        mode: 'text',
+        textColor: 'red',
+        disabled: !checkCanDoOrderAction(OrderActionEnum.cancel, curRowBotSheet?.status),
+        onPress: () => {},
+      },
+    ];
+  }, [curRowBotSheet]);
 
   const handlePressAction = (orderId: string) => {
-    setCurRowBotSheet(orderId);
+    const selectedOrder = userOrders?.orders.find(order => order.id === orderId);
+
+    setCurRowBotSheet(selectedOrder);
     onOpenBotSheet();
   };
 

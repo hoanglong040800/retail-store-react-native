@@ -6,9 +6,10 @@ import { displayProductPrice, formatCurrency } from 'utils';
 
 type Props = {
   item: CartItemDto;
+  viewOnly?: boolean;
 };
 
-const CartItem = ({ item }: Props) => {
+const CartItem = ({ item, viewOnly }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
@@ -24,7 +25,11 @@ const CartItem = ({ item }: Props) => {
       </View>
 
       <View>
-        <ProductActionButtons product={item.product} containerStyle={styles.productActionButtons} />
+        {viewOnly ? (
+          <Text variant="titleLarge">x{item.quantity}</Text>
+        ) : (
+          <ProductActionButtons product={item.product} containerStyle={styles.productActionButtons} />
+        )}
       </View>
     </View>
   );

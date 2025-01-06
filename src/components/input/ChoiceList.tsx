@@ -7,6 +7,7 @@ export type ChoiceListType = {
   icon?: string;
   mode?: ButtonProps['mode'];
   textColor?: ButtonProps['textColor'];
+  disabled?: boolean;
   onPress?: (value: string) => void;
 };
 
@@ -31,7 +32,7 @@ const ChoiceList = <T extends string>({ list, selectedValue, onChange }: Props<T
 
   return (
     <View style={styles.content}>
-      {list.map(({ text, value, icon, mode, textColor }) => (
+      {list.map(({ text, value, icon, mode, textColor, disabled }) => (
         <Button
           key={text}
           icon={icon}
@@ -40,6 +41,7 @@ const ChoiceList = <T extends string>({ list, selectedValue, onChange }: Props<T
           textColor={textColor}
           contentStyle={styles.buttonContent}
           labelStyle={styles.buttonLabel}
+          disabled={disabled}
         >
           {text}
         </Button>

@@ -6,7 +6,7 @@ import { OrderDto } from 'types/dto/order.dto';
 import { formatDate, toTitleCase } from 'utils';
 
 type Props = {
-  order: Pick<OrderDto, 'id' | 'deliveryType' | 'status' | 'createdAt' | 'paymentMethod'>;
+  order: Pick<OrderDto, 'id' | 'deliveryType' | 'address' | 'status' | 'createdAt' | 'paymentMethod'>;
 };
 
 const OrderMainInfoSection = ({ order }: Props) => {
@@ -25,7 +25,10 @@ const OrderMainInfoSection = ({ order }: Props) => {
       </Text>
 
       <Text variant="titleMedium">
-        {toTitleCase(order.deliveryType)} on <Text>{formatDate(order.createdAt, 'date')}</Text>
+        {toTitleCase(order.deliveryType)} on{' '}
+        <Text>
+          {formatDate(order.createdAt, 'date')} {order.address && `at ${order.address}`}
+        </Text>
       </Text>
 
       <View style={styles.payment}>

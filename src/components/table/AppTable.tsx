@@ -35,7 +35,11 @@ const AppTable = <T extends object>({ columnConfigs, dataList = [], isLoading, o
   const TableCell = DataTable.Cell;
 
   const renderTableHeaders = (colCfg: TableColumnConfig<T>[]) => {
-    return colCfg.map(item => <TableTitle style={[styles.tableTitle, { flex: item.flex }]}>{item.title}</TableTitle>);
+    return colCfg.map(item => (
+      <TableTitle key={item.title} style={[styles.tableTitle, { flex: item.flex }]}>
+        {item.title}
+      </TableTitle>
+    ));
   };
 
   const renderSingleTableCell = (data: T, colCfg: TableColumnConfig<T>): ReactNode => {
@@ -49,7 +53,11 @@ const AppTable = <T extends object>({ columnConfigs, dataList = [], isLoading, o
   };
 
   const renderTableRow = (colCfgs: TableColumnConfig<T>[], data: T) => {
-    return <TableRow onPress={() => onClickRow(data)}>{colCfgs.map(tcc => renderSingleTableCell(data, tcc))}</TableRow>;
+    return (
+      <TableRow key={JSON.stringify(data)} onPress={() => onClickRow(data)}>
+        {colCfgs.map(tcc => renderSingleTableCell(data, tcc))}
+      </TableRow>
+    );
   };
 
   return (

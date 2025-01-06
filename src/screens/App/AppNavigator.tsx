@@ -15,7 +15,6 @@ const AppNavigator = () => {
 
   return (
     <Stack.Navigator screenOptions={{ header: renderAppHeader }}>
-      <Stack.Screen name={Screen.OrderHistory} component={OrderHistoryScreen} />
       <Stack.Screen name={Screen.Home} component={HomeScreen} />
       <Stack.Screen name={Screen.Cart} component={CartScreen} />
       <Stack.Screen
@@ -29,9 +28,12 @@ const AppNavigator = () => {
         component={CheckoutFinishScreen}
         options={{ header: () => renderAppBar('Checkout Finish') }}
       />
+
       <Stack.Screen name={Screen.ProductList} component={ProductListScreen} />
       <Stack.Screen name={Screen.ProductDetail} component={ProductDetailsScreen} />
       <Stack.Screen name={Screen.AllBranches} component={AllBranchesScreen} />
+
+      <Stack.Screen name={Screen.OrderHistory} component={OrderHistoryScreen} />
       <Stack.Screen name={Screen.OrderDetail} component={OrderDetailScreen} />
     </Stack.Navigator>
   );

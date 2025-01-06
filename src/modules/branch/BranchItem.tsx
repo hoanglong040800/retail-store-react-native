@@ -5,9 +5,10 @@ import { BranchDto } from 'types';
 
 type Props = {
   branch: BranchDto;
+  onChooseStore: (branch: BranchDto) => void | Promise<void>;
 };
 
-const BranchItem = ({ branch }: Props) => {
+const BranchItem = ({ branch, onChooseStore }: Props) => {
   return (
     <Surface style={styles.container}>
       <View style={styles.contentContainer}>
@@ -24,7 +25,7 @@ const BranchItem = ({ branch }: Props) => {
       </View>
 
       <View style={styles.footerButton}>
-        <Button>Choose Store</Button>
+        <Button onPress={() => onChooseStore(branch)}>Choose Store</Button>
       </View>
     </Surface>
   );

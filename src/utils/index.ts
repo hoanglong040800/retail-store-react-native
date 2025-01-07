@@ -4,3 +4,4 @@ export * from './secure-store.util';
 export * from './product.util';
 export * from './payment.util';
 export * from './order.util';
+export * from './branch.util';

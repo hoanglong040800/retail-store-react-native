@@ -1,13 +1,16 @@
+/* eslint-disable camelcase */
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { useRecoilRefresher_UNSTABLE } from 'recoil';
-import { DeAppBar } from 'components';
+import { Text } from 'react-native-paper';
+import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
+import { BottomButton, DeAppBar } from 'components';
 import { selectedLocationSelector } from 'states';
-import { setStorageItems } from 'utils';
+import { BASE_STYLE } from 'const';
+import { getFullDeliveryAddress, setStorageItems } from 'utils';
 import { AdminDivisionDto, SelectedAdminDivision, SelectedLocation } from 'types';
 import AdminDivisionList from './AdminDivisionList';
 
-type Step = 'province' | 'district' | 'ward';
+type Step = 'launch' | 'province' | 'district' | 'ward' | 'summary';
 
 type Props = {
   provinces: AdminDivisionDto[];
@@ -16,13 +19,17 @@ type Props = {
 };
 
 const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props) => {
+  const selectedLocationGS = useRecoilValue<SelectedLocation>(selectedLocationSelector);
+
+  // ------ STATE ------
   const [selectedLocation, setSelectedLocation] = useState<SelectedLocation>({
     ward: null,
     district: null,
     province: null,
   });
-  const [step, setStep] = useState<Step>(getDefaultStep(selectedLocation));
-  // eslint-disable-next-line camelcase
+
+  const [step, setStep] = useState<Step>(getDefaultStep(selectedLocationGS));
+
   const refreshSelectedLocationSelector = useRecoilRefresher_UNSTABLE(selectedLocationSelector);
 
   const curDisplayAdminDivisions = useMemo((): AdminDivisionDto[] => {
@@ -44,16 +51,28 @@ const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props
   }, [provinces, selectedLocation]);
 
   const modalTitle = useMemo((): string => {
-    if (selectedLocation?.district) {
-      return selectedLocation.district.fullname;
-    }
+    switch (step) {
+      case 'launch':
+        return 'Delivery Location';
 
-    if (selectedLocation?.province) {
-      return selectedLocation.province.fullname;
-    }
+      case 'province':
+        return 'Select Province';
 
-    return 'Select Province';
-  }, [selectedLocation]);
+      case 'district':
+        return selectedLocation.province?.fullname;
+
+      case 'ward':
+        return selectedLocation.district?.fullname;
+
+      case 'summary':
+        return 'Summary';
+
+      default:
+        return '';
+    }
+  }, [step, selectedLocation]);
+
+  // ------ FUNCTIONS ------
 
   const onSelectAdminDivision = (adminDiv: AdminDivisionDto) => {
     const parseAdminDiv: SelectedAdminDivision = {
@@ -69,61 +88,105 @@ const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props
 
     setSelectedLocation(newSelectedLocation);
 
-    if (step === 'province') {
-      return setStep('district');
-    }
+    switch (step) {
+      case 'province':
+        setStep('district');
+        break;
 
-    if (step === 'district') {
-      return setStep('ward');
-    }
+      case 'district':
+        setStep('ward');
+        break;
 
-    return handleSaveLocation(newSelectedLocation);
+      case 'ward':
+        handleSaveLocation(newSelectedLocation);
+        setStep('summary');
+        break;
+
+      default:
+        break;
+    }
   };
 
   const handleSaveLocation = async (selectedLocationPar: SelectedLocation): Promise<void> => {
     if (manualSaveLocation) {
-      return manualSaveLocation(selectedLocationPar);
+      manualSaveLocation(selectedLocationPar);
+      return;
     }
 
     await setStorageItems({ selectedLocation: selectedLocationPar });
 
     // trigger get new data from storage
     refreshSelectedLocationSelector();
-    return onClose();
   };
 
   const handlePressBack = () => {
-    if (step === 'province') {
+    if (step === 'launch') {
       onClose();
+    } else if (step === 'province') {
+      setStep('launch');
     } else if (step === 'district') {
       setStep('province');
       setSelectedLocation({ ward: null, district: null, province: null });
     } else if (step === 'ward') {
       setStep('district');
       setSelectedLocation({ province: selectedLocation.province, district: null, ward: null });
+    } else if (step === 'summary') {
+      setStep('ward');
     }
   };
 
+  const handlePressSelectAgain = () => {
+    setStep('province');
+  };
+
+  const renderSummary = (selectedLocationPar: SelectedLocation) => {
+    return (
+      <View style={styles.summaryContainer}>
+        <Text variant="titleLarge">
+          You have selected branch at: {getFullDeliveryAddress(selectedLocationPar, 'full')}
+        </Text>
+      </View>
+    );
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       <DeAppBar
         title={modalTitle}
         onPressSecondary={handlePressBack}
         rightButtonProps={{ disabled: step !== 'ward' }}
       />
 
-      <AdminDivisionList
-        adminDivisions={curDisplayAdminDivisions}
-        onSelectAdminDivision={onSelectAdminDivision}
-        style={styles.list}
-      />
+      {['launch', 'summary'].includes(step) ? (
+        renderSummary(selectedLocationGS)
+      ) : (
+        <AdminDivisionList
+          adminDivisions={curDisplayAdminDivisions}
+          onSelectAdminDivision={onSelectAdminDivision}
+          style={styles.list}
+        />
+      )}
+
+      {step === 'launch' && <BottomButton text="Select Again" onPress={handlePressSelectAgain} />}
+
+      {step === 'summary' && <BottomButton text="Done" onPress={onClose} />}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    ...BASE_STYLE.CONTAINER_WRAP_BOT_BTN,
+  },
+
   list: {
     padding: 16,
+  },
+
+  summaryContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -134,6 +197,10 @@ const getDefaultStep = (selectedLocationPar: SelectedLocation): Step => {
 
   if (selectedLocationPar.province) {
     if (selectedLocationPar.district) {
+      if (selectedLocationPar.ward) {
+        return 'launch';
+      }
+
       return 'ward';
     }
 

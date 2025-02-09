@@ -9,7 +9,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { getCartById } from 'service';
 import { useRecoilValue } from 'recoil';
 import { loginUserSelector } from 'states';
-import { useAppNavigation, useCart, useCheckout } from 'hooks';
+import { useAddress, useAppNavigation, useCart, useCheckout } from 'hooks';
 import { formatCurrency } from 'utils';
 import { useMemo } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,6 +22,8 @@ import PaymentSelectorBottom from 'modules/cart/PaymentSelectorBottom';
 const resolvedCheckoutFormSchema = yupResolver(object(checkoutFormSchema));
 
 const CartScreen = () => {
+  const { selectedLocation } = useAddress();
+
   const {
     control,
     watch,
@@ -30,6 +32,7 @@ const CartScreen = () => {
   } = useForm<CheckoutForm>({
     resolver: resolvedCheckoutFormSchema,
     defaultValues: {
+      address: selectedLocation?.address || '',
       deliveryType: DeliveryTypeEnum.delivery,
       paymentMethod: PaymentMethodEnum.cash,
     },

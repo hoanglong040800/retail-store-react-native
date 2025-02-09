@@ -6,7 +6,10 @@ import { setStorageItems } from 'utils';
 
 export const useAddress = () => {
   const { deliveryProvinces } = useRecoilValue(globalConfigState);
+  const selectedLocationGS = useRecoilValue(selectedLocationSelector);
   const refreshSelectedLocationSelector = useRecoilRefresher_UNSTABLE(selectedLocationSelector);
+
+  // ------ FUNCTION ------
 
   const getSelectedLocationFromWardAdDiv = (wardAdminDivision: AdminDivisionDto): SelectedLocation => {
     if (!wardAdminDivision) {
@@ -92,7 +95,7 @@ export const useAddress = () => {
 
     const selectedLocation = getSelectedLocationFromWardAdDiv(wardAdminDivision);
 
-    // need throw error because address is wrong, not empty
+    // need throw error because location is wrong, not empty
     if (!selectedLocation) {
       throw new Error('Cant get selected location');
     }
@@ -101,6 +104,7 @@ export const useAddress = () => {
   };
 
   return {
+    selectedLocation: selectedLocationGS,
     setLocationFromDeliveryWard,
   };
 };

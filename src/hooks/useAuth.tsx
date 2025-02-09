@@ -51,7 +51,7 @@ export const useAuth = () => {
     await Promise.all([
       clearCart(),
       saveToStorage(loginData),
-      setLocationFromDeliveryWard(loginData.user.deliveryWard),
+      setLocationFromDeliveryWard(loginData.user.deliveryWard, loginData.user.address),
     ]);
   };
 

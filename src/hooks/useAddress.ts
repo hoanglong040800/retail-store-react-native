@@ -85,7 +85,7 @@ export const useAddress = () => {
     refreshSelectedLocationSelector();
   };
 
-  const setLocationFromDeliveryWard = async (wardAdminDivision: AdminDivisionDto) => {
+  const setLocationFromDeliveryWard = async (wardAdminDivision: AdminDivisionDto, address?: string) => {
     if (!wardAdminDivision) {
       return;
     }
@@ -97,7 +97,7 @@ export const useAddress = () => {
       throw new Error('Cant get selected location');
     }
 
-    await setSelectedLocation(selectedLocation);
+    await setSelectedLocation({ ...selectedLocation, address });
   };
 
   return {

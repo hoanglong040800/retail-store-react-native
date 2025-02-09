@@ -5,6 +5,7 @@ export type SelectedAdminDivision = {
 };
 
 export type SelectedLocation = {
+  address?: string;
   province: SelectedAdminDivision;
   district: SelectedAdminDivision;
   ward: SelectedAdminDivision;

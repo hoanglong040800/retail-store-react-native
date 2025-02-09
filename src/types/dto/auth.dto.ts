@@ -1,4 +1,5 @@
 import { IUser } from '../interface';
+import { AdminDivisionDto } from './admin-division.dto';
 
 export class RegisterDto {
   result: boolean;
@@ -10,6 +11,8 @@ export class LoginUserDto implements IUser {
   firstName?: string;
   lastName?: string;
   cartId: string;
+  branchId?: string;
+  deliveryWard?: AdminDivisionDto;
 }
 
 export class LoginDto {

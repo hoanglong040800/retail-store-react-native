@@ -1,4 +1,4 @@
-import { formatCurrency, generateRandomString } from './common.util';
+import { formatCurrency, generateRandomString, keyBy } from './common.util';
 
 describe('Common Utils', () => {
   describe('generateRandomString', () => {
@@ -48,6 +48,29 @@ describe('Common Utils', () => {
         const result = formatCurrency(input);
 
         expect(result).toBe(expected);
+      });
+    });
+  });
+
+  describe('keyBy', () => {
+    const testItems = [
+      { id: 1, name: 'Alice', meta: { code: 'A' } },
+      { id: 2, name: 'Bob', meta: { code: 'B' } },
+    ];
+
+    it('should group by shallow property', () => {
+      const result = keyBy(testItems, 'id');
+      expect(result).toEqual({
+        1: testItems[0],
+        2: testItems[1],
+      });
+    });
+
+    it('should group by nested property', () => {
+      const result = keyBy(testItems, 'meta.code');
+      expect(result).toEqual({
+        A: testItems[0],
+        B: testItems[1],
       });
     });
   });

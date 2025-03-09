@@ -1,4 +1,4 @@
-import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from 'const';
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from 'const/common.const';
 
 export function generateRandomString(length = 16) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';

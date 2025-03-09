@@ -1,5 +1,3 @@
-import { loadStripe } from '@stripe/stripe-js';
-import { ENV } from 'const';
 import { useAppNavigation } from 'hooks';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';

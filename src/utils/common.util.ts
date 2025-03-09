@@ -1,3 +1,5 @@
+import { DATE_FORMAT, DATE_TIME_FORMAT, TIME_FORMAT } from 'const/common.const';
+
 export function generateRandomString(length = 16) {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -52,4 +54,49 @@ export const keyBy = (array: any[], keyPath: string): Record<string, any> => {
   });
 
   return result;
+};
+
+export const flipObject = <T extends string | number | symbol, K extends string | number | symbol>(
+  obj: Record<T, K>
+): Record<string, string> => {
+  return Object.assign(
+    {},
+
+    ...Object.entries(obj).map(([a, b]) => ({
+      [`${b}`]: a,
+    }))
+  );
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getObj = (obj: object, path: string): any => {
+  const fields = path.split('.');
+
+  let curObj = obj;
+
+  for (let i = 0; i < fields.length; i += 1) {
+    if (curObj[fields[i]] === undefined) {
+      return curObj;
+    }
+
+    curObj = curObj[fields[i]];
+  }
+
+  return curObj;
+};
+
+export const formatDate = (value: string | Date, formatType: 'date' | 'time' | 'datetime') => {
+  let finalFormat: Intl.DateTimeFormatOptions = null;
+
+  if (formatType === 'date') {
+    finalFormat = DATE_FORMAT;
+  } else if (formatType === 'time') {
+    finalFormat = TIME_FORMAT;
+  } else if (formatType === 'datetime') {
+    finalFormat = DATE_TIME_FORMAT;
+  }
+
+  const formattedDate = new Date(value).toLocaleDateString('vi-VN', finalFormat);
+
+  return formattedDate;
 };

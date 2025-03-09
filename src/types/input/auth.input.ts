@@ -6,9 +6,9 @@ export class RegisterBody implements IUser {
 
   password: string;
 
-  firstName?: string;
+  firstName: string;
 
-  lastName?: string;
+  lastName: string;
 }
 
 export class LoginBody implements IUser {

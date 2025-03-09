@@ -1,20 +1,51 @@
 import { Route } from '@react-navigation/native';
 import { BottomButton } from 'components';
-import { BASE_STYLE } from 'const';
+import { BASE_STYLE, PAYMENT_OPTIONS } from 'const';
 import { useAppNavigation } from 'hooks';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Icon, Text } from 'react-native-paper';
 import { useRecoilValue } from 'recoil';
 import { selectedLocationSelector } from 'states';
-import { ParamsType, Screen } from 'types';
+import { ParamsType, PaymentOptionType, PaymentType, Screen } from 'types';
 import { DeliveryTypeEnum } from 'types/enum';
+import { getPaymentTypeByMethod } from 'utils';
+
+const textByDeliveryMethod: Record<DeliveryTypeEnum, DeliveryContent> = {
+  [DeliveryTypeEnum.delivery]: {
+    icon: 'truck-delivery-outline',
+    title: 'Your order will be prepared and will be delivered',
+    deliveryTime: 'within 2 hours',
+    address: 'to address',
+  },
+
+  [DeliveryTypeEnum.pickup]: {
+    icon: 'store-check',
+    title: 'Your order will be prepared and ready to pickup',
+    deliveryTime: 'within 2 hours',
+    address: 'at store',
+  },
+};
+
+const textByPaymentType: Record<PaymentType, { default: string }> = {
+  [PaymentType.online]: {
+    default: 'Your payment is already charged',
+  },
+
+  [PaymentType.offline]: {
+    default: 'Your payment will be charged at the store',
+  },
+};
 
 type DeliveryContent = {
   icon: string;
   title: string;
   deliveryTime: string;
   address: string;
+};
+
+type PaymentMethodContent = PaymentOptionType & {
+  paymentStatusText: string;
 };
 
 type Params = Pick<ParamsType, 'checkoutFinish'>;
@@ -31,23 +62,7 @@ const CheckoutFinishScreen = ({
   const selectedLocation = useRecoilValue(selectedLocationSelector);
   const { navigate } = useAppNavigation();
 
-  const textByDeliveryMethod: Record<DeliveryTypeEnum, DeliveryContent> = {
-    [DeliveryTypeEnum.delivery]: {
-      icon: 'truck-delivery-outline',
-      title: 'Your order will be prepared and will be delivered',
-      deliveryTime: 'within 2 hours',
-      address: 'to address',
-    },
-
-    [DeliveryTypeEnum.pickup]: {
-      icon: 'store-check',
-      title: 'Your order will be prepared and ready to pickup',
-      deliveryTime: 'within 2 hours',
-      address: 'at store',
-    },
-  };
-
-  const contentObj = useMemo(() => {
+  const contentObj: DeliveryContent = useMemo(() => {
     const selectedContent: DeliveryContent = textByDeliveryMethod[pageParams.deliveryType];
 
     const { name: branchName, ward, district, province } = pageParams.selectedBranch;
@@ -65,6 +80,23 @@ const CheckoutFinishScreen = ({
     }
 
     return selectedContent;
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageParams]);
+
+  const paymentText: PaymentMethodContent = useMemo(() => {
+    const baseContent = PAYMENT_OPTIONS.find(({ method }) => method === pageParams.paymentMethod);
+
+    const paymentType = getPaymentTypeByMethod(pageParams.paymentMethod);
+
+    const paymentStatusText = textByPaymentType[paymentType]?.default || '';
+
+    return {
+      ...baseContent,
+      paymentStatusText,
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pageParams]);
 
   const handlePressGoHomeBtn = () => {
@@ -89,6 +121,11 @@ const CheckoutFinishScreen = ({
           <View style={styles.contentText}>
             <Icon source="map-marker" size={25} />
             <Text variant="titleLarge">{contentObj.address}</Text>
+          </View>
+
+          <View style={styles.contentText}>
+            <Icon source={paymentText.icon} size={25} />
+            <Text variant="titleLarge">{paymentText.paymentStatusText}</Text>
           </View>
         </View>
       </View>

@@ -4,12 +4,13 @@ import { CartItemList } from './cart-item';
 
 type Props = {
   cartItems: CartItemDto[];
+  viewOnly?: boolean;
 };
 
-const CartLinesSection = ({ cartItems }: Props) => {
+const CartLinesSection = ({ cartItems, viewOnly }: Props) => {
   return (
     <View>
-      <CartItemList cartItems={cartItems} />
+      <CartItemList cartItems={cartItems} viewOnly={viewOnly} />
     </View>
   );
 };

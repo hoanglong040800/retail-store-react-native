@@ -1,3 +1,4 @@
+import { CheckoutForm } from 'modules/cart';
 import { atom, selector } from 'recoil';
 import { GetGlobalConfigDto, InUseCart, LoginUserDto, SelectedLocation } from 'types';
 import { getStorageItem } from 'utils';
@@ -39,5 +40,13 @@ export const inUseCartSelector = selector<InUseCart>({
     }
 
     return inUseCart;
+  },
+});
+
+export const checkoutFormState = atom<CheckoutForm>({
+  key: 'checkoutFormState',
+  default: {
+    deliveryType: null,
+    address: '',
   },
 });

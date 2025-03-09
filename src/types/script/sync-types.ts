@@ -31,8 +31,12 @@ function removeImportSwagger(content: string): string {
 
 function removeCustomValidator(content: string): string {
   const regex = /import\s*{\s*\w+\s*(?:,\s*\w+)*\s*} from '@\/modules\/_base';/;
+  const regex2 = /import\s*{\s*\w+\s*(?:,\s*\w+)*\s*} from '@\/decorators';/;
 
-  return content.replace(regex, '');
+  const afterRegex = content.replace(regex, '');
+  const afterRegex2 = afterRegex.replace(regex2, '');
+
+  return afterRegex2;
 }
 
 async function modifyAndSaveInputFile(sourceItemPath: string, destinationItemPath: string) {

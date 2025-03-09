@@ -6,6 +6,8 @@ import { authLogin, authRegister, getUserById } from 'service';
 import { loginUserSelector } from 'states';
 import { LoginBody, LoginDto, LoginUserDto, RegisterBody, UserDto } from 'types';
 import { removeSecureStoreItems, removeStorageItems, setSecureStoreItems, setStorageItems } from 'utils';
+import { useCart } from './useCart';
+import { useAddress } from './useAddress';
 
 export const useAuth = () => {
   // ---- Hooks
@@ -13,6 +15,8 @@ export const useAuth = () => {
   const refreshLoginUser = useRecoilRefresher_UNSTABLE(loginUserSelector);
 
   const { openSnackbar } = useSnackbar();
+  const { clearCart } = useCart();
+  const { setLocationFromDeliveryWard } = useAddress();
 
   const { mutateAsync: authRegisterMutate } = useMutation({
     mutationFn: authRegister,
@@ -44,7 +48,11 @@ export const useAuth = () => {
       throw new Error('Failed to login');
     }
 
-    await saveToStorage(loginData);
+    await Promise.all([
+      clearCart(),
+      saveToStorage(loginData),
+      setLocationFromDeliveryWard(loginData.user.deliveryWard, loginData.user.address),
+    ]);
   };
 
   const saveToStorage = async (loginData: LoginDto): Promise<void> => {
@@ -101,7 +109,7 @@ export const useAuth = () => {
   };
 
   const logout = async (): Promise<void> => {
-    await removeFromStorage();
+    await Promise.all([removeFromStorage(), clearCart()]);
   };
 
   const removeFromStorage = async (): Promise<void> => {

@@ -6,15 +6,16 @@ import { displayProductPrice, formatCurrency } from 'utils';
 
 type Props = {
   item: CartItemDto;
+  viewOnly?: boolean;
 };
 
-const CartItem = ({ item }: Props) => {
+const CartItem = ({ item, viewOnly }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
         <Image source={{ uri: item.product.image }} style={styles.image} />
 
-        <View>
+        <View style={styles.leftSectionContent}>
           <Text variant="bodyMedium">{item.product.name}</Text>
           <Text variant="bodySmall">{displayProductPrice(item.product)}</Text>
           <Text variant="bodyLarge" style={styles.totalPriceText}>
@@ -24,12 +25,11 @@ const CartItem = ({ item }: Props) => {
       </View>
 
       <View>
-        <ProductActionButtons
-          productId={item.product.id}
-          productName={item.product.name}
-          offsetQuantity={1}
-          containerStyle={styles.productActionButtons}
-        />
+        {viewOnly ? (
+          <Text variant="titleLarge">x{item.quantity}</Text>
+        ) : (
+          <ProductActionButtons product={item.product} containerStyle={styles.productActionButtons} />
+        )}
       </View>
     </View>
   );
@@ -45,9 +45,14 @@ const styles = StyleSheet.create({
   },
 
   leftSection: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+  },
+
+  leftSectionContent: {
+    flex: 1,
   },
 
   image: {

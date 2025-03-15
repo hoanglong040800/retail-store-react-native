@@ -1,4 +1,5 @@
 import { useAppNavigation } from 'hooks';
+import { PromoProductSection } from 'modules/home';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { Screen } from 'types';
@@ -13,6 +14,8 @@ const HomeScreen = () => {
   return (
     <View style={styles.container}>
       <Button onPress={onPressViewAllBranches}>View all stores</Button>
+
+      <PromoProductSection style={styles.pageLayout} />
     </View>
   );
 };
@@ -20,6 +23,10 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+
+  pageLayout: {
+    paddingHorizontal: 8,
   },
 });
 

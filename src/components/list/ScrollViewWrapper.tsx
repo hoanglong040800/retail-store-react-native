@@ -4,11 +4,12 @@ import { ScrollView, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 type Props = {
   direction?: 'row' | 'column' | 'both';
   itemSize?: 'S' | 'M' | 'L';
+  hideScrollbar?: boolean;
   style?: StyleProp<ViewStyle>;
   children?: ReactNode;
 };
 
-const ScrollViewWrapper = ({ direction = 'row', itemSize = 'M', style, children }: Props) => {
+const ScrollViewWrapper = ({ direction = 'row', itemSize = 'M', hideScrollbar, style, children }: Props) => {
   const scrollViewStyle = useMemo<StyleProp<ViewStyle>>(() => {
     const sizeStyle = styles[`scrollView_${direction}${itemSize}`] || {};
 
@@ -20,7 +21,13 @@ const ScrollViewWrapper = ({ direction = 'row', itemSize = 'M', style, children 
   }, [direction]);
 
   return (
-    <ScrollView horizontal={direction === 'row'} style={scrollViewStyle} contentContainerStyle={scrollContainerStyle}>
+    <ScrollView
+      horizontal={direction === 'row'}
+      style={scrollViewStyle}
+      contentContainerStyle={scrollContainerStyle}
+      showsVerticalScrollIndicator={!hideScrollbar}
+      showsHorizontalScrollIndicator={!hideScrollbar}
+    >
       {children}
     </ScrollView>
   );
@@ -49,8 +56,8 @@ const styles = StyleSheet.create({
   },
 
   scrollView_rowL: {
-    minHeight: 280,
-    maxHeight: 280,
+    minHeight: 260,
+    maxHeight: 260,
   },
 });
 

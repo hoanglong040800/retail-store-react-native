@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
-import { ParamsType, Screen } from 'types';
+import { CategoryDto, ParamsType, Screen } from 'types';
 import { THEME } from 'const';
 import { useAppNavigation } from 'hooks';
 import { globalConfigState } from 'states';
 import CategoryList from './CategoryList';
+
+const EXTRA_SELECTION_SCREEN: Record<string, Screen> = {
+  ALL_STORES: Screen.AllBranches,
+};
 
 type Props = {
   callbackAfterPressCategory?: () => void;
@@ -18,12 +22,45 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
 
   const [curMainIndex, setCurMainIndex] = useState<number>(0);
 
+  const EXTRA_SELECTION_TOP: CategoryDto[] = [
+    {
+      id: '0',
+      name: 'More',
+      icon: 'https://cdn-icons-png.flaticon.com/512/1041/1041883.png',
+      level: 1,
+      isLeaf: false,
+      childCategories: [
+        {
+          id: EXTRA_SELECTION_SCREEN.ALL_STORES,
+          name: 'View all stores',
+          icon: 'https://cdn-icons-png.flaticon.com/512/8771/8771926.png',
+          isLeaf: true,
+          level: 2,
+        },
+      ],
+    },
+  ];
+
+  const sidebarList = useMemo<CategoryDto[]>(() => {
+    const newSidebar: CategoryDto[] = [...EXTRA_SELECTION_TOP, ...(categories || [])];
+
+    return newSidebar;
+  }, [categories, EXTRA_SELECTION_TOP]);
+
+  // FUNCTIONS
+
   const onPressMainCategory = (index: number) => {
     setCurMainIndex(index);
   };
 
-  const onPressSubCategory = (index: number) => {
-    const mainCate = categories[curMainIndex];
+  const onPressSubCategory = (index: number, id: string) => {
+    if (id === Screen.AllBranches) {
+      onPressExtraSelectionScreen(id as Screen);
+      callbackAfterPressCategory();
+      return;
+    }
+
+    const mainCate = sidebarList[curMainIndex];
     const subCate = mainCate?.childCategories?.[index];
 
     const params: ParamsType = {
@@ -42,13 +79,17 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
     callbackAfterPressCategory();
   };
 
+  const onPressExtraSelectionScreen = (extraScreen: Screen) => {
+    navigate(extraScreen);
+  };
+
   return (
     <View style={styles.layout}>
-      <CategoryList list={categories} onPressItem={onPressMainCategory} style={styles.leftCate} />
+      <CategoryList list={sidebarList} onPressItem={onPressMainCategory} style={styles.leftCate} />
 
       <View style={styles.rightCate}>
         <CategoryList
-          list={categories[curMainIndex].childCategories}
+          list={sidebarList[curMainIndex].childCategories}
           direction="both"
           onPressItem={onPressSubCategory}
         />

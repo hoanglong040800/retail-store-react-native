@@ -20,7 +20,7 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
 
   const { categories } = useRecoilValue(globalConfigState);
 
-  const [curMainIndex, setCurMainIndex] = useState<number>(0);
+  const [curMainIndex, setCurMainIndex] = useState<number>(1);
 
   const EXTRA_SELECTION_TOP: CategoryDto[] = [
     {

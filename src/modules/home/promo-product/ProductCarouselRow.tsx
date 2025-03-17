@@ -1,8 +1,10 @@
 import { ScrollViewWrapper } from 'components';
 import { BASE_STYLE } from 'const';
+import { useAppNavigation } from 'hooks';
 import { ProductCard } from 'modules/product';
 import { StyleSheet, View } from 'react-native';
 import { Button, Surface } from 'react-native-paper';
+import { ParamsType, Screen } from 'types';
 
 import { ProductByCateDto } from 'types/dto/home.dto';
 
@@ -11,9 +13,22 @@ type Props = {
 };
 
 const ProductCarouselRow = ({ productCate }: Props) => {
-  // TODO : use navigation
-  const onClickCategory = (cateId: string) => {
-    return cateId;
+  const { navigate } = useAppNavigation();
+
+  const onClickCategory = () => {
+    const params: ParamsType = {
+      mainCate: {
+        id: productCate.category?.parentCategory.id,
+        name: productCate.category?.parentCategory.name,
+      },
+
+      subCate: {
+        id: productCate.category.id,
+        name: productCate.category.name,
+      },
+    };
+
+    navigate(Screen.ProductList, params);
   };
 
   // Render
@@ -25,7 +40,7 @@ const ProductCarouselRow = ({ productCate }: Props) => {
     <Surface style={styles.container}>
       <Button
         mode="text"
-        onPress={() => onClickCategory(productCate.category.id)}
+        onPress={() => onClickCategory()}
         icon={{ uri: productCate.category.icon }}
         style={styles.headerContainer}
         labelStyle={styles.headerLabel}

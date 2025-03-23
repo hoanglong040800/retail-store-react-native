@@ -7,6 +7,7 @@ export type StorageType = SecureStoreType & {
   globalConfig?: GetGlobalConfigDto;
   selectedLocation?: SelectedLocation;
   inUseCart?: InUseCart;
+  recentSearchTexts?: string[];
 };
 
 // ----------------- SECURE STORE -----------------

@@ -6,3 +6,7 @@ export const getHiddenDisplayStyle = (
 ): StyleProp<ViewStyle> => {
   return isHidden ? { display: 'none' } : originalStyle;
 };
+
+export const getDisplayStyle = (isShow: boolean, originalStyle?: StyleProp<ViewStyle>): StyleProp<ViewStyle> => {
+  return getHiddenDisplayStyle(!isShow, originalStyle);
+};

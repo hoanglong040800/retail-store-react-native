@@ -1,5 +1,5 @@
 import { CUSTOM_THEME, THEME } from 'const';
-import { HeaderCart, HeaderLocation, HeaderSearch } from 'modules';
+import { HeaderSearch } from 'modules';
 import { CategoryDrawerModal } from 'modules/category';
 import HeaderAccount from 'modules/header/HeaderAccount';
 import { useState } from 'react';
@@ -20,19 +20,13 @@ const AppHeader = () => {
   return (
     <>
       <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="menu" onPress={toggleDrawer} style={styles.leftIcon} />
+        <Appbar.Action icon="menu" onPress={toggleDrawer} style={styles.leftIcon} size={18} />
 
         <View style={styles.search}>
           <HeaderSearch />
-
-          <HeaderCart />
         </View>
 
-        <View style={styles.location}>
-          <HeaderLocation />
-        </View>
-
-        <View>
+        <View style={styles.accountCon}>
           <HeaderAccount />
         </View>
       </Appbar.Header>
@@ -49,7 +43,8 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    paddingVertical: 8,
+    paddingHorizontal: 4,
   },
 
   leftIcon: {
@@ -57,15 +52,11 @@ const styles = StyleSheet.create({
   },
 
   search: {
-    flex: 2,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
+    flex: 1,
   },
 
-  location: {
-    flex: 1,
+  accountCon: {
+    marginLeft: 8,
   },
 });
 

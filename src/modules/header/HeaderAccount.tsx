@@ -1,39 +1,53 @@
+import { DeModal } from 'components';
 import { useAppNavigation, useAuth, useModal } from 'hooks';
+import { AdminDivisionSelector } from 'modules/admin-division';
 import { AuthModal } from 'modules/auth';
 import { useMemo } from 'react';
 import { Dimensions, TouchableOpacity } from 'react-native';
-import { Avatar, Button, ButtonProps, Menu } from 'react-native-paper';
-import { Screen } from 'types';
+import { Avatar, Menu } from 'react-native-paper';
+import { useRecoilValue } from 'recoil';
+import { globalConfigState } from 'states';
+import { GetGlobalConfigDto, Screen } from 'types';
 
-type AuthModeType = {
-  text: string;
-  mode: ButtonProps['mode'];
-  onPress: () => void;
+type MenuItem = {
+  action: () => void;
+  title: string;
 };
 
 const HeaderAccount = () => {
   const { isOpen, onOpen, onClose } = useModal();
+  const { deliveryProvinces } = useRecoilValue<GetGlobalConfigDto>(globalConfigState);
   const { isOpen: isOpenMenu, onOpen: onOpenMenu, onClose: onCloseMenu } = useModal();
+  const { isOpen: isOpenLocation, onOpen: onOpenLocation, onClose: onCloseLocation } = useModal();
   const { user, logout } = useAuth();
   const { navigate } = useAppNavigation();
 
-  const authMode = useMemo((): AuthModeType => {
-    if (user) {
-      return {
-        text: 'Logout',
-        mode: 'elevated',
-        onPress: logout,
-      };
-    }
+  const isLogin = useMemo(() => {
+    return !!user;
+  }, [user]);
 
-    return {
-      text: 'Login',
-      mode: 'contained-tonal',
-      onPress: onOpen,
-    };
-  }, [user, logout, onOpen]);
+  const avatarUri = useMemo(() => {
+    return isLogin
+      ? 'https://www.shareicon.net/data/512x512/2016/07/26/802001_man_512x512.png'
+      : 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
+  }, [isLogin]);
 
-  const menuItems: { action: () => void; title: string }[] = [
+  const anonymousMenuItems: MenuItem[] = [
+    {
+      action: onOpenLocation,
+      title: 'Location',
+    },
+    {
+      action: onOpen,
+      title: 'Login',
+    },
+  ];
+
+  const loginMenuItems: MenuItem[] = [
+    {
+      action: onOpenLocation,
+      title: 'Location',
+    },
     {
       action: () => navigate(Screen.OrderHistory),
       title: 'Order History',
@@ -44,25 +58,23 @@ const HeaderAccount = () => {
     },
   ];
 
+  const displayMenuItems = useMemo(() => {
+    return isLogin ? loginMenuItems : anonymousMenuItems;
+  }, [isLogin, loginMenuItems, anonymousMenuItems]);
+
   return (
     <>
-      {authMode.text === 'Login' ? (
-        <Button mode={authMode.mode} onPress={authMode.onPress}>
-          {authMode.text}
-        </Button>
-      ) : (
-        <TouchableOpacity onPress={onOpenMenu}>
-          <Avatar.Image
-            size={30}
-            source={{
-              uri: 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg',
-            }}
-          />
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity onPress={onOpenMenu}>
+        <Avatar.Image
+          size={30}
+          source={{
+            uri: avatarUri,
+          }}
+        />
+      </TouchableOpacity>
 
       <Menu visible={isOpenMenu} onDismiss={onCloseMenu} anchor={{ y: 50, x: Dimensions.get('window').width }}>
-        {menuItems.map(({ action, title }) => (
+        {displayMenuItems.map(({ action, title }) => (
           <Menu.Item
             key={title}
             onPress={() => {
@@ -75,6 +87,10 @@ const HeaderAccount = () => {
       </Menu>
 
       <AuthModal isOpen={isOpen} onClose={onClose} />
+
+      <DeModal isOpen={isOpenLocation} onClose={onCloseLocation} hideHeader>
+        <AdminDivisionSelector provinces={deliveryProvinces} onClose={onCloseLocation} />
+      </DeModal>
     </>
   );
 };

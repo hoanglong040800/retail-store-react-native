@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
 
   pageLayout: {
-    // paddingHorizontal: 8,
+    paddingVertical: 16,
   },
 });
 

@@ -1,13 +1,14 @@
 import { BottomSheet, useBottomSheet } from 'components/bottom-sheet';
 import { CUSTOM_THEME, THEME } from 'const';
-import { HeaderCart, HeaderSearch } from 'modules';
+import { HeaderCart } from 'modules';
 import { CategoryDrawerModal } from 'modules/category';
 import HeaderAccount from 'modules/header/HeaderAccount';
 import { useHeaderSearch } from 'modules/header/hooks';
 import { useEffect, useState } from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
-import { Appbar, Text } from 'react-native-paper';
+import { Appbar } from 'react-native-paper';
 import { getHiddenDisplayStyle } from 'utils';
+import { HeaderSearch, HeaderSearchSuggestion } from './search';
 
 const BOTTOM_SHEET_HEIGHT = Dimensions.get('window').height - CUSTOM_THEME.headerHeight;
 
@@ -73,7 +74,7 @@ const AppHeader = () => {
       <CategoryDrawerModal isOpen={isDrawerOpen} onClose={onCloseDrawer} />
 
       <BottomSheet botSheetRef={botSheetRef} snapPoints={[BOTTOM_SHEET_HEIGHT]} transparentBackdrop>
-        <Text>Search suggestion</Text>
+        <HeaderSearchSuggestion />
       </BottomSheet>
     </>
   );

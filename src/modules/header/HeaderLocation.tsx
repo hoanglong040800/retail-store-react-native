@@ -1,37 +1,35 @@
 import { DeModal } from 'components';
-import { THEME } from 'const';
 import { useModal } from 'hooks';
 import { AdminDivisionSelector } from 'modules/admin-division';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { Button } from 'react-native-paper';
 import { useRecoilValue } from 'recoil';
 import { globalConfigState, selectedLocationSelector } from 'states';
 import { GetGlobalConfigDto, SelectedLocation } from 'types';
 
-// TODO remove this code
 const HeaderLocation = () => {
   const { isOpen, onOpen, onClose } = useModal();
   const { deliveryProvinces } = useRecoilValue<GetGlobalConfigDto>(globalConfigState);
   // GS shorthand for global state
   const selectedLocationGS = useRecoilValue<SelectedLocation>(selectedLocationSelector);
 
-  const isSelected = useMemo(() => {
+  const buttonText = useMemo(() => {
     const { province, district, ward } = selectedLocationGS || {};
 
-    return province && district && ward;
+    if (province && district && ward) {
+      return `${ward.fullname}, ${district.fullname}, ${province.fullname}`;
+    }
+
+    return 'Choose store';
   }, [selectedLocationGS]);
 
   return (
     <>
       <View style={styles.container}>
-        <IconButton
-          mode="contained"
-          icon={isSelected ? 'map-marker-check' : 'map-marker-outline'}
-          iconColor="#fff"
-          style={{ backgroundColor: isSelected ? THEME.colors.primary : 'transparent' }}
-          onPress={onOpen}
-        />
+        <Button mode="contained" icon="map-marker" contentStyle={styles.btnContent} onPress={onOpen}>
+          {buttonText}
+        </Button>
       </View>
 
       <DeModal isOpen={isOpen} onClose={onClose} hideHeader>
@@ -47,7 +45,7 @@ const styles = StyleSheet.create({
   },
 
   btnContent: {
-    backgroundColor: 'transparent',
+    justifyContent: 'flex-start',
   },
 });
 

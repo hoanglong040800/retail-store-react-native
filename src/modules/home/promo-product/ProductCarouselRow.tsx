@@ -2,8 +2,8 @@ import { ScrollViewWrapper } from 'components';
 import { BASE_STYLE } from 'const';
 import { useAppNavigation } from 'hooks';
 import { ProductCard } from 'modules/product';
-import { StyleSheet, View } from 'react-native';
-import { Button, Surface } from 'react-native-paper';
+import { Image, StyleSheet, View } from 'react-native';
+import { IconButton, Text } from 'react-native-paper';
 import { ParamsType, Screen } from 'types';
 
 import { ProductByCateDto } from 'types/dto/home.dto';
@@ -37,16 +37,16 @@ const ProductCarouselRow = ({ productCate }: Props) => {
   }
 
   return (
-    <Surface style={styles.container}>
-      <Button
-        mode="text"
-        onPress={() => onClickCategory()}
-        icon={{ uri: productCate.category.icon }}
-        style={styles.headerContainer}
-        labelStyle={styles.headerLabel}
-      >
-        {productCate.category.name}
-      </Button>
+    <View style={styles.container}>
+      <View style={styles.titleCon}>
+        <View style={styles.titleLeft}>
+          <Image source={{ uri: productCate.category.icon }} style={styles.titleLeftImage} />
+
+          <Text variant="titleLarge">{productCate.category.name}</Text>
+        </View>
+
+        <IconButton mode="contained-tonal" icon="chevron-right" size={18} onPress={() => onClickCategory()} />
+      </View>
 
       <ScrollViewWrapper itemSize="L" hideScrollbar>
         {productCate.products.map(product => (
@@ -61,15 +61,30 @@ const ProductCarouselRow = ({ productCate }: Props) => {
           />
         ))}
       </ScrollViewWrapper>
-    </Surface>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   // not using flex: 1 -> having weird gap
-  container: {
-    ...BASE_STYLE.SURFACE_DEFAULT,
-    paddingBottom: 20,
+  container: {},
+
+  titleCon: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+
+  titleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+
+  titleLeftImage: {
+    width: 20,
+    height: 20,
   },
 
   headerContainer: {

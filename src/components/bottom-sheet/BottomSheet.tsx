@@ -6,15 +6,18 @@ import BottomSheetLib from '@gorhom/bottom-sheet';
 import { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { Portal } from 'react-native-paper';
+import { SharedValue } from 'react-native-reanimated';
 
 type Props = {
-  children?: ReactNode;
   botSheetRef: MutableRefObject<BottomSheetMethods>;
+  snapPoints?: Array<string | number> | SharedValue<Array<string | number>>;
+  children?: ReactNode;
+  transparentBackdrop?: boolean;
   onSheetChange?: (index: number) => void;
 };
 
-const BottomSheet = ({ children, botSheetRef, onSheetChange }: Props) => {
-  const snapPoints = ['30%', '50%'];
+const BottomSheet = ({ transparentBackdrop, children, snapPoints, botSheetRef, onSheetChange }: Props) => {
+  const defaultSnapPoints = ['30%', '50%'];
 
   const handleSheetChanges = (index: number) => {
     onSheetChange?.(index);
@@ -25,14 +28,19 @@ const BottomSheet = ({ children, botSheetRef, onSheetChange }: Props) => {
     []
   );
 
+  const renderTransparentBackdrop = useCallback(
+    props => <BottomSheetBackdrop {...props} opacity={0} enableTouchThrough />,
+    []
+  );
+
   // Add Portal to fix bug: https://github.com/gorhom/react-native-bottom-sheet/issues/972#issuecomment-1986381407
   return (
     <Portal>
       <BottomSheetLib
         ref={botSheetRef}
         index={-1}
-        snapPoints={snapPoints}
-        backdropComponent={renderBackdrop}
+        snapPoints={snapPoints || defaultSnapPoints}
+        backdropComponent={transparentBackdrop ? renderTransparentBackdrop : renderBackdrop}
         enableDynamicSizing={false}
         onChange={handleSheetChanges}
       >

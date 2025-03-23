@@ -1,13 +1,23 @@
+import { BottomSheet, useBottomSheet } from 'components/bottom-sheet';
 import { CUSTOM_THEME, THEME } from 'const';
-import { HeaderSearch } from 'modules';
+import { HeaderCart, HeaderSearch } from 'modules';
 import { CategoryDrawerModal } from 'modules/category';
 import HeaderAccount from 'modules/header/HeaderAccount';
-import { useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Appbar } from 'react-native-paper';
+import { useHeaderSearch } from 'modules/header/hooks';
+import { useEffect, useState } from 'react';
+import { Dimensions, StyleSheet, View } from 'react-native';
+import { Appbar, Text } from 'react-native-paper';
+import { getHiddenDisplayStyle } from 'utils';
+
+const BOTTOM_SHEET_HEIGHT = Dimensions.get('window').height - CUSTOM_THEME.headerHeight;
 
 const AppHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isFocusSearchbar, setIsFocusSeachbar] = useState(false);
+  const { botSheetRef, onOpenBotSheet, onCloseBotSheet } = useBottomSheet({});
+  const { searchText, onChangeSearchText } = useHeaderSearch();
+
+  // -- FUNCTIONS --
 
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
@@ -17,25 +27,59 @@ const AppHeader = () => {
     setIsDrawerOpen(false);
   };
 
+  const handleChangeFocus = (isFocus: boolean) => {
+    setIsFocusSeachbar(isFocus);
+  };
+
+  const handlePressBack = () => {
+    handleChangeFocus(false);
+    onCloseBotSheet();
+  };
+
+  // -- EFFECT --
+
+  useEffect(() => {
+    if (isFocusSearchbar) {
+      onOpenBotSheet();
+    }
+  }, [isFocusSearchbar, onOpenBotSheet]);
+
   return (
     <>
       <Appbar.Header style={styles.header}>
-        <Appbar.Action icon="menu" onPress={toggleDrawer} style={styles.leftIcon} size={18} />
+        {isFocusSearchbar ? (
+          <Appbar.BackAction onPress={handlePressBack} style={styles.leftIcon} size={18} />
+        ) : (
+          <Appbar.Action icon="menu" onPress={toggleDrawer} style={styles.leftIcon} size={18} />
+        )}
 
         <View style={styles.search}>
-          <HeaderSearch />
+          <HeaderSearch
+            searchText={searchText}
+            onChangeSearchText={onChangeSearchText}
+            handleChangeFocus={handleChangeFocus}
+          />
+
+          <View style={getHiddenDisplayStyle(isFocusSearchbar)}>
+            <HeaderCart />
+          </View>
         </View>
 
-        <View style={styles.accountCon}>
+        <View style={getHiddenDisplayStyle(isFocusSearchbar, styles.accountCon)}>
           <HeaderAccount />
         </View>
       </Appbar.Header>
 
       <CategoryDrawerModal isOpen={isDrawerOpen} onClose={onCloseDrawer} />
+
+      <BottomSheet botSheetRef={botSheetRef} snapPoints={[BOTTOM_SHEET_HEIGHT]} transparentBackdrop>
+        <Text>Search suggestion</Text>
+      </BottomSheet>
     </>
   );
 };
 
+// TODO animate header expansion
 const styles = StyleSheet.create({
   header: {
     backgroundColor: THEME.colors.primaryContainer,
@@ -53,6 +97,8 @@ const styles = StyleSheet.create({
 
   search: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   accountCon: {

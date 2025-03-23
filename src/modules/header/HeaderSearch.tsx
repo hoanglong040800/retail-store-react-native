@@ -1,26 +1,28 @@
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { CUSTOM_THEME, THEME } from 'const';
-import { useHeaderCart } from './hooks';
+import { CUSTOM_THEME } from 'const';
 
-const HeaderSearch = () => {
-  const [searchText, setSearchText] = useState('');
-  const { renderCart } = useHeaderCart();
+type Props = {
+  searchText: string;
+  onChangeSearchText: (value: string) => Promise<void>;
+  handleChangeFocus: (isFocus: boolean) => void;
+};
 
-  const onChangeText = (value: string) => {
-    setSearchText(value);
+const HeaderSearch = ({ searchText, onChangeSearchText, handleChangeFocus }: Props) => {
+  const onFocus = () => {
+    handleChangeFocus(true);
   };
 
   return (
     <View style={styles.container}>
       <TextInput
         value={searchText}
-        onChangeText={onChangeText}
+        onChangeText={onChangeSearchText}
         mode="outlined"
         placeholder="Search"
-        right={renderCart()}
+        onFocus={onFocus}
         style={styles.searchBar}
+        contentStyle={styles.searchOutline}
         outlineStyle={styles.searchOutline}
       />
     </View>
@@ -34,11 +36,15 @@ const styles = StyleSheet.create({
 
   searchBar: {
     height: CUSTOM_THEME.headerHeight - 16,
+    borderTopLeftRadius: 99,
+    borderBottomLeftRadius: 99,
+    borderTopRightRadius: 0,
+    borderBottomEndRadius: 0,
   },
 
   searchOutline: {
     borderRadius: 99,
-    borderColor: THEME.colors.primaryContainer,
+    borderColor: '#fff',
   },
 });
 

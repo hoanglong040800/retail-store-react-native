@@ -1,4 +1,5 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+. ".config/husky/.huskyrc"
 
 npx lint-staged
+

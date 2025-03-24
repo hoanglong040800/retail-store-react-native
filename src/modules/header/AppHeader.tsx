@@ -16,7 +16,14 @@ const AppHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isFocusSearchbar, setIsFocusSeachbar] = useState(false);
   const { botSheetRef, onOpenBotSheet, onCloseBotSheet } = useBottomSheet({});
-  const { searchText, recentSearchTexts, handleClickRecentSearchText, onChangeSearchText } = useHeaderSearch();
+  const {
+    searchText,
+    recentSearchTexts,
+    suggestSearches,
+    handleClickRecentSearchText,
+    onChangeSearchText,
+    handleClickSuggestedSearch,
+  } = useHeaderSearch();
 
   // -- FUNCTIONS --
 
@@ -74,7 +81,12 @@ const AppHeader = () => {
       <CategoryDrawerModal isOpen={isDrawerOpen} onClose={onCloseDrawer} />
 
       <BottomSheet botSheetRef={botSheetRef} snapPoints={[BOTTOM_SHEET_HEIGHT]} transparentBackdrop>
-        <HeaderSearchSuggestion recentSearchTexts={recentSearchTexts} onClickRecentText={handleClickRecentSearchText} />
+        <HeaderSearchSuggestion
+          recentSearchTexts={recentSearchTexts}
+          suggestSearches={suggestSearches}
+          onClickRecentText={handleClickRecentSearchText}
+          onClickSuggestedSearch={handleClickSuggestedSearch}
+        />
       </BottomSheet>
     </>
   );

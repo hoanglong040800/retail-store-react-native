@@ -1,15 +1,27 @@
-import { StyleSheet, View } from 'react-native';
-import { Chip, Text } from 'react-native-paper';
+import { Image, StyleSheet, View } from 'react-native';
+import { Chip, List, Text } from 'react-native-paper';
+import { SuggestedSearch } from 'types';
 import { getDisplayStyle } from 'utils';
 
 type Props = {
   recentSearchTexts: string[];
+  suggestSearches: SuggestedSearch[];
   onClickRecentText: (index: number) => void;
+  onClickSuggestedSearch: (suggestSearch: SuggestedSearch) => void;
 };
 
-const HeaderSearchSuggestion = ({ recentSearchTexts, onClickRecentText }: Props) => {
+const HeaderSearchSuggestion = ({
+  recentSearchTexts,
+  suggestSearches,
+  onClickRecentText,
+  onClickSuggestedSearch,
+}: Props) => {
+  const renderImage = productImage => {
+    return <Image source={{ uri: productImage, width: 20, height: 20 }} />;
+  };
+
   return (
-    <View>
+    <View style={styles.container}>
       {/* Recent search history */}
       <View style={getDisplayStyle(!!recentSearchTexts.length)}>
         <Text variant="bodyLarge">Recent search history</Text>
@@ -23,16 +35,37 @@ const HeaderSearchSuggestion = ({ recentSearchTexts, onClickRecentText }: Props)
         </View>
       </View>
 
-      {/* API search result */}
+      {/* Suggested search */}
+      <List.Section style={[getDisplayStyle(!!suggestSearches.length), styles.suggestedChipCon]}>
+        <Text variant="bodyLarge">Suggested search result</Text>
+
+        {suggestSearches.map(search => (
+          <List.Item
+            left={() => renderImage(search.productImage)}
+            title={search.productName}
+            key={search.productId}
+            onPress={() => onClickSuggestedSearch(search)}
+          />
+        ))}
+      </List.Section>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    gap: 20,
+  },
+
   recentChipCon: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 8,
+  },
+
+  suggestedChipCon: {
     gap: 8,
     marginTop: 8,
   },

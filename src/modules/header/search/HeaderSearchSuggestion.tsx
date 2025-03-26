@@ -1,11 +1,12 @@
 import { Image, StyleSheet, View } from 'react-native';
-import { Chip, List, Text } from 'react-native-paper';
+import { ActivityIndicator, Chip, List, Text } from 'react-native-paper';
 import { SuggestedSearch } from 'types';
 import { getDisplayStyle } from 'utils';
 
 type Props = {
   recentSearchTexts: string[];
   suggestSearches: SuggestedSearch[];
+  isLoadingSearchResult: boolean;
   onClickRecentText: (index: number) => void;
   onClickSuggestedSearch: (suggestSearch: SuggestedSearch) => void;
 };
@@ -13,6 +14,7 @@ type Props = {
 const HeaderSearchSuggestion = ({
   recentSearchTexts,
   suggestSearches,
+  isLoadingSearchResult,
   onClickRecentText,
   onClickSuggestedSearch,
 }: Props) => {
@@ -39,14 +41,17 @@ const HeaderSearchSuggestion = ({
       <List.Section style={[getDisplayStyle(!!suggestSearches.length), styles.suggestedChipCon]}>
         <Text variant="bodyLarge">Suggested search result</Text>
 
-        {suggestSearches.map(search => (
-          <List.Item
-            left={() => renderImage(search.productImage)}
-            title={search.productName}
-            key={search.productId}
-            onPress={() => onClickSuggestedSearch(search)}
-          />
-        ))}
+        {isLoadingSearchResult && <ActivityIndicator />}
+
+        {!isLoadingSearchResult &&
+          suggestSearches?.map(search => (
+            <List.Item
+              left={() => renderImage(search.productImage)}
+              title={search.productName}
+              key={search.productId}
+              onPress={() => onClickSuggestedSearch(search)}
+            />
+          ))}
       </List.Section>
     </View>
   );

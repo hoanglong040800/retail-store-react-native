@@ -8,3 +8,4 @@ export * from './cart.service';
 export * from './checkout.service';
 export * from './users-orders.service';
 export * from './home.service';
+export * from './search.service';

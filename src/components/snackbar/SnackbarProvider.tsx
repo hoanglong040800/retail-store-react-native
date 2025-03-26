@@ -25,7 +25,7 @@ const SnackbarProvider = ({ children }: Props) => {
       {children}
 
       <SnackbarPortal>
-        <Snackbar visible={state.visible} title={state.title} onDismiss={handleDismiss} />
+        <Snackbar visible={state.visible} title={state.title} onDismiss={handleDismiss} type={state.type} />
       </SnackbarPortal>
     </SnackbarDpCxt.Provider>
   );

@@ -20,6 +20,7 @@ const AppHeader = () => {
     searchText,
     recentSearchTexts,
     suggestSearches,
+    isLoadingSearchResult,
     handleClickRecentSearchText,
     onChangeSearchText,
     handleClickSuggestedSearch,
@@ -84,6 +85,7 @@ const AppHeader = () => {
         <HeaderSearchSuggestion
           recentSearchTexts={recentSearchTexts}
           suggestSearches={suggestSearches}
+          isLoadingSearchResult={isLoadingSearchResult}
           onClickRecentText={handleClickRecentSearchText}
           onClickSuggestedSearch={handleClickSuggestedSearch}
         />

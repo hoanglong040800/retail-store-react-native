@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GetSearchDto, SuggestedSearch } from 'types';
-import { getStorageItem } from 'utils';
+import { debounce, getStorageItem } from 'utils';
 
 const MOCK_DATA: GetSearchDto = {
   searchCategories: [
@@ -122,8 +122,22 @@ export const useHeaderSearch = () => {
     alert(`handleClickSuggestedSearch ${suggestedSearch.productName}`);
   };
 
+  const handleGetSearchResult = async (searchTextPar: string) => {
+    const formatSearchText = searchTextPar.trim();
+
+    if (!formatSearchText) {
+      return;
+    }
+
+    alert(`handleGetSearchResult ${formatSearchText}`);
+  };
+
+  // use useCallback to avoid call every time re-render
+  const debounceSearch = useCallback(debounce(handleGetSearchResult, 1000), []);
+
   const onChangeSearchText = async (value: string): Promise<void> => {
     setSearchText(value);
+    debounceSearch(value);
   };
 
   useEffect(() => {

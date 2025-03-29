@@ -5,12 +5,15 @@ import { CategoryDrawerModal } from 'modules/category';
 import HeaderAccount from 'modules/header/HeaderAccount';
 import { useHeaderSearch } from 'modules/header/hooks';
 import { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { Dimensions, StyleSheet, Animated } from 'react-native';
 import { Appbar } from 'react-native-paper';
-import { getHiddenDisplayStyle } from 'utils';
 import { HeaderSearch, HeaderSearchSuggestion } from './search';
 
 const BOTTOM_SHEET_HEIGHT = Dimensions.get('window').height - CUSTOM_THEME.headerHeight;
+const FLEX_RATIO = {
+  search: 2.5,
+  rightSide: 0.5,
+};
 
 const AppHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -26,6 +29,10 @@ const AppHeader = () => {
     handleClickSuggestedSearch,
   } = useHeaderSearch();
 
+  const fadeAnim = useState(new Animated.Value(1))[0];
+  const rightSideWidthAnim = useState(new Animated.Value(1))[0];
+  const flexAnim = useState(new Animated.Value(1))[0];
+
   // -- FUNCTIONS --
 
   const toggleDrawer = () => {
@@ -38,6 +45,28 @@ const AppHeader = () => {
 
   const handleChangeFocus = (isFocus: boolean) => {
     setIsFocusSeachbar(isFocus);
+
+    const duration = 200;
+
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: isFocus ? 0 : 1,
+        duration,
+        useNativeDriver: true,
+      }),
+
+      Animated.timing(rightSideWidthAnim, {
+        toValue: isFocus ? 0 : 1,
+        duration,
+        useNativeDriver: true, // Changed to true for smooth animation
+      }),
+
+      Animated.timing(flexAnim, {
+        toValue: isFocus ? 0 : FLEX_RATIO.rightSide,
+        duration,
+        useNativeDriver: true, // Changed to true for smooth animation
+      }),
+    ]).start();
   };
 
   const handlePressBack = () => {
@@ -56,27 +85,40 @@ const AppHeader = () => {
   return (
     <>
       <Appbar.Header style={styles.header}>
+        {/* left side */}
         {isFocusSearchbar ? (
           <Appbar.BackAction onPress={handlePressBack} style={styles.leftIcon} size={18} />
         ) : (
           <Appbar.Action icon="menu" onPress={toggleDrawer} style={styles.leftIcon} size={18} />
         )}
 
-        <View style={styles.search}>
+        <Animated.View style={[styles.search]}>
           <HeaderSearch
             searchText={searchText}
             onChangeSearchText={onChangeSearchText}
             handleChangeFocus={handleChangeFocus}
           />
+        </Animated.View>
 
-          <View style={getHiddenDisplayStyle(isFocusSearchbar)}>
-            <HeaderCart />
-          </View>
-        </View>
+        {/* right side */}
+        <Animated.View
+          style={[
+            styles.rightSide,
+            {
+              opacity: fadeAnim,
+              flex: rightSideWidthAnim,
+              transform: [
+                {
+                  scaleX: rightSideWidthAnim,
+                },
+              ],
+            },
+          ]}
+        >
+          <HeaderCart />
 
-        <View style={getHiddenDisplayStyle(isFocusSearchbar, styles.accountCon)}>
           <HeaderAccount />
-        </View>
+        </Animated.View>
       </Appbar.Header>
 
       <CategoryDrawerModal isOpen={isDrawerOpen} onClose={onCloseDrawer} />
@@ -119,13 +161,15 @@ const styles = StyleSheet.create({
   },
 
   search: {
-    flex: 1,
+    flex: FLEX_RATIO.search,
     flexDirection: 'row',
     alignItems: 'center',
   },
 
-  accountCon: {
-    marginLeft: 8,
+  rightSide: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
   },
 });
 

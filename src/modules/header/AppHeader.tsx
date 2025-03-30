@@ -33,6 +33,7 @@ const AppHeader = () => {
     handleClickRecentSearchText,
     onChangeSearchText,
     handleClickSuggestedSearch,
+    handlePressEnterOrClickSearch,
   } = useHeaderSearch({ onPressBack: handlePressBack });
 
   const fadeAnim = useState(new Animated.Value(1))[0];
@@ -98,6 +99,7 @@ const AppHeader = () => {
             searchText={searchText}
             onChangeSearchText={onChangeSearchText}
             handleChangeFocus={handleChangeFocus}
+            onPressSearch={handlePressEnterOrClickSearch}
           />
         </Animated.View>
 
@@ -125,13 +127,15 @@ const AppHeader = () => {
       <CategoryDrawerModal isOpen={isDrawerOpen} onClose={onCloseDrawer} />
 
       <BottomSheet botSheetRef={botSheetRef} snapPoints={[BOTTOM_SHEET_HEIGHT]} transparentBackdrop>
-        <HeaderSearchSuggestion
-          recentSearchTexts={recentSearchTexts}
-          suggestSearches={suggestSearches}
-          isLoadingSearchResult={isLoadingSearchResult}
-          onClickRecentText={handleClickRecentSearchText}
-          onClickSuggestedSearch={handleClickSuggestedSearch}
-        />
+        {isFocusSearchbar && (
+          <HeaderSearchSuggestion
+            recentSearchTexts={recentSearchTexts}
+            suggestSearches={suggestSearches}
+            isLoadingSearchResult={isLoadingSearchResult}
+            onClickRecentText={handleClickRecentSearchText}
+            onClickSuggestedSearch={handleClickSuggestedSearch}
+          />
+        )}
       </BottomSheet>
     </>
   );

@@ -1,9 +1,10 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { SEARCH_BAR } from 'const';
 import { useAppNavigation } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getSearchResult } from 'service';
-import { GetSearchDto, GetSearchQuery, Screen, SuggestedSearch } from 'types';
-import { debounce, getStorageItem } from 'utils';
+import { GetSearchDto, GetSearchQuery, Screen, StorageType, SuggestedSearch } from 'types';
+import { debounce, getStorageItem, setStorageItems } from 'utils';
 
 type Props = {
   onPressBack?: () => void;
@@ -36,50 +37,86 @@ export const useHeaderSearch = ({ onPressBack }: Props) => {
   // -------- FUNCTIONS -----------
 
   const getRecentSearchTexts = async () => {
-    const storageTexts = await getStorageItem('recentSearchTexts');
-    const limitTexts = storageTexts?.slice(1).slice(-5) || [];
-    const revertTextArr = limitTexts.reverse();
+    const storageTexts: StorageType['recentSearchTexts'] = (await getStorageItem('recentSearchTexts')) || [];
 
-    setRecentSearchTexts(revertTextArr);
+    if (!storageTexts.length) {
+      setRecentSearchTexts(storageTexts);
+      return;
+    }
+
+    const filteredStorageTexts = storageTexts.filter(text => text);
+
+    if (filteredStorageTexts.length > SEARCH_BAR.MAXIMUM_RECENT_SEARCH_TEXT) {
+      filteredStorageTexts.length = SEARCH_BAR.MAXIMUM_RECENT_SEARCH_TEXT;
+    }
+
+    setRecentSearchTexts(filteredStorageTexts);
   };
 
   const handleClickRecentSearchText = (index: number) => {
     const selectedText = recentSearchTexts[index];
     navigate(Screen.ProductSearch, { headerSearchText: selectedText });
-    handleAfterPressSearch();
+    handleAfterPressSearch(selectedText);
   };
 
   const handlePressEnterOrClickSearch = (curSearchText: string) => {
     navigate(Screen.ProductSearch, { headerSearchText: curSearchText });
-    handleAfterPressSearch();
+    handleAfterPressSearch(curSearchText);
   };
 
   const handleClickSuggestedSearch = (suggestedSearch: SuggestedSearch) => {
     navigate(Screen.ProductDetail, {
       productId: suggestedSearch.productId,
     });
-    handleAfterPressSearch();
+    handleAfterPressSearch(searchText);
   };
 
-  const handleAfterPressSearch = () => {
+  const formatSearchText = (searchTextPar: string) => {
+    return searchTextPar.trim();
+  };
+
+  const handleAfterPressSearch = async (searchTextPar: string) => {
     setSearchText('');
     setSearchResult(null);
+    await saveRecentSearchText(searchTextPar);
+
     onPressBack?.();
+  };
+
+  const saveRecentSearchText = async (searchTextPar: string) => {
+    const formattedSearchText = formatSearchText(searchTextPar);
+
+    const nonDupSearchTexts: string[] = recentSearchTexts.filter(text => text !== formattedSearchText);
+
+    const newSearchTexts = [formattedSearchText, ...nonDupSearchTexts];
+
+    const filteredSearchTexts = newSearchTexts.filter(text => text);
+
+    if (filteredSearchTexts.length > SEARCH_BAR.MAXIMUM_RECENT_SEARCH_TEXT) {
+      filteredSearchTexts.length = SEARCH_BAR.MAXIMUM_RECENT_SEARCH_TEXT;
+    }
+
+    await setStorageItems({
+      recentSearchTexts: filteredSearchTexts,
+    });
+
+    // get again to update latest texts
+    await getRecentSearchTexts();
   };
 
   const handleGetSearchResult = async (searchTextPar: string) => {
     try {
       setIsLoadingSearchResult(true);
 
-      const formatSearchText = searchTextPar.trim();
+      const formattedSearchText = searchTextPar.trim();
 
-      if (!formatSearchText) {
+      if (!formattedSearchText) {
         setSearchResult(null);
         return;
       }
 
       const query: GetSearchQuery = {
-        searchText: formatSearchText,
+        searchText: formattedSearchText,
       };
 
       const res = await queryClient.fetchQuery({
@@ -104,10 +141,8 @@ export const useHeaderSearch = ({ onPressBack }: Props) => {
   };
 
   useEffect(() => {
-    if (!recentSearchTexts.length) {
-      getRecentSearchTexts();
-    }
-  }, [recentSearchTexts.length]);
+    getRecentSearchTexts();
+  }, []);
 
   return {
     searchText,

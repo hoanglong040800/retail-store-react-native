@@ -6,11 +6,16 @@ type Props = {
   searchText: string;
   onChangeSearchText: (value: string) => Promise<void>;
   handleChangeFocus: (isFocus: boolean) => void;
+  onPressSearch: (searchText: string) => void;
 };
 
-const HeaderSearch = ({ searchText, onChangeSearchText, handleChangeFocus }: Props) => {
+const HeaderSearch = ({ searchText, onChangeSearchText, handleChangeFocus, onPressSearch }: Props) => {
   const onFocus = () => {
     handleChangeFocus(true);
+  };
+
+  const onSubmitEditing = () => {
+    onPressSearch(searchText);
   };
 
   return (
@@ -24,6 +29,7 @@ const HeaderSearch = ({ searchText, onChangeSearchText, handleChangeFocus }: Pro
         style={styles.searchBar}
         contentStyle={styles.searchOutline}
         outlineStyle={styles.searchOutline}
+        onSubmitEditing={onSubmitEditing}
       />
     </View>
   );

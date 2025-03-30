@@ -31,3 +31,7 @@ export const ORDER_ACTIONS_CONDITION: Record<OrderActionEnum, { status: OrderSta
     status: [OrderStatusEnum.pending, OrderStatusEnum.awaitingPayment, OrderStatusEnum.awaitingFulfillment],
   },
 };
+
+export const SEARCH_BAR = {
+  MAXIMUM_RECENT_SEARCH_TEXT: 5,
+};

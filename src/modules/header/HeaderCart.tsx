@@ -24,9 +24,11 @@ const HeaderCart = () => {
 
   return (
     <View style={styles.container}>
-      <Badge size={18} style={styles.badge}>
-        {total}
-      </Badge>
+      {!!total && (
+        <Badge size={18} style={styles.badge}>
+          {total}
+        </Badge>
+      )}
 
       <IconButton icon="cart" size={25} onPress={handlePressViewCart} style={styles.iconButton} />
     </View>

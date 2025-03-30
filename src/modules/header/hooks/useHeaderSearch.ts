@@ -1,13 +1,20 @@
 import { useQueryClient } from '@tanstack/react-query';
+import { useAppNavigation } from 'hooks';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getSearchResult } from 'service';
-import { GetSearchDto, GetSearchQuery, SuggestedSearch } from 'types';
+import { GetSearchDto, GetSearchQuery, Screen, SuggestedSearch } from 'types';
 import { debounce, getStorageItem } from 'utils';
 
-export const useHeaderSearch = () => {
+type Props = {
+  onPressBack?: () => void;
+};
+
+export const useHeaderSearch = ({ onPressBack }: Props) => {
+  const queryClient = useQueryClient();
+  const { navigate } = useAppNavigation();
+
   const [searchText, setSearchText] = useState('');
   const [recentSearchTexts, setRecentSearchTexts] = useState<string[]>([]);
-  const queryClient = useQueryClient();
   const [searchResult, setSearchResult] = useState<GetSearchDto>(null);
   const [isLoadingSearchResult, setIsLoadingSearchResult] = useState(false);
 
@@ -38,11 +45,26 @@ export const useHeaderSearch = () => {
 
   const handleClickRecentSearchText = (index: number) => {
     const selectedText = recentSearchTexts[index];
-    alert(`handleClickRecentSearchText ${selectedText}`);
+    navigate(Screen.ProductSearch, { headerSearchText: selectedText });
+    handleAfterPressSearch();
+  };
+
+  const handlePressEnterOrClickSearch = (curSearchText: string) => {
+    navigate(Screen.ProductSearch, { headerSearchText: curSearchText });
+    handleAfterPressSearch();
   };
 
   const handleClickSuggestedSearch = (suggestedSearch: SuggestedSearch) => {
-    alert(`handleClickSuggestedSearch ${suggestedSearch.productName}`);
+    navigate(Screen.ProductDetail, {
+      productId: suggestedSearch.productId,
+    });
+    handleAfterPressSearch();
+  };
+
+  const handleAfterPressSearch = () => {
+    setSearchText('');
+    setSearchResult(null);
+    onPressBack?.();
   };
 
   const handleGetSearchResult = async (searchTextPar: string) => {
@@ -95,5 +117,6 @@ export const useHeaderSearch = () => {
     onChangeSearchText,
     handleClickRecentSearchText,
     handleClickSuggestedSearch,
+    handlePressEnterOrClickSearch,
   };
 };

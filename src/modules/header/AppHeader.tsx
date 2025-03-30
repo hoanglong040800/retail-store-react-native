@@ -19,6 +19,12 @@ const AppHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isFocusSearchbar, setIsFocusSeachbar] = useState(false);
   const { botSheetRef, onOpenBotSheet, onCloseBotSheet } = useBottomSheet({});
+
+  const handlePressBack = () => {
+    handleChangeFocus(false);
+    onCloseBotSheet();
+  };
+
   const {
     searchText,
     recentSearchTexts,
@@ -27,7 +33,7 @@ const AppHeader = () => {
     handleClickRecentSearchText,
     onChangeSearchText,
     handleClickSuggestedSearch,
-  } = useHeaderSearch();
+  } = useHeaderSearch({ onPressBack: handlePressBack });
 
   const fadeAnim = useState(new Animated.Value(1))[0];
   const rightSideWidthAnim = useState(new Animated.Value(1))[0];
@@ -67,11 +73,6 @@ const AppHeader = () => {
         useNativeDriver: true, // Changed to true for smooth animation
       }),
     ]).start();
-  };
-
-  const handlePressBack = () => {
-    handleChangeFocus(false);
-    onCloseBotSheet();
   };
 
   // -- EFFECT --

@@ -65,8 +65,8 @@ const styles = StyleSheet.create({
   },
 
   scrollView_rowS: {
-    minHeight: 120,
-    maxHeight: 120,
+    minHeight: 90,
+    maxHeight: 100,
   },
 
   scrollView_rowM: {

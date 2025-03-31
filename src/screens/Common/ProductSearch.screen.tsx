@@ -1,8 +1,9 @@
 import { Route } from '@react-navigation/native';
 import { ScreenAppBar } from 'components';
+import { CategoryList, ProductList } from 'modules';
 import { useProductSearchScreen } from 'modules/product/hooks';
 import { useMemo } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 import { ParamsType, Screen } from 'types';
 
@@ -18,7 +19,9 @@ const ProductSearchScreen = ({ route }: Props) => {
     return route.params?.headerSearchText || '';
   }, [route.params?.headerSearchText]);
 
-  const { searchResult, isFetchingSearchResult } = useProductSearchScreen({ searchParam });
+  const { selectedCate, searchLv2Categories, isFetchingSearchResult, onPressCateItem } = useProductSearchScreen({
+    searchParam,
+  });
 
   // -- RENDERING --
 
@@ -26,21 +29,29 @@ const ProductSearchScreen = ({ route }: Props) => {
     return <ActivityIndicator />;
   }
 
-  if (!searchResult?.searchProducts?.length) {
+  if (!searchLv2Categories?.length) {
     if (searchParam) {
       return <View>Not found any products on text: {searchParam}</View>;
     }
 
-    if (!searchParam) {
-      return <View>Search text is empty</View>;
-    }
+    return <View>Search text is empty</View>;
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <ScreenAppBar title={`Search result for: ${searchParam}`} />
+
+      <CategoryList list={searchLv2Categories} direction="row" itemSize="S" onPressItem={onPressCateItem} />
+
+      <ProductList products={searchLv2Categories[selectedCate?.index]?.products} />
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
 
 export default ProductSearchScreen;

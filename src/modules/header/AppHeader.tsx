@@ -10,10 +10,10 @@ import { Appbar } from 'react-native-paper';
 import { HeaderSearch, HeaderSearchSuggestion } from './search';
 
 const BOTTOM_SHEET_HEIGHT = Dimensions.get('window').height - CUSTOM_THEME.headerHeight;
-const FLEX_RATIO = {
-  search: 2.5,
-  rightSide: 0.5,
-};
+
+console.log(Dimensions.get('window').height, CUSTOM_THEME.headerHeight);
+
+const LEFT_SIDE_WIDTH = 100;
 
 const AppHeader = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -37,8 +37,7 @@ const AppHeader = () => {
   } = useHeaderSearch({ onPressBack: handlePressBack });
 
   const fadeAnim = useState(new Animated.Value(1))[0];
-  const rightSideWidthAnim = useState(new Animated.Value(1))[0];
-  const flexAnim = useState(new Animated.Value(1))[0];
+  const rightSideWidthAnim = useState(new Animated.Value(LEFT_SIDE_WIDTH))[0];
 
   // -- FUNCTIONS --
 
@@ -63,15 +62,9 @@ const AppHeader = () => {
       }),
 
       Animated.timing(rightSideWidthAnim, {
-        toValue: isFocus ? 0 : 1,
+        toValue: isFocus ? 0 : LEFT_SIDE_WIDTH,
         duration,
-        useNativeDriver: true, // Changed to true for smooth animation
-      }),
-
-      Animated.timing(flexAnim, {
-        toValue: isFocus ? 0 : FLEX_RATIO.rightSide,
-        duration,
-        useNativeDriver: true, // Changed to true for smooth animation
+        useNativeDriver: true,
       }),
     ]).start();
   };
@@ -109,12 +102,7 @@ const AppHeader = () => {
             styles.rightSide,
             {
               opacity: fadeAnim,
-              flex: rightSideWidthAnim,
-              transform: [
-                {
-                  scaleX: rightSideWidthAnim,
-                },
-              ],
+              width: rightSideWidthAnim,
             },
           ]}
         >
@@ -159,14 +147,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
+    flex: 1,
   },
 
   leftIcon: {
     backgroundColor: THEME.colors.primaryContainer,
+    width: 34,
   },
 
   search: {
-    flex: FLEX_RATIO.search,
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
   },

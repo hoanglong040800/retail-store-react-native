@@ -7,10 +7,11 @@ import { GetSearchDto, GetSearchQuery, Screen, StorageType, SuggestedSearch } fr
 import { debounce, getStorageItem, setStorageItems } from 'utils';
 
 type Props = {
+  isFocusSearchBar?: boolean;
   onPressBack?: () => void;
 };
 
-export const useHeaderSearch = ({ onPressBack }: Props) => {
+export const useHeaderSearch = ({ isFocusSearchBar, onPressBack }: Props) => {
   const queryClient = useQueryClient();
   const { navigate } = useAppNavigation();
 
@@ -20,7 +21,7 @@ export const useHeaderSearch = ({ onPressBack }: Props) => {
   const [isLoadingSearchResult, setIsLoadingSearchResult] = useState(false);
 
   const suggestSearches = useMemo<SuggestedSearch[]>(() => {
-    if (!searchResult) {
+    if (!searchResult || isFocusSearchBar === false) {
       return [];
     }
 

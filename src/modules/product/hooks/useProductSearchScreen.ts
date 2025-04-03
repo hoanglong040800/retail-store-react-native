@@ -4,6 +4,14 @@ import { getSearchResult } from 'service';
 import { CategoryDto, GetSearchDto, ParamsType, SearchProductDto } from 'types';
 import { keyByArr } from 'utils';
 
+const ALL_PRODUCTS_TAB: CategoryDto = {
+  id: 'all',
+  name: 'All Products',
+  icon: 'https://cdn-icons-png.flaticon.com/512/1198/1198284.png',
+  level: 0,
+  isLeaf: true,
+};
+
 type Props = {
   searchParam: ParamsType['headerSearchText'];
 };
@@ -34,12 +42,29 @@ export const useProductSearchScreen = ({ searchParam }: Props) => {
       return [];
     }
 
+    const mappedProductCategories = mapFetchedSearchCate(getSearchRes);
+    const allProductTab: CategoryDto = {
+      ...ALL_PRODUCTS_TAB,
+      products: getSearchRes.searchProducts,
+    };
+
+    const mapFixTabCategories = [allProductTab, ...mappedProductCategories];
+
+    setSelectedCate({ index: 0, id: mapFixTabCategories[0]?.id });
+
+    return mapFixTabCategories;
+  }, [getSearchRes]);
+
+  // -- FUNCTIONS --
+
+  // function expression is not hositing, only normal function
+  function mapFetchedSearchCate(searchResponse: GetSearchDto): CategoryDto[] {
     const productsByLv2CateId: Record<string, SearchProductDto[]> = keyByArr<SearchProductDto>(
-      getSearchRes.searchProducts,
+      searchResponse.searchProducts,
       'leafCategoryId'
     );
 
-    const mappedProductCategories: CategoryDto[] = getSearchRes.searchCategories.map(cate => {
+    const mappedProductCategories: CategoryDto[] = searchResponse.searchCategories.map(cate => {
       const productOfCate = productsByLv2CateId[cate.id] || [];
 
       return {
@@ -48,12 +73,8 @@ export const useProductSearchScreen = ({ searchParam }: Props) => {
       };
     });
 
-    setSelectedCate({ index: 0, id: mappedProductCategories[0]?.id });
-
     return mappedProductCategories;
-  }, [getSearchRes]);
-
-  // -- FUNCTIONS --
+  }
 
   const onPressCateItem = (index: number, id: string) => {
     setSelectedCate({ index, id });

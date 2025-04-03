@@ -11,8 +11,6 @@ import { HeaderSearch, HeaderSearchSuggestion } from './search';
 
 const BOTTOM_SHEET_HEIGHT = Dimensions.get('window').height - CUSTOM_THEME.headerHeight;
 
-console.log(Dimensions.get('window').height, CUSTOM_THEME.headerHeight);
-
 const LEFT_SIDE_WIDTH = 100;
 
 const AppHeader = () => {
@@ -34,7 +32,7 @@ const AppHeader = () => {
     onChangeSearchText,
     handleClickSuggestedSearch,
     handlePressEnterOrClickSearch,
-  } = useHeaderSearch({ onPressBack: handlePressBack });
+  } = useHeaderSearch({ onPressBack: handlePressBack, isFocusSearchBar: isFocusSearchbar });
 
   const fadeAnim = useState(new Animated.Value(1))[0];
   const rightSideWidthAnim = useState(new Animated.Value(LEFT_SIDE_WIDTH))[0];
@@ -129,7 +127,6 @@ const AppHeader = () => {
   );
 };
 
-// TODO animate header expansion
 const styles = StyleSheet.create({
   header: {
     backgroundColor: THEME.colors.primaryContainer,

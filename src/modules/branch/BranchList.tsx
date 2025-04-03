@@ -16,7 +16,6 @@ const BranchList = ({ branches }: Props) => {
 
   // refer to handleSaveLocation from AdminDivisionSelector.tsx
   const handleChooseStore = async (branch: BranchDto) => {
-    console.log('handleChooseStore', branch);
     if (!branch?.ward?.parentDivision?.parentDivision?.id) {
       return;
     }

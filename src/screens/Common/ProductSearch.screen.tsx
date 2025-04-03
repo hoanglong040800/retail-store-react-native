@@ -41,7 +41,13 @@ const ProductSearchScreen = ({ route }: Props) => {
     <View style={styles.container}>
       <ScreenAppBar title={`Search result for: ${searchParam}`} />
 
-      <CategoryList list={searchLv2Categories} direction="row" itemSize="S" onPressItem={onPressCateItem} />
+      <CategoryList
+        list={searchLv2Categories}
+        direction="row"
+        itemSize="S"
+        onPressItem={onPressCateItem}
+        selectedId={selectedCate?.id}
+      />
 
       <ProductList products={searchLv2Categories[selectedCate?.index]?.products} />
     </View>

@@ -43,8 +43,15 @@ const BottomSheet = ({ transparentBackdrop, children, snapPoints, botSheetRef, o
         backdropComponent={transparentBackdrop ? renderTransparentBackdrop : renderBackdrop}
         enableDynamicSizing={false}
         onChange={handleSheetChanges}
+        aria-label="Bottom Sheet"
       >
-        <BottomSheetScrollView style={styles.contentContainer}>{children}</BottomSheetScrollView>
+        <BottomSheetScrollView
+          aria-label="Bottom Sheet Scroll View"
+          style={styles.contentContainer}
+          contentContainerStyle={styles.contentContentContainer}
+        >
+          {children}
+        </BottomSheetScrollView>
       </BottomSheetLib>
     </Portal>
   );
@@ -54,6 +61,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     padding: 16,
+  },
+
+  contentContentContainer: {
+    flex: 1,
   },
 });
 

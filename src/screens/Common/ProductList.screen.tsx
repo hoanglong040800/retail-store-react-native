@@ -1,11 +1,12 @@
 import { Route } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
-import { ScreenAppBar } from 'components';
+import { BottomSheet, ScreenAppBar, useBottomSheet } from 'components';
 import { CategoryList } from 'modules/category';
 import { ProductList } from 'modules/product';
+import { ProductFilter } from 'modules/product/filter';
 import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
+import { ActivityIndicator, Button } from 'react-native-paper';
 import { getCategoryById } from 'service';
 import { CategoryDto, ParamsType, Screen } from 'types';
 
@@ -18,6 +19,8 @@ type Props = {
 const ProductListScreen = ({ route: { params } }: Props) => {
   const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>(null);
 
+  const { botSheetRef, onCloseBotSheet, onOpenBotSheet } = useBottomSheet({});
+
   const { data: lv1Category, isLoading } = useQuery<CategoryDto, null, CategoryDto>({
     queryKey: [params.mainCate.id],
     queryFn: () => getCategoryById(params.mainCate.id),
@@ -25,6 +28,10 @@ const ProductListScreen = ({ route: { params } }: Props) => {
 
   const onPressCateItem = (index: number, id: string) => {
     setSelectedSubCate({ index, id });
+  };
+
+  const onPressApply = () => {
+    onCloseBotSheet();
   };
 
   useEffect(() => {
@@ -42,9 +49,19 @@ const ProductListScreen = ({ route: { params } }: Props) => {
     return <ActivityIndicator animating />;
   }
 
+  // -- RENDERING --
+
+  const renderFilterButton = () => {
+    return (
+      <Button icon="filter" onPress={onOpenBotSheet}>
+        Filter
+      </Button>
+    );
+  };
+
   return (
     <View style={styles.container}>
-      <ScreenAppBar title={lv1Category.name} />
+      <ScreenAppBar title={lv1Category.name} right={renderFilterButton()} />
 
       <CategoryList
         list={lv1Category.childCategories}
@@ -58,6 +75,10 @@ const ProductListScreen = ({ route: { params } }: Props) => {
         products={lv1Category.childCategories[selectedSubCate?.index]?.products}
         style={styles.productList}
       />
+
+      <BottomSheet botSheetRef={botSheetRef} snapPoints={['60%']}>
+        <ProductFilter onPressApply={onPressApply} />
+      </BottomSheet>
     </View>
   );
 };

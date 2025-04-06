@@ -11,6 +11,25 @@ const EXTRA_SELECTION_SCREEN: Record<string, Screen> = {
   ALL_STORES: Screen.AllBranches,
 };
 
+const EXTRA_SELECTION_TOP: CategoryDto[] = [
+  {
+    id: '0',
+    name: 'More',
+    icon: 'https://cdn-icons-png.flaticon.com/512/1041/1041883.png',
+    level: 1,
+    isLeaf: false,
+    childCategories: [
+      {
+        id: EXTRA_SELECTION_SCREEN.ALL_STORES,
+        name: 'View all stores',
+        icon: 'https://cdn-icons-png.flaticon.com/512/8771/8771926.png',
+        isLeaf: true,
+        level: 2,
+      },
+    ],
+  },
+];
+
 type Props = {
   callbackAfterPressCategory?: () => void;
 };
@@ -21,25 +40,6 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
   const { categories } = useRecoilValue(globalConfigState);
 
   const [curMainIndex, setCurMainIndex] = useState<number>(1);
-
-  const EXTRA_SELECTION_TOP: CategoryDto[] = [
-    {
-      id: '0',
-      name: 'More',
-      icon: 'https://cdn-icons-png.flaticon.com/512/1041/1041883.png',
-      level: 1,
-      isLeaf: false,
-      childCategories: [
-        {
-          id: EXTRA_SELECTION_SCREEN.ALL_STORES,
-          name: 'View all stores',
-          icon: 'https://cdn-icons-png.flaticon.com/512/8771/8771926.png',
-          isLeaf: true,
-          level: 2,
-        },
-      ],
-    },
-  ];
 
   const sidebarList = useMemo<CategoryDto[]>(() => {
     const newSidebar: CategoryDto[] = [...EXTRA_SELECTION_TOP, ...(categories || [])];
@@ -85,7 +85,12 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
 
   return (
     <View style={styles.layout}>
-      <CategoryList list={sidebarList} onPressItem={onPressMainCategory} style={styles.leftCate} />
+      <CategoryList
+        list={sidebarList}
+        onPressItem={onPressMainCategory}
+        selectedId={sidebarList[curMainIndex]?.id}
+        style={styles.leftCate}
+      />
 
       <View style={styles.rightCate}>
         <CategoryList

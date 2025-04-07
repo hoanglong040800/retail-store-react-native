@@ -1,9 +1,8 @@
 import { Text } from 'react-native-paper';
 import { FlatList, StyleSheet, ViewStyle, StyleProp, View, Dimensions } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
-import { useAppNavigation } from 'hooks';
-import { Screen } from 'types';
 import ProductCard from './ProductCard';
+import { useProductListScreen } from './hooks';
 
 type Props = {
   products: ProductDto[];
@@ -11,14 +10,9 @@ type Props = {
 };
 
 const ProductList = ({ products, style }: Props) => {
-  const colNum = 2;
+  const { colNum, onPressProductCard } = useProductListScreen();
 
-  const { navigate } = useAppNavigation();
-
-  const onPressProductCard = (id: string) => {
-    navigate(Screen.ProductDetail, { productId: id });
-  };
-
+  // -- RENDER --
   const renderProductCard = ({ item }: { item: ProductDto }) => (
     <ProductCard
       id={item.id}

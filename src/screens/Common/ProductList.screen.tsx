@@ -1,14 +1,13 @@
 import { Route } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
-import { BottomSheet, ScreenAppBar, useBottomSheet } from 'components';
+import { BottomSheet, ScreenAppBar } from 'components';
 import { CategoryList } from 'modules/category';
 import { ProductList } from 'modules/product';
 import { ProductFilter } from 'modules/product/filter';
-import { useEffect, useState } from 'react';
+import { useProductListScreen } from 'modules/product/hooks';
+import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button } from 'react-native-paper';
-import { getCategoryById } from 'service';
-import { CategoryDto, ParamsType, Screen } from 'types';
+import { ParamsType, Screen } from 'types';
 
 type Params = Pick<ParamsType, 'mainCate' | 'subCate'>;
 
@@ -17,47 +16,33 @@ type Props = {
 };
 
 const ProductListScreen = ({ route: { params } }: Props) => {
-  const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>(null);
-
-  const { botSheetRef, onCloseBotSheet, onOpenBotSheet } = useBottomSheet({});
-
-  const { data: lv1Category, isLoading } = useQuery<CategoryDto, null, CategoryDto>({
-    queryKey: [params.mainCate.id],
-    queryFn: () => getCategoryById(params.mainCate.id),
-  });
-
-  const onPressCateItem = (index: number, id: string) => {
-    setSelectedSubCate({ index, id });
-  };
-
-  const onPressApply = () => {
-    onCloseBotSheet();
-  };
-
-  useEffect(() => {
-    if (!lv1Category) {
-      return;
-    }
-
-    const index = lv1Category.childCategories.findIndex(cate => cate.id === params.subCate.id);
-    const id = lv1Category.childCategories[index]?.id;
-
-    setSelectedSubCate({ index, id });
-  }, [lv1Category, params.subCate.id]);
-
-  if (isLoading) {
-    return <ActivityIndicator animating />;
-  }
+  const {
+    colNum,
+    formMethod,
+    botSheetRef,
+    lv1Category,
+    selectedSubCate,
+    isLoadingLv1Cate,
+    onPressFilter,
+    onPressApply,
+    onPressCateItem,
+    onPressProductCard,
+    onPressResetFilter,
+  } = useProductListScreen({ params });
 
   // -- RENDERING --
 
   const renderFilterButton = () => {
     return (
-      <Button icon="filter" onPress={onOpenBotSheet}>
+      <Button icon="filter" onPress={onPressFilter}>
         Filter
       </Button>
     );
   };
+
+  if (isLoadingLv1Cate) {
+    return <ActivityIndicator animating />;
+  }
 
   return (
     <View style={styles.container}>
@@ -72,12 +57,17 @@ const ProductListScreen = ({ route: { params } }: Props) => {
       />
 
       <ProductList
+        colNum={colNum}
         products={lv1Category.childCategories[selectedSubCate?.index]?.products}
+        onPressProductCard={onPressProductCard}
         style={styles.productList}
       />
 
       <BottomSheet botSheetRef={botSheetRef} snapPoints={['60%']}>
-        <ProductFilter onPressApply={onPressApply} />
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <FormProvider {...formMethod}>
+          <ProductFilter onPressApply={onPressApply} onPressReset={onPressResetFilter} />
+        </FormProvider>
       </BottomSheet>
     </View>
   );

@@ -1,9 +1,6 @@
-import { FormProvider, useForm } from 'react-hook-form';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
-import { ProductFilterForm, productFilterSchema, SortProductVaule } from 'modules/product/_shared';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { object } from 'yup';
+import { ProductFilterForm, SortProductVaule } from 'modules/product/_shared';
 import { Dropdown } from 'components';
 
 const SORT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
@@ -12,43 +9,21 @@ const SORT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
   { label: 'Name', value: 'name' },
 ];
 
-const resolvedRegisterSchema = yupResolver(object(productFilterSchema));
-
 type Props = {
   onPressApply: () => void;
-  onPressResetCallback?: () => void;
+  onPressReset: () => void;
 };
 
-const ProductFilter = ({ onPressApply, onPressResetCallback }: Props) => {
-  const formMethod = useForm<ProductFilterForm>({
-    resolver: resolvedRegisterSchema,
-    defaultValues: {
-      sortValue: '',
-      sortBy: 'asc',
-      priceStart: 0,
-      priceEnd: 0,
-    },
-  });
-
-  const { reset } = formMethod;
-
-  const onPressReset = () => {
-    reset();
-    onPressResetCallback?.();
-  };
-
+const ProductFilter = ({ onPressApply, onPressReset }: Props) => {
   return (
     <View aria-label="Product Filter" style={styles.container}>
       <ScrollView aria-label="Sort section" style={styles.scrollView}>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-        <FormProvider {...formMethod}>
-          <Dropdown<ProductFilterForm>
-            label="Sort by"
-            name="sortValue"
-            options={SORT_VALUE_OPTIONS}
-            placeholder="Select sort value"
-          />
-        </FormProvider>
+        <Dropdown<ProductFilterForm>
+          label="Sort by"
+          name="sortValue"
+          options={SORT_VALUE_OPTIONS}
+          placeholder="Select sort value"
+        />
       </ScrollView>
 
       <View style={styles.btnCon}>

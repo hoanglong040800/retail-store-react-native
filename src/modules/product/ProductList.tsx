@@ -2,16 +2,15 @@ import { Text } from 'react-native-paper';
 import { FlatList, StyleSheet, ViewStyle, StyleProp, View, Dimensions } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
 import ProductCard from './ProductCard';
-import { useProductListScreen } from './hooks';
 
 type Props = {
+  colNum?: number;
   products: ProductDto[];
+  onPressProductCard: (id: string) => void;
   style?: StyleProp<ViewStyle>;
 };
 
-const ProductList = ({ products, style }: Props) => {
-  const { colNum, onPressProductCard } = useProductListScreen();
-
+const ProductList = ({ colNum = 2, products, style, onPressProductCard }: Props) => {
   // -- RENDER --
   const renderProductCard = ({ item }: { item: ProductDto }) => (
     <ProductCard

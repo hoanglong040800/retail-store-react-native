@@ -26,7 +26,7 @@ export const useProductListScreen = ({ params }: Props) => {
     resolver: resolvedRegisterSchema,
     defaultValues: {
       sortValue: '',
-      sortBy: 'desc',
+      sortBy: 'asc',
       priceStart: 0,
       priceEnd: 0,
     },
@@ -55,7 +55,7 @@ export const useProductListScreen = ({ params }: Props) => {
       return selCate.products;
     }
 
-    // make shallow copy so react can detect change in object. https://stackoverflow.com/a/71767008/19568962
+    // make shallow copy so react can detect change in state. https://stackoverflow.com/a/71767008/19568962
     let filteredProducts: ProductDto[] = [...selCate.products];
 
     const { sortValue } = filter;
@@ -63,7 +63,13 @@ export const useProductListScreen = ({ params }: Props) => {
     if (sortValue) {
       const sortByMultiplier = filter.sortBy === 'desc' ? -1 : 1;
 
-      filteredProducts = filteredProducts.sort((a, b) => (a.price - b.price) * sortByMultiplier);
+      if (sortValue === 'price') {
+        filteredProducts = filteredProducts.sort(
+          (a, b) => (a[filter.sortValue] - b[filter.sortValue]) * sortByMultiplier
+        );
+      } else {
+        filteredProducts = filteredProducts.sort((a, b) => a[sortValue].localeCompare(b[sortValue]) * sortByMultiplier);
+      }
     }
 
     return filteredProducts;

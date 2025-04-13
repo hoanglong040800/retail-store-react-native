@@ -23,6 +23,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
     lv1Category,
     selectedSubCate,
     isLoadingLv1Cate,
+    displayProducts,
     onPressFilter,
     onPressApply,
     onPressCateItem,
@@ -58,7 +59,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
 
       <ProductList
         colNum={colNum}
-        products={lv1Category.childCategories[selectedSubCate?.index]?.products}
+        products={displayProducts}
         onPressProductCard={onPressProductCard}
         style={styles.productList}
       />

@@ -3,7 +3,7 @@ import { useAppNavigation } from 'hooks';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import { CategoryDto, ParamsType, Screen } from 'types';
+import { CategoryDto, ParamsType, ProductDto, Screen } from 'types';
 import { getCategoryById } from 'service';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { object } from 'yup';
@@ -17,7 +17,8 @@ type Props = {
 
 export const useProductListScreen = ({ params }: Props) => {
   const colNum = 2;
-  const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>(null);
+  const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>({ index: 0, id: '' });
+  const [displayProducts, setDisplayProducts] = useState<ProductDto[]>([]);
 
   // -- FORM --
 
@@ -25,7 +26,7 @@ export const useProductListScreen = ({ params }: Props) => {
     resolver: resolvedRegisterSchema,
     defaultValues: {
       sortValue: '',
-      sortBy: 'asc',
+      sortBy: 'desc',
       priceStart: 0,
       priceEnd: 0,
     },
@@ -45,30 +46,72 @@ export const useProductListScreen = ({ params }: Props) => {
 
   // -- FUNCTIONS --
 
+  const getFilteredProducts = (selCate: CategoryDto, filter: ProductFilterForm): ProductDto[] => {
+    if (!selCate?.products?.length) {
+      return [];
+    }
+
+    if (!filter) {
+      return selCate.products;
+    }
+
+    // make shallow copy so react can detect change in object. https://stackoverflow.com/a/71767008/19568962
+    let filteredProducts: ProductDto[] = [...selCate.products];
+
+    const { sortValue } = filter;
+
+    if (sortValue) {
+      const sortByMultiplier = filter.sortBy === 'desc' ? -1 : 1;
+
+      filteredProducts = filteredProducts.sort((a, b) => (a.price - b.price) * sortByMultiplier);
+    }
+
+    return filteredProducts;
+  };
+
+  const handleFilterChange = (newSelectedSubCate?: { index: number; id: string }) => {
+    const filter = formMethod.getValues();
+
+    const selectedIndex =
+      typeof newSelectedSubCate?.index === 'number' ? newSelectedSubCate.index : selectedSubCate.index;
+
+    const selCate = lv1Category.childCategories[selectedIndex];
+
+    const filteredProducts = getFilteredProducts(selCate, filter);
+
+    setDisplayProducts(filteredProducts);
+  };
+
   const onPressProductCard = (id: string) => {
     navigate(Screen.ProductDetail, {
       productId: id,
     });
+    handleFilterChange();
   };
 
   const onPressCateItem = (index: number, id: string) => {
-    setSelectedSubCate({ index, id });
-  };
+    const newSelectedCate = { index, id };
 
-  const onPressApply = () => {
-    onCloseBotSheet();
+    setSelectedSubCate(newSelectedCate);
+    handleFilterChange(newSelectedCate);
   };
 
   const onPressFilter = () => {
     onOpenBotSheet();
   };
 
-  const onPressResetFilter = () => {
-    reset();
+  const onPressApply = () => {
+    onCloseBotSheet();
+    handleFilterChange();
   };
 
+  const onPressResetFilter = () => {
+    reset();
+    handleFilterChange();
+  };
   // -- EFFECTS --
 
+  // fetch data changed
   useEffect(() => {
     if (!lv1Category) {
       return;
@@ -78,6 +121,10 @@ export const useProductListScreen = ({ params }: Props) => {
     const id = lv1Category.childCategories[index]?.id;
 
     setSelectedSubCate({ index, id });
+    onPressResetFilter();
+
+    // only need to fetch first time
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lv1Category, params.subCate.id]);
 
   return {
@@ -87,6 +134,7 @@ export const useProductListScreen = ({ params }: Props) => {
     selectedSubCate,
     isLoadingLv1Cate,
     formMethod,
+    displayProducts,
     onPressProductCard,
     onPressCateItem,
     onPressApply,

@@ -1,43 +1,22 @@
+import { UseFormReturn } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { useBottomSheet } from 'components';
 import { useAppNavigation } from 'hooks';
 import { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { useForm } from 'react-hook-form';
 import { CategoryDto, ParamsType, ProductDto, Screen } from 'types';
 import { getCategoryById } from 'service';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { object } from 'yup';
-import { ProductFilterForm, productFilterSchema } from '../_shared';
-
-const resolvedRegisterSchema = yupResolver(object(productFilterSchema));
+import { ProductFilterForm } from '../_shared';
 
 type Props = {
   params: ParamsType;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  formMethod: UseFormReturn<ProductFilterForm, any, ProductFilterForm>;
 };
 
-export const useProductListScreen = ({ params }: Props) => {
+export const useProductListScreen = ({ params, formMethod }: Props) => {
   const colNum = 2;
   const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>({ index: 0, id: '' });
   const [displayProducts, setDisplayProducts] = useState<ProductDto[]>([]);
-
-  // -- FORM --
-
-  const formMethod = useForm<ProductFilterForm>({
-    resolver: resolvedRegisterSchema,
-    defaultValues: {
-      sortValue: '',
-      sortBy: 'asc',
-      priceRange: [0, 500000],
-    },
-  });
-
-  const { reset } = formMethod;
-
-  const [bottomSheetDraggable, setBottomSheetDraggable] = useState(true);
-
-  const onSliderChange = (isChanging: boolean) => {
-    setBottomSheetDraggable(!isChanging);
-  };
 
   // -- HOOKS --
 
@@ -118,7 +97,7 @@ export const useProductListScreen = ({ params }: Props) => {
   };
 
   const onPressResetFilter = () => {
-    reset();
+    formMethod.reset();
     handleFilterChange();
   };
   // -- EFFECTS --
@@ -145,14 +124,12 @@ export const useProductListScreen = ({ params }: Props) => {
     lv1Category,
     selectedSubCate,
     isLoadingLv1Cate,
-    formMethod,
     displayProducts,
-    bottomSheetDraggable,
+
     onPressProductCard,
     onPressCateItem,
     onPressApply,
     onPressFilter,
     onPressResetFilter,
-    onSliderChange,
   };
 };

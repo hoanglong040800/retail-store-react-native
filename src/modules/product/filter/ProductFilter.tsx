@@ -1,8 +1,9 @@
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { ProductFilterForm, SortBy, SortProductVaule } from 'modules/product/_shared';
 import { Dropdown, Slider } from 'components';
 import { useState } from 'react';
+import { DEFAULT_INPUT_VALUE } from 'const';
 
 const SORT_PRODUCT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
   { label: 'None', value: '' },
@@ -15,13 +16,23 @@ const SORT_DIRECTION_OPTIONS: { label: string; value: SortBy }[] = [
   { label: 'Desc', value: 'desc' },
 ];
 
+const SCREEN_WIDTH = Dimensions.get('window').width;
+
 type Props = {
+  priceRange?: [number, number];
+  priceStep?: number;
   onPressApply: () => void;
   onPressReset: () => void;
   onSliderChange: (isChanging: boolean) => void;
 };
 
-const ProductFilter = ({ onPressApply, onPressReset, onSliderChange }: Props) => {
+const ProductFilter = ({
+  priceRange = DEFAULT_INPUT_VALUE.priceRange,
+  priceStep = DEFAULT_INPUT_VALUE.priceStep,
+  onPressApply,
+  onPressReset,
+  onSliderChange,
+}: Props) => {
   const [isScrollable, setIsScrollable] = useState(false);
 
   const onSliderChangeStart = () => {
@@ -55,11 +66,15 @@ const ProductFilter = ({ onPressApply, onPressReset, onSliderChange }: Props) =>
 
         <Slider<ProductFilterForm>
           name="priceRange"
+          label="Price Range (000đ)"
           onValuesChangeStart={onSliderChangeStart}
           onValuesChangeFinish={onSliderChangeEnd}
-          min={0}
-          max={500000}
-          step={50000}
+          min={priceRange[0]}
+          max={priceRange[1]}
+          step={priceStep}
+          sliderLength={SCREEN_WIDTH - (styles.sliderContainer.marginHorizontal * 2 + 32)}
+          containerStyle={styles.sliderContainer}
+          viewProps={{ style: styles.sliderView }}
         />
       </ScrollView>
 
@@ -101,6 +116,14 @@ const styles = StyleSheet.create({
 
   btn: {
     flex: 1,
+  },
+
+  sliderView: {
+    marginTop: 16,
+  },
+
+  sliderContainer: {
+    marginHorizontal: 16,
   },
 });
 

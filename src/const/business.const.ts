@@ -35,3 +35,13 @@ export const ORDER_ACTIONS_CONDITION: Record<OrderActionEnum, { status: OrderSta
 export const SEARCH_BAR = {
   MAXIMUM_RECENT_SEARCH_TEXT: 5,
 };
+
+type DefaultInputType = {
+  priceRange: [number, number];
+  priceStep: number;
+};
+
+export const DEFAULT_INPUT_VALUE: DefaultInputType = {
+  priceRange: [0, 100],
+  priceStep: 20,
+};

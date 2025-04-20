@@ -2,7 +2,8 @@ import { Route } from '@react-navigation/native';
 import { BottomSheet, ScreenAppBar } from 'components';
 import { CategoryList } from 'modules/category';
 import { ProductList } from 'modules/product';
-import { ProductFilter } from 'modules/product/filter';
+import { ProductFilter, useProductFilter } from 'modules/product/filter';
+
 import { useProductListScreen } from 'modules/product/hooks';
 import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
@@ -16,22 +17,22 @@ type Props = {
 };
 
 const ProductListScreen = ({ route: { params } }: Props) => {
+  const { formMethod, bottomSheetDraggable, onSliderChange } = useProductFilter();
+
   const {
     colNum,
-    formMethod,
     botSheetRef,
     lv1Category,
     selectedSubCate,
     isLoadingLv1Cate,
     displayProducts,
-    bottomSheetDraggable,
+
     onPressFilter,
     onPressApply,
     onPressCateItem,
     onPressProductCard,
     onPressResetFilter,
-    onSliderChange,
-  } = useProductListScreen({ params });
+  } = useProductListScreen({ params, formMethod });
 
   // -- RENDERING --
 

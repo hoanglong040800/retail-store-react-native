@@ -2,13 +2,13 @@
 /* eslint-disable import/no-duplicates */
 import { MutableRefObject, ReactNode, useCallback } from 'react';
 import { StyleSheet } from 'react-native';
-import BottomSheetLib from '@gorhom/bottom-sheet';
+import BottomSheetLib, { BottomSheetProps } from '@gorhom/bottom-sheet';
 import { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { Portal } from 'react-native-paper';
 import { SharedValue } from 'react-native-reanimated';
 
-type Props = {
+type Props = BottomSheetProps & {
   botSheetRef: MutableRefObject<BottomSheetMethods>;
   snapPoints?: Array<string | number> | SharedValue<Array<string | number>>;
   children?: ReactNode;
@@ -16,7 +16,14 @@ type Props = {
   onSheetChange?: (index: number) => void;
 };
 
-const BottomSheet = ({ transparentBackdrop, children, snapPoints, botSheetRef, onSheetChange }: Props) => {
+const BottomSheet = ({
+  transparentBackdrop,
+  children,
+  snapPoints,
+  botSheetRef,
+  onSheetChange,
+  ...bottomSheetProps
+}: Props) => {
   const defaultSnapPoints = ['30%', '50%'];
 
   const handleSheetChanges = (index: number) => {
@@ -44,6 +51,7 @@ const BottomSheet = ({ transparentBackdrop, children, snapPoints, botSheetRef, o
         enableDynamicSizing={false}
         onChange={handleSheetChanges}
         aria-label="Bottom Sheet"
+        {...bottomSheetProps}
       >
         <BottomSheetScrollView
           aria-label="Bottom Sheet Scroll View"

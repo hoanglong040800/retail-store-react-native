@@ -1,15 +1,16 @@
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-paper';
 import { ProductFilterForm, SortBy, SortProductVaule } from 'modules/product/_shared';
-import { Dropdown } from 'components';
+import { Dropdown, Slider } from 'components';
+import { useState } from 'react';
 
-const SORT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
+const SORT_PRODUCT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
   { label: 'None', value: '' },
   { label: 'Price', value: 'price' },
   { label: 'Name', value: 'name' },
 ];
 
-const SORT_BY_OPTIONS: { label: string; value: SortBy }[] = [
+const SORT_DIRECTION_OPTIONS: { label: string; value: SortBy }[] = [
   { label: 'Asc', value: 'asc' },
   { label: 'Desc', value: 'desc' },
 ];
@@ -17,27 +18,49 @@ const SORT_BY_OPTIONS: { label: string; value: SortBy }[] = [
 type Props = {
   onPressApply: () => void;
   onPressReset: () => void;
+  onSliderChange: (isChanging: boolean) => void;
 };
 
-const ProductFilter = ({ onPressApply, onPressReset }: Props) => {
+const ProductFilter = ({ onPressApply, onPressReset, onSliderChange }: Props) => {
+  const [isScrollable, setIsScrollable] = useState(false);
+
+  const onSliderChangeStart = () => {
+    setIsScrollable(false);
+    onSliderChange(true);
+  };
+
+  const onSliderChangeEnd = () => {
+    setIsScrollable(true);
+    onSliderChange(false);
+  };
+
   return (
     <View aria-label="Product Filter" style={styles.container}>
-      <ScrollView aria-label="Sort section" style={styles.scrollView}>
+      <ScrollView aria-label="Sort section" style={styles.scrollView} scrollEnabled={isScrollable}>
         <View style={styles.sortSec}>
           <Dropdown<ProductFilterForm>
             label="Sort value"
             name="sortValue"
-            options={SORT_VALUE_OPTIONS}
+            options={SORT_PRODUCT_VALUE_OPTIONS}
             placeholder="Select sort value"
           />
 
           <Dropdown<ProductFilterForm>
             label="Sort By"
             name="sortBy"
-            options={SORT_BY_OPTIONS}
+            options={SORT_DIRECTION_OPTIONS}
             placeholder="Select sort by"
           />
         </View>
+
+        <Slider<ProductFilterForm>
+          name="priceRange"
+          onValuesChangeStart={onSliderChangeStart}
+          onValuesChangeFinish={onSliderChangeEnd}
+          min={0}
+          max={500000}
+          step={50000}
+        />
       </ScrollView>
 
       <View style={styles.btnCon}>

@@ -24,11 +24,13 @@ const ProductListScreen = ({ route: { params } }: Props) => {
     selectedSubCate,
     isLoadingLv1Cate,
     displayProducts,
+    bottomSheetDraggable,
     onPressFilter,
     onPressApply,
     onPressCateItem,
     onPressProductCard,
     onPressResetFilter,
+    onSliderChange,
   } = useProductListScreen({ params });
 
   // -- RENDERING --
@@ -64,10 +66,14 @@ const ProductListScreen = ({ route: { params } }: Props) => {
         style={styles.productList}
       />
 
-      <BottomSheet botSheetRef={botSheetRef} snapPoints={['60%']}>
+      <BottomSheet botSheetRef={botSheetRef} snapPoints={['60%']} enableOverDrag={bottomSheetDraggable}>
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <FormProvider {...formMethod}>
-          <ProductFilter onPressApply={onPressApply} onPressReset={onPressResetFilter} />
+          <ProductFilter
+            onPressApply={onPressApply}
+            onPressReset={onPressResetFilter}
+            onSliderChange={onSliderChange}
+          />
         </FormProvider>
       </BottomSheet>
     </View>

@@ -6,6 +6,5 @@ export type ProductFilterForm = {
   sortValue?: SortProductVaule;
   sortBy?: SortBy;
 
-  priceStart?: number;
-  priceEnd?: number;
+  priceRange?: number[];
 };

@@ -19,9 +19,10 @@ const ProductSearchScreen = ({ route }: Props) => {
     return route.params?.headerSearchText || '';
   }, [route.params?.headerSearchText]);
 
-  const { selectedCate, searchLv2Categories, isFetchingSearchResult, onPressCateItem } = useProductSearchScreen({
-    searchParam,
-  });
+  const { selectedCate, searchLv2Categories, isFetchingSearchResult, onPressCateItem, onPressProductCard } =
+    useProductSearchScreen({
+      searchParam,
+    });
 
   // -- RENDERING --
 
@@ -61,7 +62,10 @@ const ProductSearchScreen = ({ route }: Props) => {
             selectedId={selectedCate?.id}
           />
 
-          <ProductList products={searchLv2Categories[selectedCate?.index]?.products} />
+          <ProductList
+            products={searchLv2Categories[selectedCate?.index]?.products}
+            onPressProductCard={onPressProductCard}
+          />
         </>
       )}
     </View>

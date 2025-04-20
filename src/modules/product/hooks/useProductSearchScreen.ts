@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
+import { useAppNavigation } from 'hooks';
 import { useMemo, useState } from 'react';
 import { getSearchResult } from 'service';
-import { CategoryDto, GetSearchDto, ParamsType, SearchProductDto } from 'types';
+import { CategoryDto, GetSearchDto, ParamsType, Screen, SearchProductDto } from 'types';
 import { keyByArr } from 'utils';
 
 const ALL_PRODUCTS_TAB: CategoryDto = {
@@ -19,6 +20,7 @@ type Props = {
 export const useProductSearchScreen = ({ searchParam }: Props) => {
   // -- STATE --
   const [selectedCate, setSelectedCate] = useState<{ index: number; id: string }>(null);
+  const { navigate } = useAppNavigation();
 
   // -- QUERY --
   const fetchProductSearch = async (headerSearchText: string): Promise<GetSearchDto> => {
@@ -80,10 +82,20 @@ export const useProductSearchScreen = ({ searchParam }: Props) => {
     setSelectedCate({ index, id });
   };
 
+  const onPressProductCard = (productId: string) => {
+    if (!productId) {
+      console.warn('Warning: productId is required but was not provided.');
+      return;
+    }
+
+    navigate(Screen.ProductDetail, { productId });
+  };
+
   return {
     selectedCate,
     searchLv2Categories,
     isFetchingSearchResult,
     onPressCateItem,
+    onPressProductCard,
   };
 };

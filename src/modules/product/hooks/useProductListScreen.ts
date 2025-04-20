@@ -27,12 +27,17 @@ export const useProductListScreen = ({ params }: Props) => {
     defaultValues: {
       sortValue: '',
       sortBy: 'asc',
-      priceStart: 0,
-      priceEnd: 0,
+      priceRange: [0, 500000],
     },
   });
 
   const { reset } = formMethod;
+
+  const [bottomSheetDraggable, setBottomSheetDraggable] = useState(true);
+
+  const onSliderChange = (isChanging: boolean) => {
+    setBottomSheetDraggable(!isChanging);
+  };
 
   // -- HOOKS --
 
@@ -40,7 +45,7 @@ export const useProductListScreen = ({ params }: Props) => {
   const { navigate } = useAppNavigation();
 
   const { data: lv1Category, isLoading: isLoadingLv1Cate } = useQuery<CategoryDto, null, CategoryDto>({
-    queryKey: [params.mainCate.id],
+    queryKey: ['category', params.mainCate.id],
     queryFn: () => getCategoryById(params.mainCate.id),
   });
 
@@ -55,7 +60,8 @@ export const useProductListScreen = ({ params }: Props) => {
       return selCate.products;
     }
 
-    // make shallow copy so react can detect change in state. https://stackoverflow.com/a/71767008/19568962
+    // Create a shallow copy of the array to ensure React detects state changes,
+    // as React compares references to determine if the state has changed.
     let filteredProducts: ProductDto[] = [...selCate.products];
 
     const { sortValue } = filter;
@@ -81,7 +87,7 @@ export const useProductListScreen = ({ params }: Props) => {
     const selectedIndex =
       typeof newSelectedSubCate?.index === 'number' ? newSelectedSubCate.index : selectedSubCate.index;
 
-    const selCate = lv1Category.childCategories[selectedIndex];
+    const selCate = lv1Category?.childCategories?.[selectedIndex];
 
     const filteredProducts = getFilteredProducts(selCate, filter);
 
@@ -141,10 +147,12 @@ export const useProductListScreen = ({ params }: Props) => {
     isLoadingLv1Cate,
     formMethod,
     displayProducts,
+    bottomSheetDraggable,
     onPressProductCard,
     onPressCateItem,
     onPressApply,
     onPressFilter,
     onPressResetFilter,
+    onSliderChange,
   };
 };

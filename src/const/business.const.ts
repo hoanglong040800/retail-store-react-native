@@ -42,6 +42,6 @@ type DefaultInputType = {
 };
 
 export const DEFAULT_INPUT_VALUE: DefaultInputType = {
-  priceRange: [0, 100],
-  priceStep: 20,
+  priceRange: [0, 100000],
+  priceStep: 20000,
 };

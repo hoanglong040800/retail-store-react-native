@@ -7,6 +7,7 @@ import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native
 type Props = {
   children?: ReactNode;
   containerStyle?: StyleProp<ViewStyle>;
+  // GUIDE: how to get component props
   bottomButton?: ComponentProps<typeof BottomButton>;
 };
 

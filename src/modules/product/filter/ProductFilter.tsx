@@ -45,6 +45,12 @@ const ProductFilter = ({
     onSliderChange(false);
   };
 
+  const formatPriceMarkerValue = (value: number): string => {
+    const newVal = value.toString().slice(0, -3);
+
+    return newVal;
+  };
+
   return (
     <View aria-label="Product Filter" style={styles.container}>
       <ScrollView aria-label="Sort section" style={styles.scrollView} scrollEnabled={isScrollable}>
@@ -69,6 +75,8 @@ const ProductFilter = ({
           label="Price Range (000đ)"
           onValuesChangeStart={onSliderChangeStart}
           onValuesChangeFinish={onSliderChangeEnd}
+          valueSuffix="k"
+          formatMarkerValue={formatPriceMarkerValue}
           min={priceRange[0]}
           max={priceRange[1]}
           step={priceStep}

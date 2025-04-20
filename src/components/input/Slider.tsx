@@ -1,17 +1,24 @@
 // eslint-disable react/jsx-props-no-spreading
 import MultiSlider, { MultiSliderProps } from '@ptomasroos/react-native-multi-slider';
+import { ComponentProps } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { View, ViewProps } from 'react-native';
+import { StyleSheet, View, ViewProps } from 'react-native';
 import { Text } from 'react-native-paper';
+import { THEME } from 'const';
+import { SliderMarker } from './SliderCustomMarker';
 
 type Props<T> = MultiSliderProps & {
   name: keyof T;
   label: string;
   viewProps?: ViewProps;
+  formatMarkerValue?: (value: number) => string;
 };
 
-const Slider = <T extends object>({ name, label, viewProps, ...multiSliderProps }: Props<T>) => {
+const Slider = <T extends object>({ name, label, viewProps, formatMarkerValue, ...multiSliderProps }: Props<T>) => {
   const { control } = useFormContext();
+
+  // GUIDE: fix Do not define components during render
+  const renderSliderMarker = (props: ComponentProps<typeof SliderMarker>) => <SliderMarker {...props} />;
 
   return (
     <Controller
@@ -19,9 +26,14 @@ const Slider = <T extends object>({ name, label, viewProps, ...multiSliderProps 
       control={control}
       render={({ field: { onChange, value } }) => (
         <View {...viewProps}>
-          <Text>{label}</Text>
+          <Text style={styles.label}>{label}</Text>
 
-          <MultiSlider values={value} onValuesChange={newVal => onChange(newVal)} enableLabel {...multiSliderProps} />
+          <MultiSlider
+            values={value}
+            onValuesChange={newVal => onChange(newVal)}
+            customMarker={props => renderSliderMarker({ ...props, formatValue: formatMarkerValue })}
+            {...multiSliderProps}
+          />
         </View>
       )}
     />
@@ -29,3 +41,13 @@ const Slider = <T extends object>({ name, label, viewProps, ...multiSliderProps 
 };
 
 export default Slider;
+
+const styles = StyleSheet.create({
+  label: {
+    marginBottom: 4,
+  },
+
+  track: {
+    backgroundColor: THEME.colors.primary,
+  },
+});

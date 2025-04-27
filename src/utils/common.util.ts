@@ -56,6 +56,34 @@ export const keyBy = (array: any[], keyPath: string): Record<string, any> => {
   return result;
 };
 
+export const keyByArr = <T>(array: T[], keyPath: keyof T | string): Record<string, T[]> => {
+  const result: Record<string, T[]> = {};
+
+  array.forEach(x => {
+    let resultKey = x;
+
+    const keyPaths: string[] = String(keyPath).split('.');
+
+    keyPaths.forEach(key => {
+      if (resultKey === undefined) {
+        return;
+      }
+
+      resultKey = resultKey[key];
+    });
+
+    if (resultKey !== undefined && typeof resultKey === 'string') {
+      if (!result[resultKey]) {
+        result[resultKey] = [];
+      }
+
+      result[resultKey].push(x);
+    }
+  });
+
+  return result;
+};
+
 export const flipObject = <T extends string | number | symbol, K extends string | number | symbol>(
   obj: Record<T, K>
 ): Record<string, string> => {
@@ -99,4 +127,17 @@ export const formatDate = (value: string | Date, formatType: 'date' | 'time' | '
   const formattedDate = new Date(value).toLocaleDateString('vi-VN', finalFormat);
 
   return formattedDate;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const debounce = <T extends (...args: any[]) => void>(
+  func: T,
+  delay: number
+): ((...args: Parameters<T>) => void) => {
+  let timeoutId: NodeJS.Timeout;
+
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
 };

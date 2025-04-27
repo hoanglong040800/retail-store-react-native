@@ -47,6 +47,8 @@ export type ParamsType = {
   checkoutFinish?: CheckoutFinishParams;
 
   orderId?: string;
+
+  headerSearchText?: string;
 };
 
 export enum Screen {
@@ -54,6 +56,7 @@ export enum Screen {
   Category = 'Category',
   ProductList = 'Product List',
   ProductDetail = 'Product Detail',
+  ProductSearch = 'Product Search',
   Cart = 'Cart',
   Noti = 'Noti',
   Account = 'Account',

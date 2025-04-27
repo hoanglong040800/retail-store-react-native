@@ -21,11 +21,18 @@ const CategoryList = ({ list, direction = 'column', itemSize = 'M', selectedId, 
   }, [direction, itemSize, style]);
 
   const scrollContainerStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    return direction === 'both' ? styles.scrollContainer_both : {};
+    return styles[`scrollContainer_${direction}`] || {};
   }, [direction]);
 
+  // TODO reusing ScrollViewWrapper
   return (
-    <ScrollView horizontal={direction === 'row'} style={scrollViewStyle} contentContainerStyle={scrollContainerStyle}>
+    <ScrollView
+      horizontal={direction === 'row'}
+      style={scrollViewStyle}
+      contentContainerStyle={scrollContainerStyle}
+      showsHorizontalScrollIndicator={false}
+      showsVerticalScrollIndicator={false}
+    >
       {list?.map((cate, index) => (
         <CategoryItem
           key={cate.name}
@@ -50,11 +57,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     padding: 8,
+    gap: 12,
+  },
+
+  scrollContainer_column: {
+    gap: 12,
   },
 
   scrollView_rowS: {
-    minHeight: 120,
-    maxHeight: 120,
+    minHeight: 90,
+    maxHeight: 100,
   },
 
   scrollView_rowM: {

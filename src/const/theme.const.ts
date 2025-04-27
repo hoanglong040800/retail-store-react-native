@@ -44,7 +44,13 @@ const SCROLL_VIEW_DEFAULT: ViewStyle = {
   maxHeight: Dimensions.get('window').height - CUSTOM_THEME.headerHeight,
 };
 
-type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT' | 'SCROLL_VIEW_BOT_BTN' | 'SURFACE_DEFAULT';
+type BASE_STYLE_KEY =
+  | 'CONTAINER_WRAP_BOT_BTN'
+  | 'SCROLL_VIEW_DEFAULT'
+  | 'SCROLL_VIEW_BOT_BTN'
+  | 'SURFACE_DEFAULT'
+  | 'PRODUCT_CARD';
+
 type BASE_STYPE_TYPE = Record<BASE_STYLE_KEY, ViewStyle>;
 
 export const BASE_STYLE: BASE_STYPE_TYPE = {
@@ -68,5 +74,10 @@ export const BASE_STYLE: BASE_STYPE_TYPE = {
     padding: 8,
     borderRadius: 8,
     backgroundColor: 'white',
+  },
+
+  PRODUCT_CARD: {
+    height: 280,
+    width: 180,
   },
 };

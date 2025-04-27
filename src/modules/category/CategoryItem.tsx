@@ -20,7 +20,7 @@ const CategoryItem = ({ icon, name, size = 'M', isHighlighted, onPress = () => n
       <View style={styles.container}>
         <Image source={{ uri: icon }} style={[styles[`image${size}`], dynamicImgStyle]} />
 
-        <Text>{name}</Text>
+        <Text style={styles.text}>{name}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -39,6 +39,10 @@ const styles = StyleSheet.create({
   imageM: {
     width: 100,
     height: 100,
+  },
+
+  text: {
+    marginTop: 4,
   },
 });
 

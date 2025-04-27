@@ -34,8 +34,8 @@ const ProductActionButtons = ({ product, offsetQuantity = 1, containerStyle }: P
   return (
     <View style={[styles.container, containerStyle]}>
       {inCartQuantity === 0 ? (
-        <Button mode="outlined" style={styles.addToCart} onPress={handlePressAddCart}>
-          Add to cart
+        <Button mode="outlined" icon="cart-plus" style={styles.addToCart} onPress={handlePressAddCart}>
+          Add
         </Button>
       ) : (
         <NumericInput value={inCartQuantity} offset={offsetQuantity} onChange={handleAdjustQuantity} />

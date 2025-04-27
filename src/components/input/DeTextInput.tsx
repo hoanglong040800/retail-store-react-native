@@ -4,18 +4,19 @@ import { View } from 'react-native';
 import { TextInput, TextInputProps } from 'react-native-paper';
 import InputError from './InputError';
 
-type Props = TextInputProps & {
+type Props<T> = TextInputProps & {
   control: Control<any>;
   errors: FieldErrors<any>;
   label: string;
-  name: string;
+  name: keyof T;
 };
 
-const DeTextInput = ({ control, errors, label, name, ...props }: Props) => {
+// TODO refactor using useFormContext instead of passing control and errors
+const DeTextInput = <T extends object>({ control, errors, label, name, ...props }: Props<T>) => {
   return (
     <View>
       <Controller
-        name={name}
+        name={name as string}
         control={control}
         render={({ field: { onChange, value } }) => (
           <TextInput
@@ -31,7 +32,7 @@ const DeTextInput = ({ control, errors, label, name, ...props }: Props) => {
         )}
       />
 
-      <InputError errors={errors?.[name]} name={name} />
+      <InputError errors={errors?.[name]} name={name as string} />
     </View>
   );
 };

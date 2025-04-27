@@ -24,11 +24,13 @@ const HeaderCart = () => {
 
   return (
     <View style={styles.container}>
-      <Badge size={18} style={styles.badge}>
-        {total}
-      </Badge>
+      {!!total && (
+        <Badge size={16} style={styles.badge}>
+          {total}
+        </Badge>
+      )}
 
-      <IconButton icon="cart" size={25} onPress={handlePressViewCart} style={styles.iconButton} />
+      <IconButton icon="cart" size={30} onPress={handlePressViewCart} style={styles.iconButton} />
     </View>
   );
 };
@@ -36,14 +38,17 @@ const HeaderCart = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
+    maxHeight: 44,
   },
 
   badge: {
     position: 'absolute',
+    right: 4,
   },
 
   iconButton: {
     backgroundColor: 'transparent',
+    paddingBottom: 12,
   },
 });
 

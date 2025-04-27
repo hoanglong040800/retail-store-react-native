@@ -3,3 +3,5 @@ import ProductList from './ProductList';
 import ProductActionButtons from './ProductActionButtons';
 
 export { ProductCard, ProductList, ProductActionButtons };
+
+export * from './filter';

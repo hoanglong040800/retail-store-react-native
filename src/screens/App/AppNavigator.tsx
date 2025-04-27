@@ -1,11 +1,11 @@
 import { createStackNavigator } from '@react-navigation/stack';
-import { AppHeader } from 'components/header';
 import { Screen } from 'types';
 import { CartScreen, CheckoutFinishScreen, PaymentScreen } from 'screens/Cart';
-import { AllBranchesScreen, ProductDetailsScreen, ProductListScreen } from 'screens/Common';
+import { AllBranchesScreen, ProductDetailsScreen, ProductListScreen, ProductSearchScreen } from 'screens/Common';
 import { HomeScreen } from 'screens/Home';
 import { DeAppBar } from 'components';
 import { OrderDetailScreen, OrderHistoryScreen } from 'screens/Orders';
+import { AppHeader } from 'modules';
 
 const AppNavigator = () => {
   const Stack = createStackNavigator();
@@ -32,6 +32,7 @@ const AppNavigator = () => {
       <Stack.Screen name={Screen.ProductList} component={ProductListScreen} />
       <Stack.Screen name={Screen.ProductDetail} component={ProductDetailsScreen} />
       <Stack.Screen name={Screen.AllBranches} component={AllBranchesScreen} />
+      <Stack.Screen name={Screen.ProductSearch} component={ProductSearchScreen} />
 
       <Stack.Screen name={Screen.OrderHistory} component={OrderHistoryScreen} />
       <Stack.Screen name={Screen.OrderDetail} component={OrderDetailScreen} />

@@ -1,13 +1,14 @@
 import { Route } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
-import { ScreenAppBar } from 'components';
+import { BottomSheet, ScreenAppBar } from 'components';
 import { CategoryList } from 'modules/category';
 import { ProductList } from 'modules/product';
-import { useEffect, useState } from 'react';
+import { ProductFilter, useProductFilter } from 'modules/product/filter';
+
+import { useProductListScreen } from 'modules/product/hooks';
+import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
-import { ActivityIndicator } from 'react-native-paper';
-import { getCategoryById } from 'service';
-import { CategoryDto, ParamsType, Screen } from 'types';
+import { ActivityIndicator, Button } from 'react-native-paper';
+import { ParamsType, Screen } from 'types';
 
 type Params = Pick<ParamsType, 'mainCate' | 'subCate'>;
 
@@ -16,35 +17,41 @@ type Props = {
 };
 
 const ProductListScreen = ({ route: { params } }: Props) => {
-  const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>(null);
+  const { formMethod, bottomSheetDraggable, onSliderChange } = useProductFilter();
 
-  const { data: lv1Category, isLoading } = useQuery<CategoryDto, null, CategoryDto>({
-    queryKey: [params.mainCate.id],
-    queryFn: () => getCategoryById(params.mainCate.id),
-  });
+  const {
+    colNum,
+    botSheetRef,
+    lv1Category,
+    selectedSubCate,
+    isLoadingLv1Cate,
+    displayProducts,
+    priceRangeLimit,
 
-  const onPressCateItem = (index: number, id: string) => {
-    setSelectedSubCate({ index, id });
+    onPressFilter,
+    onPressApply,
+    onPressCateItem,
+    onPressProductCard,
+    onPressResetFilter,
+  } = useProductListScreen({ params, formMethod });
+
+  // -- RENDERING --
+
+  const renderFilterButton = () => {
+    return (
+      <Button icon="filter" onPress={onPressFilter}>
+        Filter
+      </Button>
+    );
   };
 
-  useEffect(() => {
-    if (!lv1Category) {
-      return;
-    }
-
-    const index = lv1Category.childCategories.findIndex(cate => cate.id === params.subCate.id);
-    const id = lv1Category.childCategories[index]?.id;
-
-    setSelectedSubCate({ index, id });
-  }, [lv1Category, params.subCate.id]);
-
-  if (isLoading) {
+  if (isLoadingLv1Cate) {
     return <ActivityIndicator animating />;
   }
 
   return (
     <View style={styles.container}>
-      <ScreenAppBar title={lv1Category.name} />
+      <ScreenAppBar title={lv1Category.name} right={renderFilterButton()} />
 
       <CategoryList
         list={lv1Category.childCategories}
@@ -55,9 +62,23 @@ const ProductListScreen = ({ route: { params } }: Props) => {
       />
 
       <ProductList
-        products={lv1Category.childCategories[selectedSubCate?.index]?.products}
+        colNum={colNum}
+        products={displayProducts}
+        onPressProductCard={onPressProductCard}
         style={styles.productList}
       />
+
+      <BottomSheet botSheetRef={botSheetRef} snapPoints={['60%']} enableOverDrag={bottomSheetDraggable}>
+        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+        <FormProvider {...formMethod}>
+          <ProductFilter
+            priceRange={priceRangeLimit}
+            onPressApply={onPressApply}
+            onPressReset={onPressResetFilter}
+            onSliderChange={onSliderChange}
+          />
+        </FormProvider>
+      </BottomSheet>
     </View>
   );
 };

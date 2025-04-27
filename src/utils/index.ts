@@ -5,3 +5,4 @@ export * from './product.util';
 export * from './payment.util';
 export * from './order.util';
 export * from './branch.util';
+export * from './style.util';

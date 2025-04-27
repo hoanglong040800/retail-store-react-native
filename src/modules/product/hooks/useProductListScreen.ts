@@ -63,6 +63,7 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     // need to wait for form to finish registering before setting new value
     setTimeout(() => {
       formMethod.setValue('priceRange', newPriceRangeLimit);
+      formMethod.reset({ priceRange: newPriceRangeLimit });
     }, 500);
 
     return newPriceRangeLimit;
@@ -145,7 +146,6 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
 
   const onPressResetFilter = () => {
     formMethod.reset();
-    handleFilterChange();
   };
 
   // -- EFFECTS --

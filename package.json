@@ -59,6 +59,7 @@
     "@babel/core": "^7.19.3",
     "@babel/preset-env": "^7.24.3",
     "@babel/preset-react": "^7.24.1",
+    "@babel/preset-typescript": "^7.27.0",
     "@tanstack/eslint-plugin-query": "^5.35.6",
     "@types/jest": "^29.5.12",
     "@types/react": "~18.2.14",

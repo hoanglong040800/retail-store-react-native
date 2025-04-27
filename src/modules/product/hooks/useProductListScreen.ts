@@ -84,7 +84,13 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     // as React compares references to determine if the state has changed.
     let filteredProducts: ProductDto[] = [...selCate.products];
 
-    const { sortValue } = filter;
+    const { sortValue, priceRange } = filter;
+
+    if (priceRange) {
+      filteredProducts = filteredProducts.filter(
+        product => product.price >= priceRange[0] && product.price <= priceRange[1]
+      );
+    }
 
     if (sortValue) {
       const sortByMultiplier = filter.sortBy === 'desc' ? -1 : 1;

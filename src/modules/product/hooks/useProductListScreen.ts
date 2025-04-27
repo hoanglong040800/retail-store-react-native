@@ -1,8 +1,9 @@
 import { UseFormReturn } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
+import { DEFAULT_INPUT_VALUE } from 'const';
 import { useBottomSheet } from 'components';
 import { useAppNavigation } from 'hooks';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { CategoryDto, ParamsType, ProductDto, Screen } from 'types';
 import { getCategoryById } from 'service';
 import { ProductFilterForm } from '../_shared';
@@ -27,6 +28,46 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     queryKey: ['category', params.mainCate.id],
     queryFn: () => getCategoryById(params.mainCate.id),
   });
+
+  // -- STATES --
+
+  const getMaxPriceRange = (cateRes: CategoryDto): number => {
+    const defaultValue = DEFAULT_INPUT_VALUE.priceRange[1];
+
+    if (!cateRes) {
+      return defaultValue;
+    }
+
+    const allPrices = cateRes.childCategories.flatMap(cate => cate.products.map(product => product.price));
+
+    if (!allPrices?.length) {
+      return defaultValue;
+    }
+
+    const responseMaxPrice = Math.max(...allPrices);
+
+    const formatMaxPrice = Math.ceil(responseMaxPrice / DEFAULT_INPUT_VALUE.priceStep) * DEFAULT_INPUT_VALUE.priceStep;
+
+    return formatMaxPrice || defaultValue;
+  };
+
+  const priceRangeLimit = useMemo((): [number, number] => {
+    if (!lv1Category) {
+      return DEFAULT_INPUT_VALUE.priceRange;
+    }
+
+    const maxPrice: number = getMaxPriceRange(lv1Category);
+
+    const newPriceRangeLimit: [number, number] = [DEFAULT_INPUT_VALUE.priceRange[0], maxPrice];
+
+    // need to wait for form to finish registering before setting new value
+    setTimeout(() => {
+      formMethod.setValue('priceRange', newPriceRangeLimit);
+    }, 500);
+
+    return newPriceRangeLimit;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lv1Category]);
 
   // -- FUNCTIONS --
 
@@ -100,6 +141,7 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     formMethod.reset();
     handleFilterChange();
   };
+
   // -- EFFECTS --
 
   // fetch data changed
@@ -125,6 +167,7 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     selectedSubCate,
     isLoadingLv1Cate,
     displayProducts,
+    priceRangeLimit,
 
     onPressProductCard,
     onPressCateItem,

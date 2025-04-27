@@ -26,6 +26,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
     selectedSubCate,
     isLoadingLv1Cate,
     displayProducts,
+    priceRangeLimit,
 
     onPressFilter,
     onPressApply,
@@ -71,6 +72,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
         {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         <FormProvider {...formMethod}>
           <ProductFilter
+            priceRange={priceRangeLimit}
             onPressApply={onPressApply}
             onPressReset={onPressResetFilter}
             onSliderChange={onSliderChange}

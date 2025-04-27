@@ -72,7 +72,7 @@ const ProductFilter = ({
 
         <Slider<ProductFilterForm>
           name="priceRange"
-          label="Price Range (000đ)"
+          label="Price Range (đ)"
           onValuesChangeStart={onSliderChangeStart}
           onValuesChangeFinish={onSliderChangeEnd}
           valueSuffix="k"
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
 
   sliderContainer: {
-    marginHorizontal: 16,
+    marginHorizontal: 20,
   },
 });
 

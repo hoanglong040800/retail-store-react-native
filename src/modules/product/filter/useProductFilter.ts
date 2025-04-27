@@ -10,6 +10,7 @@ const resolvedRegisterSchema = yupResolver(object(productFilterSchema));
 export const useProductFilter = () => {
   const formMethod = useForm<ProductFilterForm>({
     resolver: resolvedRegisterSchema,
+    shouldUnregister: true,
     defaultValues: {
       sortValue: '',
       sortBy: 'asc',

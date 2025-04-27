@@ -24,18 +24,20 @@ const Slider = <T extends object>({ name, label, viewProps, formatMarkerValue, .
     <Controller
       name={name as string}
       control={control}
-      render={({ field: { onChange, value } }) => (
-        <View {...viewProps}>
-          <Text style={styles.label}>{label}</Text>
+      render={({ field: { onChange, value } }) => {
+        return (
+          <View {...viewProps}>
+            <Text style={styles.label}>{label}</Text>
 
-          <MultiSlider
-            values={value}
-            onValuesChange={newVal => onChange(newVal)}
-            customMarker={props => renderSliderMarker({ ...props, formatValue: formatMarkerValue })}
-            {...multiSliderProps}
-          />
-        </View>
-      )}
+            <MultiSlider
+              values={value}
+              onValuesChange={newVal => onChange(newVal)}
+              customMarker={props => renderSliderMarker({ ...props, formatValue: formatMarkerValue })}
+              {...multiSliderProps}
+            />
+          </View>
+        );
+      }}
     />
   );
 };

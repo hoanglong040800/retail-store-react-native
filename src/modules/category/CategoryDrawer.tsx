@@ -95,7 +95,7 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
 
       <View style={[styles.rightCate, { backgroundColor: colors.surface }]}>
         <CategoryList
-          list={sidebarList[curMainIndex].childCategories}
+          list={sidebarList[curMainIndex]?.childCategories}
           direction="both"
           onPressItem={onPressSubCategory}
         />

@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { FieldError, FieldErrors } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
 import { Text } from 'react-native-paper';
+import { useAppTheme } from 'hooks';
 
 type Props = {
   errors: FieldErrors<any> | FieldError;
@@ -10,6 +11,7 @@ type Props = {
 };
 
 const InputError = ({ name, errors }: Props) => {
+  const { colors } = useAppTheme();
   const renderError = useMemo((): string => {
     if (errors?.message) {
       return (errors?.message as string) || '';
@@ -19,7 +21,7 @@ const InputError = ({ name, errors }: Props) => {
   }, [errors, name]);
 
   return (
-    <Text variant="labelMedium" style={styles.text}>
+    <Text variant="labelMedium" style={[styles.text, { color: colors.error }]}>
       {renderError}
     </Text>
   );
@@ -27,8 +29,7 @@ const InputError = ({ name, errors }: Props) => {
 
 const styles = StyleSheet.create({
   text: {
-    color: 'red',
-    height: 25,
+    height: 20,
   },
 });
 

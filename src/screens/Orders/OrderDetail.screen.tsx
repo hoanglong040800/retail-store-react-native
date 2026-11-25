@@ -2,7 +2,7 @@ import { Route } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
 import { BottomButton, BottomSheet, ChoiceList, ChoiceListType, ScreenAppBar, useBottomSheet } from 'components';
 import { BASE_STYLE } from 'const';
-import { useAuth } from 'hooks';
+import { useAppTheme, useAuth } from 'hooks';
 import { OrderMainInfoSection } from 'modules';
 import { CartSummary } from 'modules/cart';
 import CartLinesSection from 'modules/cart/CartLinesSection';
@@ -25,6 +25,7 @@ const OrderDetailScreen = ({
   },
 }: Props) => {
   // ---- HOOKS ----
+  const { colors } = useAppTheme();
   const { user } = useAuth();
   const { botSheetRef, onOpenBotSheet } = useBottomSheet({});
 
@@ -50,7 +51,7 @@ const OrderDetailScreen = ({
       text: 'Cancel',
       value: 'cancel',
       mode: 'text',
-      textColor: 'red',
+      textColor: colors.error,
       disabled: !checkCanDoOrderAction(OrderActionEnum.cancel, data?.order?.status),
       onPress: () => {},
     },

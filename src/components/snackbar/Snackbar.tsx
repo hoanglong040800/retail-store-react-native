@@ -1,3 +1,4 @@
+import { useAppTheme } from 'hooks';
 import { useMemo } from 'react';
 import { Snackbar as PaperSnackbar } from 'react-native-paper';
 import { ThemeProp } from 'react-native-paper/lib/typescript/types';
@@ -13,19 +14,21 @@ type Props = {
 const Snackbar = ({ visible, title, type, onDismiss }: Props) => {
   const DURATION = 5000;
 
+  const { colors } = useAppTheme();
+
   const theme = useMemo<ThemeProp>(() => {
-    let textColor: string = 'white';
-    let backgroundColor: string = 'grey';
+    let textColor = colors.inverseOnSurface;
+    let backgroundColor = colors.inverseSurface;
 
     switch (type) {
       case 'success':
-        textColor = 'white';
-        backgroundColor = 'lightgreen';
+        textColor = colors.onSuccessContainer;
+        backgroundColor = colors.successContainer;
         break;
 
       case 'error':
-        textColor = 'white';
-        backgroundColor = 'lightcoral';
+        textColor = colors.onErrorContainer;
+        backgroundColor = colors.errorContainer;
         break;
 
       default:
@@ -38,7 +41,7 @@ const Snackbar = ({ visible, title, type, onDismiss }: Props) => {
         inverseSurface: backgroundColor,
       },
     };
-  }, [type]);
+  }, [type, colors]);
 
   return (
     <PaperSnackbar

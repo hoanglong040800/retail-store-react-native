@@ -2,8 +2,7 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { CategoryDto, ParamsType, Screen } from 'types';
-import { THEME } from 'const';
-import { useAppNavigation } from 'hooks';
+import { useAppNavigation, useAppTheme } from 'hooks';
 import { globalConfigState } from 'states';
 import CategoryList from './CategoryList';
 
@@ -36,6 +35,7 @@ type Props = {
 
 const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
   const { navigate } = useAppNavigation();
+  const { colors } = useAppTheme();
 
   const { categories } = useRecoilValue(globalConfigState);
 
@@ -89,10 +89,10 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
         list={sidebarList}
         onPressItem={onPressMainCategory}
         selectedId={sidebarList[curMainIndex]?.id}
-        style={styles.leftCate}
+        style={[styles.leftCate, { backgroundColor: colors.elevation.level1 }]}
       />
 
-      <View style={styles.rightCate}>
+      <View style={[styles.rightCate, { backgroundColor: colors.elevation.level0 }]}>
         <CategoryList
           list={sidebarList[curMainIndex].childCategories}
           direction="both"
@@ -110,7 +110,6 @@ const styles = StyleSheet.create({
   },
 
   leftCate: {
-    backgroundColor: THEME.colors.elevation.level1,
     maxWidth: 150,
     paddingBottom: 16,
   },
@@ -118,7 +117,6 @@ const styles = StyleSheet.create({
   rightCate: {
     padding: 8,
     flex: 1,
-    backgroundColor: THEME.colors.elevation.level0,
   },
 });
 

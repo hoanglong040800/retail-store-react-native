@@ -1,15 +1,19 @@
 import { MarkerProps } from '@ptomasroos/react-native-multi-slider';
-import { THEME } from 'const';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
+import { useAppTheme } from 'hooks';
 
 type CustomMarkerProps = MarkerProps & {
   formatValue?: (value: number) => string;
 };
 
 export const SliderMarker = ({ currentValue, valueSuffix, formatValue }: CustomMarkerProps) => {
+  const { colors } = useAppTheme();
+
   return (
-    <View style={styles.customMarkerCon}>
+    <View
+      style={[styles.customMarkerCon, { backgroundColor: colors.elevation.level1, borderColor: colors.outlineVariant }]}
+    >
       <Text variant="labelSmall">
         {formatValue?.(currentValue) || currentValue}
         {valueSuffix}
@@ -19,20 +23,10 @@ export const SliderMarker = ({ currentValue, valueSuffix, formatValue }: CustomM
 };
 
 const styles = StyleSheet.create({
-  label: {
-    marginBottom: 4,
-  },
-
-  track: {
-    backgroundColor: THEME.colors.primary,
-  },
-
   customMarkerCon: {
     alignItems: 'center',
-    backgroundColor: 'white',
     borderRadius: 50,
-    borderWidth: 0.5,
-    borderColor: 'rgb(0,0,0, 0.5)',
+    borderWidth: 1,
     padding: 4,
   },
 });

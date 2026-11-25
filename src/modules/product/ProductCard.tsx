@@ -1,5 +1,6 @@
 import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
 import { Card, Divider, Subheading, Text } from 'react-native-paper';
+import { useAppTheme } from 'hooks';
 import { formatCurrency } from 'utils';
 import ProductActionButtons from './ProductActionButtons';
 
@@ -13,9 +14,15 @@ type Props = {
 };
 
 const ProductCard = ({ id, name, image, price, style, onPress }: Props) => {
+  const { colors } = useAppTheme();
+
   return (
     <Card style={[style, styles.container]} onPress={onPress}>
-      <Card.Cover source={{ uri: image }} style={styles.cover} resizeMode="contain" />
+      <Card.Cover
+        source={{ uri: image }}
+        style={[styles.cover, { backgroundColor: colors.elevation.level1 }]}
+        resizeMode="contain"
+      />
 
       <Card.Content>
         <Text variant="titleSmall" style={styles.title}>
@@ -42,7 +49,6 @@ const styles = StyleSheet.create({
 
   cover: {
     height: 100,
-    backgroundColor: 'white',
   },
 
   title: {

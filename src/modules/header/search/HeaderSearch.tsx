@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { CUSTOM_THEME } from 'const';
+import { SIZE } from 'const';
+import { useAppTheme } from 'hooks';
 
 type Props = {
   searchText: string;
@@ -10,6 +11,8 @@ type Props = {
 };
 
 const HeaderSearch = ({ searchText, onChangeSearchText, handleChangeFocus, onPressSearch }: Props) => {
+  const { colors } = useAppTheme();
+
   const onFocus = () => {
     handleChangeFocus(true);
   };
@@ -26,9 +29,9 @@ const HeaderSearch = ({ searchText, onChangeSearchText, handleChangeFocus, onPre
         mode="outlined"
         placeholder="Search"
         onFocus={onFocus}
-        style={styles.searchBar}
+        style={[styles.searchBar, { backgroundColor: colors.elevation.level1 }]}
         contentStyle={styles.searchOutline}
-        outlineStyle={styles.searchOutline}
+        outlineStyle={[styles.searchOutline, { borderColor: colors.outlineVariant }]}
         onSubmitEditing={onSubmitEditing}
       />
     </View>
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
   },
 
   searchBar: {
-    height: CUSTOM_THEME.headerHeight - 16,
+    height: SIZE.appBarHeight - 16,
     borderTopLeftRadius: 99,
     borderBottomLeftRadius: 99,
     borderTopRightRadius: 0,
@@ -50,7 +53,6 @@ const styles = StyleSheet.create({
 
   searchOutline: {
     borderRadius: 99,
-    borderColor: '#fff',
   },
 });
 

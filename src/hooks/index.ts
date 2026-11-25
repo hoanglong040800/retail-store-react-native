@@ -5,3 +5,4 @@ export * from './useCart';
 export * from '../modules/payment/hooks/usePayment';
 export * from './useCheckout';
 export * from './useAddress';
+export * from './useAppTheme';

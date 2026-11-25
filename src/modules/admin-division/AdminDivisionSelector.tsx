@@ -1,16 +1,28 @@
 /* eslint-disable camelcase */
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Icon, Surface, Text, TouchableRipple } from 'react-native-paper';
 import { useRecoilRefresher_UNSTABLE, useRecoilValue } from 'recoil';
 import { BottomButton, DeAppBar } from 'components';
 import { selectedLocationSelector } from 'states';
-import { BASE_STYLE } from 'const';
+import { BASE_STYLE, RADIUS, SPACE } from 'const';
+import { useAppTheme } from 'hooks';
 import { getFullDeliveryAddress, setStorageItems } from 'utils';
 import { AdminDivisionDto, SelectedAdminDivision, SelectedLocation } from 'types';
 import AdminDivisionList from './AdminDivisionList';
 
 type Step = 'launch' | 'province' | 'district' | 'ward' | 'summary';
+
+type DivisionStep = 'province' | 'district' | 'ward';
+
+const BREADCRUMB_STEPS: { step: DivisionStep; label: string }[] = [
+  { step: 'province', label: 'Province' },
+  { step: 'district', label: 'District' },
+  { step: 'ward', label: 'Ward' },
+];
+
+const STORE_ICON_SIZE = 24;
+const BREADCRUMB_ICON_SIZE = 16;
 
 type Props = {
   provinces: AdminDivisionDto[];
@@ -19,6 +31,7 @@ type Props = {
 };
 
 const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props) => {
+  const { colors } = useAppTheme();
   const selectedLocationGS = useRecoilValue<SelectedLocation>(selectedLocationSelector);
 
   // ------ STATE ------
@@ -139,12 +152,63 @@ const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props
     setStep('province');
   };
 
+  const handlePressBreadcrumb = (target: DivisionStep) => {
+    if (target === 'province') {
+      setStep('province');
+      setSelectedLocation({ ward: null, district: null, province: null });
+      return;
+    }
+
+    if (target === 'district') {
+      setStep('district');
+      setSelectedLocation({ province: selectedLocation.province, district: null, ward: null });
+    }
+  };
+
+  const renderBreadcrumb = (currentStep: DivisionStep) => {
+    const currentIndex = BREADCRUMB_STEPS.findIndex(item => item.step === currentStep);
+
+    return (
+      <View style={styles.breadcrumb}>
+        {BREADCRUMB_STEPS.map((item, index) => {
+          const isDone = index < currentIndex;
+          const isCurrent = index === currentIndex;
+          const color = (isDone && colors.primary) || (isCurrent && colors.onSurface) || colors.onSurfaceVariant;
+
+          return (
+            <View key={item.step} style={styles.breadcrumbItem}>
+              {index > 0 && <Icon source="chevron-right" size={BREADCRUMB_ICON_SIZE} color={colors.onSurfaceVariant} />}
+
+              <TouchableRipple disabled={!isDone} onPress={() => handlePressBreadcrumb(item.step)}>
+                <View style={styles.breadcrumbItem}>
+                  {isDone && <Icon source="check" size={BREADCRUMB_ICON_SIZE} color={color} />}
+                  <Text variant={isCurrent ? 'labelLarge' : 'labelMedium'} style={{ color }}>
+                    {item.label}
+                  </Text>
+                </View>
+              </TouchableRipple>
+            </View>
+          );
+        })}
+      </View>
+    );
+  };
+
   const renderSummary = (selectedLocationPar: SelectedLocation) => {
     return (
       <View style={styles.summaryContainer}>
-        <Text variant="titleLarge">
-          You have selected branch at: {getFullDeliveryAddress(selectedLocationPar, 'full')}
-        </Text>
+        <Surface elevation={1} style={styles.summaryCard}>
+          <View style={[styles.storeIcon, { backgroundColor: colors.primaryContainer }]}>
+            <Icon source="store-outline" size={STORE_ICON_SIZE} color={colors.onPrimaryContainer} />
+          </View>
+
+          <View style={styles.summaryText}>
+            <Text variant="bodyMedium" style={{ color: colors.onSurfaceVariant }}>
+              You have selected branch at:
+            </Text>
+            <Text variant="titleMedium">{getFullDeliveryAddress(selectedLocationPar, 'full')}</Text>
+          </View>
+        </Surface>
       </View>
     );
   };
@@ -160,11 +224,16 @@ const AdminDivisionSelector = ({ provinces, onClose, manualSaveLocation }: Props
       {['launch', 'summary'].includes(step) ? (
         renderSummary(selectedLocationGS)
       ) : (
-        <AdminDivisionList
-          adminDivisions={curDisplayAdminDivisions}
-          onSelectAdminDivision={onSelectAdminDivision}
-          style={styles.list}
-        />
+        <>
+          {renderBreadcrumb(step as DivisionStep)}
+
+          <AdminDivisionList
+            key={step}
+            adminDivisions={curDisplayAdminDivisions}
+            onSelectAdminDivision={onSelectAdminDivision}
+            contentContainerStyle={styles.list}
+          />
+        </>
       )}
 
       {step === 'launch' && <BottomButton text="Select Again" onPress={handlePressSelectAgain} />}
@@ -180,13 +249,48 @@ const styles = StyleSheet.create({
   },
 
   list: {
-    padding: 16,
+    padding: SPACE.md,
+  },
+
+  breadcrumb: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: SPACE.xxs,
+    paddingHorizontal: SPACE.md,
+    paddingBottom: SPACE.xs,
+  },
+
+  breadcrumbItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACE.xxs,
   },
 
   summaryContainer: {
     flex: 1,
-    justifyContent: 'center',
+    padding: SPACE.md,
+  },
+
+  summaryCard: {
+    flexDirection: 'row',
     alignItems: 'center',
+    gap: SPACE.sm,
+    padding: SPACE.md,
+    borderRadius: RADIUS.md,
+  },
+
+  storeIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: RADIUS.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  summaryText: {
+    flex: 1,
+    gap: SPACE.xxs,
   },
 });
 

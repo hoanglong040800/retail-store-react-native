@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { CategoryDto, ParamsType, Screen } from 'types';
+import { SIZE, SPACE } from 'const';
 import { useAppNavigation, useAppTheme } from 'hooks';
 import { globalConfigState } from 'states';
 import CategoryList from './CategoryList';
@@ -89,10 +90,10 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
         list={sidebarList}
         onPressItem={onPressMainCategory}
         selectedId={sidebarList[curMainIndex]?.id}
-        style={[styles.leftCate, { backgroundColor: colors.elevation.level1 }]}
+        style={[styles.leftCate, { backgroundColor: colors.elevation.level2 }]}
       />
 
-      <View style={[styles.rightCate, { backgroundColor: colors.elevation.level0 }]}>
+      <View style={[styles.rightCate, { backgroundColor: colors.surface }]}>
         <CategoryList
           list={sidebarList[curMainIndex].childCategories}
           direction="both"
@@ -110,12 +111,12 @@ const styles = StyleSheet.create({
   },
 
   leftCate: {
-    maxWidth: 150,
-    paddingBottom: 16,
+    flexGrow: 0,
+    width: SIZE.categoryRailWidth,
   },
 
   rightCate: {
-    padding: 8,
+    padding: SPACE.md,
     flex: 1,
   },
 });

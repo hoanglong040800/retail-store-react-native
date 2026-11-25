@@ -175,14 +175,6 @@ export const DARK_THEME: AppTheme = {
   },
 };
 
-/** @deprecated use `useAppTheme()`; removed after the component migration. */
-export const THEME = LIGHT_THEME;
-
-/** @deprecated use `SIZE`; removed after the component migration. */
-export const CUSTOM_THEME = {
-  headerHeight: SIZE.appBarHeight,
-};
-
 const SCROLL_VIEW_DEFAULT: ViewStyle = {
   flex: 1,
   maxHeight: Dimensions.get('window').height - SIZE.appBarHeight,
@@ -192,7 +184,6 @@ type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT' | 'SCROLL
 
 type BASE_STYPE_TYPE = Record<BASE_STYLE_KEY, ViewStyle>;
 
-/** @deprecated use `SPACE` / `RADIUS` / `SIZE`; removed after the component migration. */
 export const BASE_STYLE: BASE_STYPE_TYPE = {
   CONTAINER_WRAP_BOT_BTN: {
     // container full -> allow bottom button stick at end

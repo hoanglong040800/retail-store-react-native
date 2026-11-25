@@ -1,14 +1,15 @@
 // https://github.com/expo/expo/issues/23104#issuecomment-1689566248
 import '@expo/metro-runtime';
-import { NavigationContainer } from '@react-navigation/native';
+import { DefaultTheme as NavigationDefaultTheme, NavigationContainer, Theme } from '@react-navigation/native';
 import * as BeVietnamPro from '@expo-google-fonts/be-vietnam-pro';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { SnackbarProvider } from 'components';
-import { ENV, FONT_FAMILY, LIGHT_THEME } from 'const';
+import { ENV, FONT_FAMILY, LIGHT_THEME, SIZE } from 'const';
 import { GlobalConfigProvider } from 'modules';
 import { Suspense } from 'react';
+import { StyleSheet, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActivityIndicator, PaperProvider } from 'react-native-paper';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -19,6 +20,18 @@ const queryClient = new QueryClient();
 const stripePromise = loadStripe(ENV.STRIPE.PUBLIC_KEY, {
   locale: 'auto',
 });
+
+const NAVIGATION_THEME: Theme = {
+  ...NavigationDefaultTheme,
+  colors: {
+    ...NavigationDefaultTheme.colors,
+    primary: LIGHT_THEME.colors.primary,
+    background: LIGHT_THEME.colors.background,
+    card: LIGHT_THEME.colors.background,
+    text: LIGHT_THEME.colors.onSurface,
+    border: LIGHT_THEME.colors.outlineVariant,
+  },
+};
 
 // Add suspense to avoid error with async recoil. github.com/facebook/react/issues/25629
 const App = () => {
@@ -41,12 +54,14 @@ const App = () => {
             <Suspense fallback={<ActivityIndicator />}>
               <SnackbarProvider>
                 <GlobalConfigProvider>
-                  <GestureHandlerRootView style={{ flex: 1 }}>
-                    <NavigationContainer>
-                      <Elements stripe={stripePromise}>
-                        <AppNavigator />
-                      </Elements>
-                    </NavigationContainer>
+                  <GestureHandlerRootView style={styles.root}>
+                    <View style={styles.content}>
+                      <NavigationContainer theme={NAVIGATION_THEME}>
+                        <Elements stripe={stripePromise}>
+                          <AppNavigator />
+                        </Elements>
+                      </NavigationContainer>
+                    </View>
                   </GestureHandlerRootView>
                 </GlobalConfigProvider>
               </SnackbarProvider>
@@ -57,5 +72,20 @@ const App = () => {
     </SafeAreaProvider>
   );
 };
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    backgroundColor: LIGHT_THEME.colors.background,
+  },
+
+  // web: keep content readable on wide screens
+  content: {
+    flex: 1,
+    width: '100%',
+    maxWidth: SIZE.contentMaxWidth,
+    alignSelf: 'center',
+  },
+});
 
 export default App;

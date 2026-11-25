@@ -2,7 +2,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { DEFAULT_INPUT_VALUE } from 'const';
 import { useBottomSheet } from 'components';
-import { useAppNavigation } from 'hooks';
+import { useAppNavigation, useResponsiveLayout } from 'hooks';
 import { useState, useEffect, useMemo } from 'react';
 import { CategoryDto, ParamsType, ProductDto, Screen } from 'types';
 import { getCategoryById } from 'service';
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const useProductListScreen = ({ params, formMethod }: Props) => {
-  const colNum = 2;
+  const { gridColumns: colNum } = useResponsiveLayout();
   const [selectedSubCate, setSelectedSubCate] = useState<{ index: number; id: string }>({ index: 0, id: '' });
   const [displayProducts, setDisplayProducts] = useState<ProductDto[]>([]);
 

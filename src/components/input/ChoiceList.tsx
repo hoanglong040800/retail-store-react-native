@@ -1,3 +1,4 @@
+import { RADIUS, SIZE, SPACE } from 'const';
 import { StyleSheet, View } from 'react-native';
 import { Button, ButtonProps } from 'react-native-paper';
 
@@ -22,12 +23,22 @@ const ChoiceList = <T extends string>({ list, selectedValue, onChange }: Props<T
     onChange(curVal);
   };
 
-  const getButtonMode = (mode: ButtonProps['mode'], selVal: typeof selectedValue): ButtonProps['mode'] => {
+  const isSelected = (value: string) => value === selectedValue;
+
+  const getButtonMode = (mode: ButtonProps['mode'], value: string): ButtonProps['mode'] => {
     if (mode) {
       return mode;
     }
 
-    return selVal === selectedValue ? 'contained' : 'outlined';
+    return isSelected(value) ? 'contained-tonal' : 'outlined';
+  };
+
+  const getIcon = (icon: string | undefined, mode: ButtonProps['mode'], value: string) => {
+    if (icon) {
+      return icon;
+    }
+
+    return !mode && isSelected(value) ? 'check' : undefined;
   };
 
   return (
@@ -35,12 +46,12 @@ const ChoiceList = <T extends string>({ list, selectedValue, onChange }: Props<T
       {list.map(({ text, value, icon, mode, textColor, disabled }) => (
         <Button
           key={text}
-          icon={icon}
+          icon={getIcon(icon, mode, value)}
           mode={getButtonMode(mode, value)}
           onPress={() => handlePressChoice(value)}
           textColor={textColor}
+          style={styles.button}
           contentStyle={styles.buttonContent}
-          labelStyle={styles.buttonLabel}
           disabled={disabled}
         >
           {text}
@@ -53,16 +64,17 @@ const ChoiceList = <T extends string>({ list, selectedValue, onChange }: Props<T
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    gap: 20,
+    gap: SPACE.xs,
   },
 
-  buttonLabel: {
-    fontSize: 18,
+  button: {
+    borderRadius: RADIUS.sm,
   },
 
   buttonContent: {
-    gap: 8,
+    gap: SPACE.xs,
     flex: 1,
+    minHeight: SIZE.buttonHeight,
   },
 });
 

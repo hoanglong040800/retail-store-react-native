@@ -1,4 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useAppTheme } from 'hooks';
+import { useMemo } from 'react';
 import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
 import { View, ViewProps } from 'react-native';
 import { SegmentedButtons, SegmentedButtonsProps } from 'react-native-paper';
@@ -19,6 +21,16 @@ const DeSegmentedButtons = <FormT extends FieldValues = FieldValues>({
   ...segmentedButtonProps
 }: Props<FormT>) => {
   const { field, fieldState } = useController(ctrlProps);
+  const { colors } = useAppTheme();
+
+  const selectedTheme = useMemo(
+    () => ({
+      colors: { secondaryContainer: colors.primaryContainer, onSecondaryContainer: colors.onPrimaryContainer },
+    }),
+    [colors]
+  );
+
+  const buttonsWithCheck = useMemo(() => buttons.map(btn => ({ showSelectedCheck: true, ...btn })), [buttons]);
 
   return (
     <View {...wrapperProps}>
@@ -27,7 +39,8 @@ const DeSegmentedButtons = <FormT extends FieldValues = FieldValues>({
         multiSelect={multiSelect}
         value={field.value}
         onValueChange={field.onChange}
-        buttons={buttons}
+        buttons={buttonsWithCheck}
+        theme={selectedTheme}
       />
 
       <InputError name={field.name} errors={fieldState.error} />

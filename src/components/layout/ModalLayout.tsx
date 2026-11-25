@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import { BottomButton } from 'components/button';
-import { BASE_STYLE } from 'const';
+import { BASE_STYLE, SPACE } from 'const';
 import { ComponentProps, ReactNode } from 'react';
 import { ScrollView, StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    padding: 16,
+    padding: SPACE.md,
   },
 });
 

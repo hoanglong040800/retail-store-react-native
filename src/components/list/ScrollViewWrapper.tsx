@@ -1,4 +1,5 @@
 import { ReactNode, useMemo } from 'react';
+import { SPACE } from 'const';
 import { ScrollView, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 type Props = {
@@ -17,7 +18,7 @@ const ScrollViewWrapper = ({ direction = 'row', itemSize = 'M', hideScrollbar, s
   }, [direction, itemSize, style]);
 
   const scrollContainerStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    return direction === 'both' ? styles.scrollContainer_both : {};
+    return direction === 'both' ? styles.scrollContainer_both : styles.scrollContainer_line;
   }, [direction]);
 
   return (
@@ -36,13 +37,18 @@ const ScrollViewWrapper = ({ direction = 'row', itemSize = 'M', hideScrollbar, s
 const styles = StyleSheet.create({
   scrollViewDefault: {
     flex: 1,
-    padding: 8,
+  },
+
+  scrollContainer_line: {
+    gap: SPACE.sm,
+    padding: SPACE.md,
   },
 
   scrollContainer_both: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
+    gap: SPACE.sm,
+    padding: SPACE.md,
   },
 
   scrollView_rowS: {
@@ -56,8 +62,8 @@ const styles = StyleSheet.create({
   },
 
   scrollView_rowL: {
-    minHeight: 260,
-    maxHeight: 260,
+    minHeight: 340,
+    maxHeight: 340,
   },
 });
 

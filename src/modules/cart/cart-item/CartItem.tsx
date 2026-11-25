@@ -1,3 +1,5 @@
+import { RADIUS, SPACE } from 'const';
+import { useAppTheme } from 'hooks';
 import { ProductActionButtons } from 'modules/product';
 import { Image, StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
@@ -10,15 +12,21 @@ type Props = {
 };
 
 const CartItem = ({ item, viewOnly }: Props) => {
+  const { colors } = useAppTheme();
+
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
         <Image source={{ uri: item.product.image }} style={styles.image} />
 
         <View style={styles.leftSectionContent}>
-          <Text variant="bodyMedium">{item.product.name}</Text>
-          <Text variant="bodySmall">{displayProductPrice(item.product)}</Text>
-          <Text variant="bodyLarge" style={styles.totalPriceText}>
+          <Text variant="titleSmall" numberOfLines={2}>
+            {item.product.name}
+          </Text>
+          <Text variant="bodySmall" style={{ color: colors.onSurfaceVariant }}>
+            {displayProductPrice(item.product)}
+          </Text>
+          <Text variant="titleSmall" style={styles.totalPriceText}>
             {formatCurrency(item.totalPrice)}
           </Text>
         </View>
@@ -40,15 +48,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
-    padding: 4,
+    gap: SPACE.sm,
+    paddingVertical: SPACE.sm,
   },
 
   leftSection: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACE.sm,
   },
 
   leftSectionContent: {
@@ -56,17 +64,17 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
+    width: 64,
+    height: 64,
+    borderRadius: RADIUS.sm,
   },
 
   totalPriceText: {
-    marginTop: 8,
+    marginTop: SPACE.xxs,
   },
 
   productActionButtons: {
-    maxWidth: 160,
+    width: 128,
   },
 });
 

@@ -1,4 +1,5 @@
-import { Text } from 'react-native-paper';
+import { Divider, Text } from 'react-native-paper';
+import { Fragment } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { CartItemDto } from 'types';
 import { CartItem } from '.';
@@ -15,8 +16,11 @@ const CartItemList = ({ cartItems, viewOnly }: Props) => {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      {cartItems.map(cartItem => (
-        <CartItem key={cartItem.id} item={cartItem} viewOnly={viewOnly} />
+      {cartItems.map((cartItem, index) => (
+        <Fragment key={cartItem.id}>
+          {index > 0 && <Divider />}
+          <CartItem item={cartItem} viewOnly={viewOnly} />
+        </Fragment>
       ))}
     </ScrollView>
   );
@@ -27,9 +31,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  contentContainer: {
-    gap: 16,
-  },
+  contentContainer: {},
 });
 
 export default CartItemList;

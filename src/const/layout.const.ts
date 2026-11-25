@@ -45,3 +45,6 @@ export const BREAKPOINT = {
   md: 905,
   lg: 1240,
 } as const;
+
+// Derived: fixed bottom button bar (button + vertical padding).
+export const BOTTOM_BAR_HEIGHT = SIZE.buttonHeight + SPACE.sm * 2;

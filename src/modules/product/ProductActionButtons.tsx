@@ -1,6 +1,7 @@
 import { NumericInput } from 'components';
 import { useCart } from 'hooks';
 import { useMemo } from 'react';
+import { SIZE } from 'const';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Button } from 'react-native-paper';
 import { ProductDto } from 'types';
@@ -34,7 +35,13 @@ const ProductActionButtons = ({ product, offsetQuantity = 1, containerStyle }: P
   return (
     <View style={[styles.container, containerStyle]}>
       {inCartQuantity === 0 ? (
-        <Button mode="outlined" icon="cart-plus" style={styles.addToCart} onPress={handlePressAddCart}>
+        <Button
+          mode="contained-tonal"
+          icon="cart-plus"
+          style={styles.addToCart}
+          contentStyle={styles.addToCartContent}
+          onPress={handlePressAddCart}
+        >
           Add
         </Button>
       ) : (
@@ -47,12 +54,15 @@ const ProductActionButtons = ({ product, offsetQuantity = 1, containerStyle }: P
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    maxHeight: 40,
+    height: SIZE.locationChipHeight,
   },
 
   addToCart: {
     flex: 1,
-    height: '100%',
+  },
+
+  addToCartContent: {
+    height: SIZE.locationChipHeight,
   },
 });
 

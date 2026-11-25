@@ -1,6 +1,6 @@
 import { Dimensions, ViewStyle } from 'react-native';
 import { MD3DarkTheme, MD3LightTheme, MD3Theme, configureFonts } from 'react-native-paper';
-import { RADIUS, SIZE, SPACE } from './layout.const';
+import { BOTTOM_BAR_HEIGHT, RADIUS, SIZE, SPACE } from './layout.const';
 
 // Values from design-system/tokens.json. Keep in sync.
 
@@ -188,12 +188,7 @@ const SCROLL_VIEW_DEFAULT: ViewStyle = {
   maxHeight: Dimensions.get('window').height - SIZE.appBarHeight,
 };
 
-type BASE_STYLE_KEY =
-  | 'CONTAINER_WRAP_BOT_BTN'
-  | 'SCROLL_VIEW_DEFAULT'
-  | 'SCROLL_VIEW_BOT_BTN'
-  | 'SURFACE_DEFAULT'
-  | 'PRODUCT_CARD';
+type BASE_STYLE_KEY = 'CONTAINER_WRAP_BOT_BTN' | 'SCROLL_VIEW_DEFAULT' | 'SCROLL_VIEW_BOT_BTN' | 'SURFACE_DEFAULT';
 
 type BASE_STYPE_TYPE = Record<BASE_STYLE_KEY, ViewStyle>;
 
@@ -203,7 +198,7 @@ export const BASE_STYLE: BASE_STYPE_TYPE = {
     // container full -> allow bottom button stick at end
     flex: 1,
     // giving space to display bottom button
-    paddingBottom: SPACE.xxl,
+    paddingBottom: BOTTOM_BAR_HEIGHT,
   },
 
   SCROLL_VIEW_DEFAULT,
@@ -211,17 +206,11 @@ export const BASE_STYLE: BASE_STYPE_TYPE = {
   SCROLL_VIEW_BOT_BTN: {
     ...SCROLL_VIEW_DEFAULT,
     paddingBottom: SPACE.md,
-    maxHeight: (SCROLL_VIEW_DEFAULT.maxHeight as number) - SPACE.xxl - SPACE.md,
+    maxHeight: (SCROLL_VIEW_DEFAULT.maxHeight as number) - BOTTOM_BAR_HEIGHT - SPACE.md,
   },
 
   SURFACE_DEFAULT: {
-    padding: SPACE.xs,
+    padding: SPACE.md,
     borderRadius: RADIUS.md,
-    backgroundColor: LIGHT_THEME.colors.elevation.level1,
-  },
-
-  PRODUCT_CARD: {
-    height: 280,
-    width: SIZE.productCardWidth,
   },
 };

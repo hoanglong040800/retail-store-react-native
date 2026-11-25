@@ -1,6 +1,6 @@
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
 import { BottomSheet } from 'components';
-import { PAYMENT_OPTIONS } from 'const';
+import { PAYMENT_OPTIONS, SPACE } from 'const';
 import { MutableRefObject } from 'react';
 import { FieldValues, UseControllerProps, useController } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
@@ -37,7 +37,6 @@ const PaymentSelectorBottom = <FormT extends FieldValues = FieldValues>({
             icon={icon}
             contentStyle={styles.buttonContent}
             mode={value === method ? 'contained' : 'outlined'}
-            labelStyle={styles.buttonLabel}
           >
             {text}
           </Button>
@@ -50,15 +49,11 @@ const PaymentSelectorBottom = <FormT extends FieldValues = FieldValues>({
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    gap: 20,
-  },
-
-  buttonLabel: {
-    fontSize: 18,
+    gap: SPACE.xs,
   },
 
   buttonContent: {
-    gap: 8,
+    gap: SPACE.xs,
     flex: 1,
   },
 });

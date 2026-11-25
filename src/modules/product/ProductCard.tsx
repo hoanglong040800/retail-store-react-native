@@ -1,6 +1,7 @@
-import { StyleProp, StyleSheet, TouchableOpacity, ViewStyle } from 'react-native';
-import { Card, Divider, Subheading, Text } from 'react-native-paper';
+import { RADIUS, SIZE, SPACE } from 'const';
 import { useAppTheme } from 'hooks';
+import { Image, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native';
+import { Card, Text } from 'react-native-paper';
 import { formatCurrency } from 'utils';
 import ProductActionButtons from './ProductActionButtons';
 
@@ -17,51 +18,60 @@ const ProductCard = ({ id, name, image, price, style, onPress }: Props) => {
   const { colors } = useAppTheme();
 
   return (
-    <Card style={[style, styles.container]} onPress={onPress}>
-      <Card.Cover
-        source={{ uri: image }}
-        style={[styles.cover, { backgroundColor: colors.elevation.level1 }]}
-        resizeMode="contain"
-      />
+    <Card
+      mode="elevated"
+      elevation={1}
+      style={[styles.container, { backgroundColor: colors.elevation.level1 }, style]}
+      onPress={onPress}
+    >
+      <Image source={{ uri: image }} style={styles.cover} resizeMode="cover" />
 
-      <Card.Content>
-        <Text variant="titleSmall" style={styles.title}>
+      <View style={styles.body}>
+        <Text variant="titleSmall" numberOfLines={2} style={styles.title}>
           {name}
         </Text>
 
-        <Divider />
+        <Text variant="titleMedium" style={{ color: colors.primary }}>
+          {formatCurrency(price)}
+        </Text>
 
-        <Subheading style={styles.price}>{formatCurrency(price)}</Subheading>
-      </Card.Content>
-
-      {/* add touchable here to prevent action inside trigger press card */}
-      <TouchableOpacity onPress={() => null} activeOpacity={1}>
-        <Card.Actions style={styles.actionContainer}>
+        {/* add touchable here to prevent action inside trigger press card */}
+        <TouchableOpacity onPress={() => null} activeOpacity={1} style={styles.actionContainer}>
           <ProductActionButtons product={{ id, name }} />
-        </Card.Actions>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     </Card>
   );
 };
 
+const TITLE_LINES = 2;
+const TITLE_LINE_HEIGHT = 20;
+
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    width: SIZE.productCardWidth,
+    borderRadius: RADIUS.md,
+    overflow: 'hidden',
+  },
 
   cover: {
-    height: 100,
+    width: '100%',
+    aspectRatio: 1,
+    borderTopLeftRadius: RADIUS.md,
+    borderTopRightRadius: RADIUS.md,
+  },
+
+  body: {
+    padding: SPACE.sm,
+    gap: SPACE.xxs,
   },
 
   title: {
-    paddingVertical: 4,
-    height: 45,
-  },
-
-  price: {
-    textAlign: 'right',
+    height: TITLE_LINES * TITLE_LINE_HEIGHT,
   },
 
   actionContainer: {
-    marginTop: 12,
+    marginTop: SPACE.xs,
   },
 });
 

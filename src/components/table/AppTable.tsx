@@ -5,15 +5,16 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, DataTable, Surface, Text, TouchableRipple } from 'react-native-paper';
 import { getObj } from 'utils';
 
-export type DeepKeys<T> = T extends object
-  ? {
-      [K in keyof T]: K extends string | number ? K | `${K}.${DeepKeys<T[K]>}` : never; // Exclude symbol keys
-    }[keyof T] extends infer D
-    ? D extends string
-      ? D
-      : never
-    : never
-  : '';
+type PrevDepth = [never, 0, 1, 2, 3];
+
+// Depth-limited so circular DTOs (category <-> product) do not recurse forever
+export type DeepKeys<T, Depth extends number = 3> = [Depth] extends [never]
+  ? never
+  : T extends object
+    ? {
+        [K in keyof T & (string | number)]-?: `${K}` | `${K}.${DeepKeys<T[K], PrevDepth[Depth]>}`;
+      }[keyof T & (string | number)]
+    : never;
 
 export type TableColumnConfig<T> = {
   title: string;

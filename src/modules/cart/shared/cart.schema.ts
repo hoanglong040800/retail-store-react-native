@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { DeliveryTypeEnum } from 'types/enum';
+import { DeliveryTypeEnum, PaymentMethodEnum } from 'types/enum';
 import { CheckoutForm } from './cartForm.type';
 
 export const checkoutFormSchema: Record<keyof CheckoutForm, yup.AnySchema> = {
@@ -8,4 +8,5 @@ export const checkoutFormSchema: Record<keyof CheckoutForm, yup.AnySchema> = {
     is: DeliveryTypeEnum.delivery,
     then: schema => schema.required().min(3).max(200),
   }),
+  paymentMethod: yup.mixed<PaymentMethodEnum>().oneOf(Object.values(PaymentMethodEnum)),
 };

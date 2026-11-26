@@ -162,6 +162,14 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     setSelectedSubCate({ index, id });
     onPressResetFilter();
 
+    // form resets to the limit range only after a delay, so apply the limit directly
+    setDisplayProducts(
+      getFilteredProducts(lv1Category.childCategories[index], {
+        ...formMethod.getValues(),
+        priceRange: priceRangeLimit,
+      })
+    );
+
     // only need to fetch first time
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lv1Category, params.subCate.id]);

@@ -1,11 +1,11 @@
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Chip, Text } from 'react-native-paper';
 import { ProductFilterForm, SortBy, SortProductVaule } from 'modules/product/_shared';
 import { Slider } from 'components';
 import { useState } from 'react';
 import { useController, useFormContext } from 'react-hook-form';
 import { DEFAULT_INPUT_VALUE, RADIUS, SIZE, SPACE } from 'const';
-import { useAppTheme } from 'hooks';
+import { useAppTheme, useResponsiveLayout } from 'hooks';
 
 const SORT_PRODUCT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
   { label: 'None', value: '' },
@@ -18,7 +18,6 @@ const SORT_DIRECTION_OPTIONS: { label: string; value: SortBy }[] = [
   { label: 'Desc', value: 'desc' },
 ];
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
 const SLIDER_MARGIN = SPACE.lg;
 
 type ChoiceChipsProps = {
@@ -74,6 +73,7 @@ const ProductFilter = ({
   onSliderChange,
 }: Props) => {
   const [isScrollable, setIsScrollable] = useState(false);
+  const { contentWidth } = useResponsiveLayout();
 
   const onSliderChangeStart = () => {
     setIsScrollable(false);
@@ -112,7 +112,7 @@ const ProductFilter = ({
           min={priceRange[0]}
           max={priceRange[1]}
           step={priceStep}
-          sliderLength={SCREEN_WIDTH - (SLIDER_MARGIN * 2 + SPACE.xl)}
+          sliderLength={contentWidth - (SLIDER_MARGIN * 2 + SPACE.xl)}
           containerStyle={styles.sliderContainer}
           viewProps={{ style: styles.sliderView }}
         />

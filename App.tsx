@@ -35,15 +35,20 @@ const NAVIGATION_THEME: Theme = {
 
 // Add suspense to avoid error with async recoil. github.com/facebook/react/issues/25629
 const App = () => {
-  const [fontsLoaded] = BeVietnamPro.useFonts({
+  const [fontsLoaded, fontError] = BeVietnamPro.useFonts({
     [FONT_FAMILY.regular]: BeVietnamPro.BeVietnamPro_400Regular,
     [FONT_FAMILY.medium]: BeVietnamPro.BeVietnamPro_500Medium,
     [FONT_FAMILY.semibold]: BeVietnamPro.BeVietnamPro_600SemiBold,
     [FONT_FAMILY.bold]: BeVietnamPro.BeVietnamPro_700Bold,
   });
 
-  if (!fontsLoaded) {
-    return null;
+  // on font error fall back to the system font instead of a blank screen
+  if (!fontsLoaded && !fontError) {
+    return (
+      <View style={styles.fontLoading}>
+        <ActivityIndicator animating />
+      </View>
+    );
   }
 
   return (
@@ -76,6 +81,12 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+    backgroundColor: LIGHT_THEME.colors.background,
+  },
+
+  fontLoading: {
+    flex: 1,
+    justifyContent: 'center',
     backgroundColor: LIGHT_THEME.colors.background,
   },
 

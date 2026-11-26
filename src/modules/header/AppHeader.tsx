@@ -6,16 +6,16 @@ import { CategoryDrawerModal } from 'modules/category';
 import HeaderAccount from 'modules/header/HeaderAccount';
 import { useHeaderSearch } from 'modules/header/hooks';
 import { useEffect, useState } from 'react';
-import { Dimensions, StyleSheet, Animated } from 'react-native';
+import { StyleSheet, Animated, useWindowDimensions } from 'react-native';
 import { Appbar } from 'react-native-paper';
 import { HeaderSearch, HeaderSearchSuggestion } from './search';
-
-const BOTTOM_SHEET_HEIGHT = Dimensions.get('window').height - SIZE.appBarHeight;
 
 const LEFT_SIDE_WIDTH = 100;
 
 const AppHeader = () => {
   const { colors } = useAppTheme();
+  const { height: windowHeight } = useWindowDimensions();
+  const bottomSheetHeight = windowHeight - SIZE.appBarHeight;
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isFocusSearchbar, setIsFocusSeachbar] = useState(false);
   const { botSheetRef, onOpenBotSheet, onCloseBotSheet } = useBottomSheet({});
@@ -114,7 +114,7 @@ const AppHeader = () => {
 
       <CategoryDrawerModal isOpen={isDrawerOpen} onClose={onCloseDrawer} />
 
-      <BottomSheet botSheetRef={botSheetRef} snapPoints={[BOTTOM_SHEET_HEIGHT]} transparentBackdrop>
+      <BottomSheet botSheetRef={botSheetRef} snapPoints={[bottomSheetHeight]} transparentBackdrop>
         {isFocusSearchbar && (
           <HeaderSearchSuggestion
             recentSearchTexts={recentSearchTexts}

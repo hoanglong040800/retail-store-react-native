@@ -162,13 +162,8 @@ export const useProductListScreen = ({ params, formMethod }: Props) => {
     setSelectedSubCate({ index, id });
     onPressResetFilter();
 
-    // form resets to the limit range only after a delay, so apply the limit directly
-    setDisplayProducts(
-      getFilteredProducts(lv1Category.childCategories[index], {
-        ...formMethod.getValues(),
-        priceRange: priceRangeLimit,
-      })
-    );
+    // form resets to the defaults only after a delay, so filter with the defaults directly (no sort, full range)
+    setDisplayProducts(getFilteredProducts(lv1Category.childCategories[index], { priceRange: priceRangeLimit }));
 
     // only need to fetch first time
     // eslint-disable-next-line react-hooks/exhaustive-deps

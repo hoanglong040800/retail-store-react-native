@@ -9,6 +9,7 @@ import { FormProvider } from 'react-hook-form';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button } from 'react-native-paper';
 import { ParamsType, Screen } from 'types';
+import { SPACE } from 'const';
 
 type Params = Pick<ParamsType, 'mainCate' | 'subCate'>;
 
@@ -39,7 +40,7 @@ const ProductListScreen = ({ route: { params } }: Props) => {
 
   const renderFilterButton = () => {
     return (
-      <Button icon="filter" onPress={onPressFilter}>
+      <Button icon="tune-variant" onPress={onPressFilter}>
         Filter
       </Button>
     );
@@ -57,7 +58,6 @@ const ProductListScreen = ({ route: { params } }: Props) => {
         list={lv1Category.childCategories}
         selectedId={selectedSubCate?.id}
         direction="row"
-        itemSize="S"
         onPressItem={onPressCateItem}
       />
 
@@ -86,12 +86,10 @@ const ProductListScreen = ({ route: { params } }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1, // allow page to extend -> allow scroll
-    paddingHorizontal: 8,
   },
 
   productList: {
-    paddingTop: 12,
-    marginBottom: 20,
+    marginBottom: SPACE.md,
   },
 });
 

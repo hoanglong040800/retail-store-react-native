@@ -1,3 +1,4 @@
+import { SPACE } from 'const';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { ProductByCateDto } from 'types/dto/home.dto';
 import ProductCarouselRow from './ProductCarouselRow';
@@ -24,7 +25,7 @@ const PromoProductSection = ({ productCarousels, style }: Props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    gap: 20,
+    gap: SPACE.lg,
   },
 });
 

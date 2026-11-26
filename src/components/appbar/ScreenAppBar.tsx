@@ -1,4 +1,4 @@
-import { useAppNavigation } from 'hooks';
+import { useAppNavigation, useAppTheme } from 'hooks';
 import { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import { Appbar, Button, Text } from 'react-native-paper';
@@ -10,6 +10,7 @@ type Props = {
 
 const ScreenAppBar = ({ title, right }: Props) => {
   const { goBack } = useAppNavigation();
+  const { colors } = useAppTheme();
 
   const onPressBack = () => {
     goBack();
@@ -17,7 +18,7 @@ const ScreenAppBar = ({ title, right }: Props) => {
 
   return (
     <Appbar.Header style={styles.header}>
-      <Button icon="chevron-left" textColor="black" onPress={onPressBack}>
+      <Button icon="chevron-left" textColor={colors.onSurface} onPress={onPressBack}>
         <Text variant="titleMedium">{title}</Text>
       </Button>
 

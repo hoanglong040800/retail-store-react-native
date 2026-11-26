@@ -1,4 +1,5 @@
 import { PAYMENT_OPTIONS } from 'const';
+import { useAppTheme } from 'hooks';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Icon, Text } from 'react-native-paper';
@@ -11,12 +12,17 @@ type Props = {
 };
 
 const PaymentSelector = ({ selectedMethod, onClick }: Props) => {
+  const { colors } = useAppTheme();
   const selectedPaymentMethod: PaymentOptionType = useMemo(() => {
     return PAYMENT_OPTIONS.find(({ method }) => method === selectedMethod);
   }, [selectedMethod]);
 
   return (
-    <Button onPress={onClick} labelStyle={styles.buttonLabel} contentStyle={styles.buttonContent}>
+    <Button
+      onPress={onClick}
+      labelStyle={[styles.buttonLabel, { color: colors.onSurface }]}
+      contentStyle={styles.buttonContent}
+    >
       <Text variant="labelLarge">Payment method:</Text>
 
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -38,7 +44,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    color: 'black',
   },
 
   paymentLine: {

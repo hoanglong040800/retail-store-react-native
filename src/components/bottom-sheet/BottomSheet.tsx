@@ -5,6 +5,8 @@ import { StyleSheet } from 'react-native';
 import BottomSheetLib, { BottomSheetProps } from '@gorhom/bottom-sheet';
 import { BottomSheetBackdrop, BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import { RADIUS, SPACE } from 'const';
+import { useAppTheme } from 'hooks';
 import { Portal } from 'react-native-paper';
 import { SharedValue } from 'react-native-reanimated';
 
@@ -24,6 +26,7 @@ const BottomSheet = ({
   onSheetChange,
   ...bottomSheetProps
 }: Props) => {
+  const { colors } = useAppTheme();
   const defaultSnapPoints = ['30%', '50%'];
 
   const handleSheetChanges = (index: number) => {
@@ -51,6 +54,8 @@ const BottomSheet = ({
         enableDynamicSizing={false}
         onChange={handleSheetChanges}
         aria-label="Bottom Sheet"
+        backgroundStyle={[styles.background, { backgroundColor: colors.elevation.level1 }]}
+        handleIndicatorStyle={[styles.handle, { backgroundColor: colors.outlineVariant }]}
         {...bottomSheetProps}
       >
         <BottomSheetScrollView
@@ -66,9 +71,19 @@ const BottomSheet = ({
 };
 
 const styles = StyleSheet.create({
+  background: {
+    borderTopLeftRadius: RADIUS.xl,
+    borderTopRightRadius: RADIUS.xl,
+  },
+
+  handle: {
+    width: 32,
+    height: 4,
+  },
+
   contentContainer: {
     flex: 1,
-    padding: 16,
+    padding: SPACE.md,
   },
 
   contentContentContainer: {

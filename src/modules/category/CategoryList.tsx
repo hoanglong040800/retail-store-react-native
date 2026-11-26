@@ -1,35 +1,31 @@
-import { useMemo } from 'react';
+import { SPACE } from 'const';
 import { ScrollView, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { CategoryDto } from 'types';
-import CategoryItem from './CategoryItem';
+import CategoryItem, { CategoryItemVariant } from './CategoryItem';
 
 type Props = {
   list: CategoryDto[];
   direction?: 'row' | 'column' | 'both';
-  itemSize?: 'S' | 'M';
   selectedId?: string;
   style?: StyleProp<ViewStyle>;
 
   onPressItem?: (index: number, id: string) => void;
 };
 
-const CategoryList = ({ list, direction = 'column', itemSize = 'M', selectedId, style, onPressItem }: Props) => {
-  const scrollViewStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    const sizeStyle = styles[`scrollView_${direction}${itemSize}`] || {};
+// row = filter chip strip, column = side rail, both = tile grid
+const VARIANT_BY_DIRECTION: Record<NonNullable<Props['direction']>, CategoryItemVariant> = {
+  row: 'chip',
+  column: 'rail',
+  both: 'tile',
+};
 
-    return [sizeStyle, styles.scrollViewDefault, style];
-  }, [direction, itemSize, style]);
-
-  const scrollContainerStyle = useMemo<StyleProp<ViewStyle>>(() => {
-    return styles[`scrollContainer_${direction}`] || {};
-  }, [direction]);
-
+const CategoryList = ({ list, direction = 'column', selectedId, style, onPressItem }: Props) => {
   // TODO reusing ScrollViewWrapper
   return (
     <ScrollView
       horizontal={direction === 'row'}
-      style={scrollViewStyle}
-      contentContainerStyle={scrollContainerStyle}
+      style={[direction === 'row' ? styles.scrollView_row : styles.scrollViewDefault, style]}
+      contentContainerStyle={styles[`scrollContainer_${direction}`]}
       showsHorizontalScrollIndicator={false}
       showsVerticalScrollIndicator={false}
     >
@@ -38,7 +34,7 @@ const CategoryList = ({ list, direction = 'column', itemSize = 'M', selectedId, 
           key={cate.name}
           name={cate.name}
           icon={cate.icon}
-          size={itemSize}
+          variant={VARIANT_BY_DIRECTION[direction]}
           isHighlighted={selectedId ? cate.id === selectedId : null}
           onPress={() => onPressItem(index, cate.id)}
         />
@@ -50,28 +46,25 @@ const CategoryList = ({ list, direction = 'column', itemSize = 'M', selectedId, 
 const styles = StyleSheet.create({
   scrollViewDefault: {
     flex: 1,
-    padding: 8,
   },
+
+  scrollView_row: {
+    flexGrow: 0,
+  },
+
+  scrollContainer_row: {
+    gap: SPACE.xs,
+    paddingHorizontal: SPACE.md,
+    paddingVertical: SPACE.xs,
+    alignItems: 'center',
+  },
+
+  scrollContainer_column: {},
 
   scrollContainer_both: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 8,
-    gap: 12,
-  },
-
-  scrollContainer_column: {
-    gap: 12,
-  },
-
-  scrollView_rowS: {
-    minHeight: 90,
-    maxHeight: 100,
-  },
-
-  scrollView_rowM: {
-    minHeight: 170,
-    maxHeight: 170,
+    gap: SPACE.sm,
   },
 });
 

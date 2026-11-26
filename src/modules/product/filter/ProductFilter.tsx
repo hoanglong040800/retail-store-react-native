@@ -1,9 +1,11 @@
-import { Dimensions, ScrollView, StyleSheet, View } from 'react-native';
-import { Button } from 'react-native-paper';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { Button, Chip, Text } from 'react-native-paper';
 import { ProductFilterForm, SortBy, SortProductVaule } from 'modules/product/_shared';
-import { Dropdown, Slider } from 'components';
+import { Slider } from 'components';
 import { useState } from 'react';
-import { DEFAULT_INPUT_VALUE } from 'const';
+import { useController, useFormContext } from 'react-hook-form';
+import { DEFAULT_INPUT_VALUE, RADIUS, SIZE, SPACE } from 'const';
+import { useAppTheme, useResponsiveLayout } from 'hooks';
 
 const SORT_PRODUCT_VALUE_OPTIONS: { label: string; value: SortProductVaule }[] = [
   { label: 'None', value: '' },
@@ -16,7 +18,44 @@ const SORT_DIRECTION_OPTIONS: { label: string; value: SortBy }[] = [
   { label: 'Desc', value: 'desc' },
 ];
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
+const SLIDER_MARGIN = SPACE.lg;
+
+type ChoiceChipsProps = {
+  label: string;
+  name: keyof ProductFilterForm;
+  options: { label: string; value: string }[];
+};
+
+const ChoiceChips = ({ label, name, options }: ChoiceChipsProps) => {
+  const { colors } = useAppTheme();
+  const { control } = useFormContext<ProductFilterForm>();
+  const { field } = useController({ control, name });
+
+  return (
+    <View style={styles.chipSection}>
+      <Text variant="titleSmall">{label}</Text>
+
+      <View style={styles.chipRow}>
+        {options.map(option => {
+          const isSelected = (field.value ?? '') === option.value;
+
+          return (
+            <Chip
+              key={option.value}
+              selected={isSelected}
+              showSelectedCheck
+              onPress={() => field.onChange(option.value)}
+              style={[styles.chip, { backgroundColor: isSelected ? colors.primaryContainer : colors.elevation.level1 }]}
+              selectedColor={isSelected ? colors.onPrimaryContainer : colors.onSurface}
+            >
+              {option.label}
+            </Chip>
+          );
+        })}
+      </View>
+    </View>
+  );
+};
 
 type Props = {
   priceRange?: [number, number];
@@ -34,6 +73,7 @@ const ProductFilter = ({
   onSliderChange,
 }: Props) => {
   const [isScrollable, setIsScrollable] = useState(false);
+  const { contentWidth } = useResponsiveLayout();
 
   const onSliderChangeStart = () => {
     setIsScrollable(false);
@@ -55,19 +95,11 @@ const ProductFilter = ({
     <View aria-label="Product Filter" style={styles.container}>
       <ScrollView aria-label="Sort section" style={styles.scrollView} scrollEnabled={isScrollable}>
         <View style={styles.sortSec}>
-          <Dropdown<ProductFilterForm>
-            label="Sort value"
-            name="sortValue"
-            options={SORT_PRODUCT_VALUE_OPTIONS}
-            placeholder="Select sort value"
-          />
+          <Text variant="titleLarge">Filter</Text>
 
-          <Dropdown<ProductFilterForm>
-            label="Sort By"
-            name="sortBy"
-            options={SORT_DIRECTION_OPTIONS}
-            placeholder="Select sort by"
-          />
+          <ChoiceChips label="Sort value" name="sortValue" options={SORT_PRODUCT_VALUE_OPTIONS} />
+
+          <ChoiceChips label="Sort By" name="sortBy" options={SORT_DIRECTION_OPTIONS} />
         </View>
 
         <Slider<ProductFilterForm>
@@ -80,14 +112,14 @@ const ProductFilter = ({
           min={priceRange[0]}
           max={priceRange[1]}
           step={priceStep}
-          sliderLength={SCREEN_WIDTH - (styles.sliderContainer.marginHorizontal * 2 + 32)}
+          sliderLength={contentWidth - (SLIDER_MARGIN * 2 + SPACE.xl)}
           containerStyle={styles.sliderContainer}
           viewProps={{ style: styles.sliderView }}
         />
       </ScrollView>
 
       <View style={styles.btnCon}>
-        <Button mode="outlined" onPress={onPressReset} style={styles.btn}>
+        <Button mode="text" onPress={onPressReset} style={styles.btn}>
           Reset
         </Button>
 
@@ -107,19 +139,32 @@ const styles = StyleSheet.create({
 
   scrollView: {
     flex: 1,
-    marginBottom: 60, // Add margin to prevent content from being hidden behind button
+    marginBottom: SIZE.buttonHeight + SPACE.sm, // prevent content from being hidden behind button
   },
 
   sortSec: {
+    gap: SPACE.md,
+  },
+
+  chipSection: {
+    gap: SPACE.xs,
+  },
+
+  chipRow: {
     flexDirection: 'row',
-    gap: 8,
+    flexWrap: 'wrap',
+    gap: SPACE.xs,
+  },
+
+  chip: {
+    borderRadius: RADIUS.sm,
   },
 
   btnCon: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACE.xs,
   },
 
   btn: {
@@ -127,11 +172,11 @@ const styles = StyleSheet.create({
   },
 
   sliderView: {
-    marginTop: 16,
+    marginTop: SPACE.lg,
   },
 
   sliderContainer: {
-    marginHorizontal: 20,
+    marginHorizontal: SLIDER_MARGIN,
   },
 });
 

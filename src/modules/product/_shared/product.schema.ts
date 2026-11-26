@@ -6,6 +6,5 @@ export const productFilterSchema: Record<keyof ProductFilterForm, yup.Schema<any
   sortValue: yup.string().optional(),
   sortBy: yup.string().optional(),
 
-  priceStart: yup.number().optional(),
-  priceEnd: yup.number().optional(),
+  priceRange: yup.array().of(yup.number()).optional(),
 };

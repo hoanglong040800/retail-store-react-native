@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AppTable, BottomSheet, ChoiceList, ChoiceListType, TableColumnConfig, useBottomSheet } from 'components';
 import { OrderStatusChip } from 'components/chip';
-import { useAppNavigation, useAuth } from 'hooks';
+import { useAppNavigation, useAppTheme, useAuth } from 'hooks';
 import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
@@ -12,6 +12,7 @@ import { checkCanDoOrderAction, formatCurrency, formatDate } from 'utils';
 
 const OrderHistoryScreen = () => {
   // ---- HOOKS ----
+  const { colors } = useAppTheme();
   const { user } = useAuth();
   const { navigate } = useAppNavigation();
   const { onOpenBotSheet, botSheetRef } = useBottomSheet({});
@@ -92,12 +93,12 @@ const OrderHistoryScreen = () => {
         text: 'Cancel',
         value: 'cancel',
         mode: 'text',
-        textColor: 'red',
+        textColor: colors.error,
         disabled: !checkCanDoOrderAction(OrderActionEnum.cancel, curRowBotSheet?.status),
         onPress: () => {},
       },
     ];
-  }, [curRowBotSheet]);
+  }, [curRowBotSheet, colors.error]);
 
   const handlePressAction = (orderId: string) => {
     const selectedOrder = userOrders?.orders.find(order => order.id === orderId);

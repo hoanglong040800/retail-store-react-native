@@ -57,7 +57,6 @@ const ProductSearchScreen = ({ route }: Props) => {
           <CategoryList
             list={searchLv2Categories}
             direction="row"
-            itemSize="S"
             onPressItem={onPressCateItem}
             selectedId={selectedCate?.id}
           />

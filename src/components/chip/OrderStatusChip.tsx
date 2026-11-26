@@ -1,12 +1,16 @@
+import { AppColors } from 'const';
+import { useAppTheme } from 'hooks';
 import { useMemo } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Chip, Icon, Tooltip } from 'react-native-paper';
 import { OrderStatusEnum } from 'types/enum';
 
+type ColorRole = keyof Omit<AppColors, 'elevation'>;
+
 type ChipProp = {
   text: string;
-  color: string;
-  textColor: string;
+  color: ColorRole;
+  textColor: ColorRole;
   icon: string;
   tooltip: string;
 };
@@ -14,43 +18,43 @@ type ChipProp = {
 const contentByStatus: Record<OrderStatusEnum, ChipProp> = {
   [OrderStatusEnum.pending]: {
     text: 'Pending',
-    color: 'darkgray',
-    textColor: 'white',
+    color: 'surfaceVariant',
+    textColor: 'onSurfaceVariant',
     icon: 'clock-outline',
     tooltip: 'Default status when first checkout',
   },
   [OrderStatusEnum.awaitingFulfillment]: {
     text: 'Preparing',
-    color: 'lightgoldenrodyellow',
-    textColor: 'darkkhaki',
+    color: 'secondaryContainer',
+    textColor: 'onSecondaryContainer',
     icon: 'cart-arrow-down',
     tooltip: 'Wait for store clerks to prepare order',
   },
   [OrderStatusEnum.awaitingPayment]: {
     text: 'Payment',
-    color: 'coral',
-    textColor: 'navajowhite',
+    color: 'warningContainer',
+    textColor: 'onWarningContainer',
     icon: 'cash',
     tooltip: 'Wait for customer to pay in order to process. Its depend on delivery type',
   },
   [OrderStatusEnum.awaitingShipment]: {
     text: 'Shipment',
-    color: 'lightskyblue',
-    textColor: 'mintcream',
+    color: 'infoContainer',
+    textColor: 'onInfoContainer',
     icon: 'truck',
     tooltip: 'Finish fulfillment, wait for delivery. Customer may or may not need to pay at this step',
   },
   [OrderStatusEnum.done]: {
     text: 'Done',
-    color: 'limegreen',
-    textColor: 'white',
+    color: 'successContainer',
+    textColor: 'onSuccessContainer',
     icon: 'check',
     tooltip: 'Order is delivered and paid',
   },
   [OrderStatusEnum.cancelled]: {
     text: 'Cancelled',
-    color: 'indianred',
-    textColor: 'white',
+    color: 'errorContainer',
+    textColor: 'onErrorContainer',
     icon: 'cancel',
     tooltip: 'Order is either cancelled by store or customer',
   },
@@ -62,14 +66,15 @@ type Props = {
 };
 
 const OrderStatusChip = ({ orderStatus, onPress }: Props) => {
+  const { colors } = useAppTheme();
   const content: ChipProp = useMemo(() => {
     const newContent: ChipProp = contentByStatus[orderStatus];
 
     if (!newContent) {
       return {
         text: 'Invalid Status',
-        color: 'darkgray',
-        textColor: 'white',
+        color: 'surfaceVariant',
+        textColor: 'onSurfaceVariant',
         icon: '',
         tooltip: 'Status is not valid',
       };
@@ -78,7 +83,8 @@ const OrderStatusChip = ({ orderStatus, onPress }: Props) => {
     return newContent;
   }, [orderStatus]);
 
-  const renderIcon = () => <Icon source={content.icon} size={13} color={content.textColor} />;
+  const textColor = colors[content.textColor];
+  const renderIcon = () => <Icon source={content.icon} size={16} color={textColor} />;
 
   return (
     <View style={styles.container}>
@@ -86,9 +92,9 @@ const OrderStatusChip = ({ orderStatus, onPress }: Props) => {
         <Chip
           onPress={onPress}
           icon={renderIcon}
-          textStyle={[styles.text, { color: content.textColor }]}
-          style={{ backgroundColor: content.color }}
-          selectedColor={content.textColor}
+          textStyle={[styles.text, { color: textColor }]}
+          style={{ backgroundColor: colors[content.color] }}
+          selectedColor={textColor}
         >
           {content.text}
         </Chip>

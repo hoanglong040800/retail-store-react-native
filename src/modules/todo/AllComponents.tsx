@@ -1,139 +1,141 @@
-import { THEME } from 'const';
+import { useAppTheme } from 'hooks';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 
 const AllComponents = () => {
+  const { colors } = useAppTheme();
+
   const primaryColorList = [
     {
-      backgroundColor: THEME.colors.primary,
+      backgroundColor: colors.primary,
       text: 'Primary',
     },
 
     {
-      backgroundColor: THEME.colors.primaryContainer,
+      backgroundColor: colors.primaryContainer,
       text: 'Primary Container',
-      textColor: THEME.colors.secondary,
+      textColor: colors.secondary,
     },
 
     {
-      backgroundColor: THEME.colors.onPrimary,
+      backgroundColor: colors.onPrimary,
       text: 'On Primary',
     },
 
     {
-      backgroundColor: THEME.colors.onPrimaryContainer,
+      backgroundColor: colors.onPrimaryContainer,
       text: 'On Primary Container',
     },
 
     {
-      backgroundColor: THEME.colors.inversePrimary,
+      backgroundColor: colors.inversePrimary,
       text: 'Inverse Primary',
     },
   ];
 
   const secondaryColorList = [
     {
-      backgroundColor: THEME.colors.secondary,
+      backgroundColor: colors.secondary,
       text: 'Secondary',
     },
 
     {
-      backgroundColor: THEME.colors.secondaryContainer,
+      backgroundColor: colors.secondaryContainer,
       text: 'Secondary Container',
-      textColor: THEME.colors.primary,
+      textColor: colors.primary,
     },
 
     {
-      backgroundColor: THEME.colors.onSecondary,
+      backgroundColor: colors.onSecondary,
       text: 'On Secondary',
-      textColor: 'white',
+      textColor: colors.secondary,
     },
 
     {
-      backgroundColor: THEME.colors.onSecondaryContainer,
+      backgroundColor: colors.onSecondaryContainer,
       text: 'On Secondary Container',
-      textColor: 'white',
+      textColor: colors.secondaryContainer,
     },
 
     {
-      backgroundColor: THEME.colors.tertiary,
+      backgroundColor: colors.tertiary,
       text: 'Tertiary',
     },
 
     {
-      backgroundColor: THEME.colors.tertiaryContainer,
+      backgroundColor: colors.tertiaryContainer,
       text: 'Tertiary Container',
     },
   ];
 
   const elevationColorList = [
     {
-      backgroundColor: THEME.colors.elevation.level0,
+      backgroundColor: colors.elevation.level0,
       text: 'Elevation Lv 0',
     },
     {
-      backgroundColor: THEME.colors.elevation.level1,
+      backgroundColor: colors.elevation.level1,
       text: 'Elevation Lv 1',
     },
     {
-      backgroundColor: THEME.colors.elevation.level2,
+      backgroundColor: colors.elevation.level2,
       text: 'Elevation Lv 2',
     },
     {
-      backgroundColor: THEME.colors.elevation.level3,
+      backgroundColor: colors.elevation.level3,
       text: 'Elevation Lv 3',
     },
     {
-      backgroundColor: THEME.colors.elevation.level4,
+      backgroundColor: colors.elevation.level4,
       text: 'Elevation Lv 4',
     },
     {
-      backgroundColor: THEME.colors.elevation.level5,
+      backgroundColor: colors.elevation.level5,
       text: 'Elevation Lv 5',
     },
   ];
 
   const surfaceColorList = [
     {
-      backgroundColor: THEME.colors.surface,
+      backgroundColor: colors.surface,
       text: 'Surface',
     },
 
     {
-      backgroundColor: THEME.colors.surfaceVariant,
+      backgroundColor: colors.surfaceVariant,
       text: 'Surface Variant',
     },
 
     {
-      backgroundColor: THEME.colors.surfaceDisabled,
+      backgroundColor: colors.surfaceDisabled,
       text: 'Disabled Surface',
     },
 
     {
-      backgroundColor: THEME.colors.onSurface,
+      backgroundColor: colors.onSurface,
       text: 'On Surface',
-      textColor: 'white',
+      textColor: colors.surface,
     },
 
     {
-      backgroundColor: THEME.colors.onSurfaceVariant,
+      backgroundColor: colors.onSurfaceVariant,
       text: 'On Surface Variant',
-      textColor: 'white',
+      textColor: colors.surfaceVariant,
     },
 
     {
-      backgroundColor: THEME.colors.onSurfaceDisabled,
+      backgroundColor: colors.onSurfaceDisabled,
       text: 'Disabled On Surface',
     },
 
     {
-      backgroundColor: THEME.colors.inverseSurface,
+      backgroundColor: colors.inverseSurface,
       text: 'Inverse Surface',
-      textColor: 'white',
+      textColor: colors.inverseOnSurface,
     },
 
     {
-      backgroundColor: THEME.colors.inverseOnSurface,
+      backgroundColor: colors.inverseOnSurface,
       text: 'Inverse On Surface',
     },
   ];

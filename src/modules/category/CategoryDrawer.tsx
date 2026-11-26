@@ -2,8 +2,8 @@ import { useMemo, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useRecoilValue } from 'recoil';
 import { CategoryDto, ParamsType, Screen } from 'types';
-import { THEME } from 'const';
-import { useAppNavigation } from 'hooks';
+import { SIZE, SPACE } from 'const';
+import { useAppNavigation, useAppTheme } from 'hooks';
 import { globalConfigState } from 'states';
 import CategoryList from './CategoryList';
 
@@ -36,6 +36,7 @@ type Props = {
 
 const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
   const { navigate } = useAppNavigation();
+  const { colors } = useAppTheme();
 
   const { categories } = useRecoilValue(globalConfigState);
 
@@ -85,16 +86,13 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
 
   return (
     <View style={styles.layout}>
-      <CategoryList
-        list={sidebarList}
-        onPressItem={onPressMainCategory}
-        selectedId={sidebarList[curMainIndex]?.id}
-        style={styles.leftCate}
-      />
+      <View style={[styles.leftCate, { backgroundColor: colors.elevation.level2 }]}>
+        <CategoryList list={sidebarList} onPressItem={onPressMainCategory} selectedId={sidebarList[curMainIndex]?.id} />
+      </View>
 
-      <View style={styles.rightCate}>
+      <View style={[styles.rightCate, { backgroundColor: colors.surface }]}>
         <CategoryList
-          list={sidebarList[curMainIndex].childCategories}
+          list={sidebarList[curMainIndex]?.childCategories}
           direction="both"
           onPressItem={onPressSubCategory}
         />
@@ -110,15 +108,12 @@ const styles = StyleSheet.create({
   },
 
   leftCate: {
-    backgroundColor: THEME.colors.elevation.level1,
-    maxWidth: 150,
-    paddingBottom: 16,
+    width: SIZE.categoryRailWidth,
   },
 
   rightCate: {
-    padding: 8,
+    padding: SPACE.md,
     flex: 1,
-    backgroundColor: THEME.colors.elevation.level0,
   },
 });
 

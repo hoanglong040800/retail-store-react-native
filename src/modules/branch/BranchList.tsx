@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
-import { ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { BranchDto, SelectedLocation } from 'types';
-import { BASE_STYLE } from 'const';
+import { BASE_STYLE, SPACE } from 'const';
+import { useResponsiveLayout } from 'hooks';
 import { setStorageItems } from 'utils';
 import { useRecoilRefresher_UNSTABLE } from 'recoil';
 import { selectedLocationSelector } from 'states';
@@ -12,6 +13,10 @@ type Props = {
 };
 
 const BranchList = ({ branches }: Props) => {
+  const { isPhone, isWide, getGridItemWidth } = useResponsiveLayout();
+  const columns = (isPhone && 1) || (isWide && 3) || 2;
+  const itemWidth = getGridItemWidth(columns);
+
   const refreshSelectedLocationSelector = useRecoilRefresher_UNSTABLE(selectedLocationSelector);
 
   // refer to handleSaveLocation from AdminDivisionSelector.tsx
@@ -51,7 +56,9 @@ const BranchList = ({ branches }: Props) => {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
       {branches.map(branch => (
-        <BranchItem branch={branch} key={branch.id} onChooseStore={handleChooseStore} />
+        <View key={branch.id} style={{ width: itemWidth }}>
+          <BranchItem branch={branch} onChooseStore={handleChooseStore} />
+        </View>
       ))}
     </ScrollView>
   );
@@ -60,13 +67,13 @@ const BranchList = ({ branches }: Props) => {
 const styles = StyleSheet.create({
   container: {
     ...BASE_STYLE.SCROLL_VIEW_BOT_BTN,
-    minWidth: 500,
-    maxWidth: 768,
-    padding: 16,
   },
 
   contentContainer: {
-    gap: 16,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACE.sm,
+    padding: SPACE.md,
   },
 });
 

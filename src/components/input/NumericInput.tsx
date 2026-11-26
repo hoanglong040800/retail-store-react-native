@@ -1,5 +1,7 @@
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { IconButton, TextInput } from 'react-native-paper';
+import { RADIUS, SPACE } from 'const';
+import { useAppTheme } from 'hooks';
+import { StyleProp, StyleSheet, TextInput, View, ViewStyle } from 'react-native';
+import { IconButton } from 'react-native-paper';
 
 type Props = {
   value: number;
@@ -8,7 +10,11 @@ type Props = {
   containerStyle?: StyleProp<ViewStyle>;
 };
 
+const STEPPER_ICON_SIZE = 18;
+
 const NumericInput = ({ value, offset = 1, containerStyle, onChange }: Props) => {
+  const { colors, fonts } = useAppTheme();
+
   const handleOnChangeInput = (text: string) => {
     onChange(+text);
   };
@@ -23,40 +29,51 @@ const NumericInput = ({ value, offset = 1, containerStyle, onChange }: Props) =>
   };
 
   return (
-    <View style={[styles.container, containerStyle]}>
-      <IconButton icon="minus" mode="outlined" style={styles.icon} onPress={() => handleClickIcon('minus')} />
+    <View style={[styles.container, { backgroundColor: colors.primaryContainer }, containerStyle]}>
+      <IconButton
+        icon="minus"
+        size={STEPPER_ICON_SIZE}
+        iconColor={colors.onPrimaryContainer}
+        style={styles.icon}
+        onPress={() => handleClickIcon('minus')}
+      />
 
       <TextInput
         value={value.toString()}
-        mode="outlined"
         keyboardType="number-pad"
         onChangeText={handleOnChangeInput}
         maxLength={2}
-        style={styles.input}
+        style={[styles.input, fonts.titleSmall, { color: colors.onPrimaryContainer }]}
       />
 
-      <IconButton icon="plus" mode="outlined" style={styles.icon} onPress={() => handleClickIcon('plus')} />
+      <IconButton
+        icon="plus"
+        size={STEPPER_ICON_SIZE}
+        iconColor={colors.onPrimaryContainer}
+        style={styles.icon}
+        onPress={() => handleClickIcon('plus')}
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
     flexDirection: 'row',
     flex: 1,
     alignItems: 'center',
+    borderRadius: RADIUS.full,
+    paddingHorizontal: SPACE.xxs,
   },
 
   icon: {
-    maxWidth: 80,
-    height: 30, // same as input height
-    borderRadius: 8,
+    margin: 0,
   },
 
   input: {
     flex: 1,
-    height: 30,
+    minWidth: 0,
+    textAlign: 'center',
   },
 });
 

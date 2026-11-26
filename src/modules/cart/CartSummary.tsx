@@ -1,3 +1,4 @@
+import { SPACE } from 'const';
 import { StyleSheet, View } from 'react-native';
 import { Divider, Text } from 'react-native-paper';
 import { CartCalculationDto } from 'types';
@@ -12,23 +13,23 @@ const CartSummary = ({ cartCalculation }: Props) => {
     <View>
       <View style={styles.infoSection}>
         <View style={styles.infoLine}>
-          <Text>Sub Total</Text>
+          <Text variant="bodyMedium">Sub Total</Text>
 
-          <Text>{formatCurrency(cartCalculation.subTotal)}</Text>
+          <Text variant="bodyMedium">{formatCurrency(cartCalculation.subTotal)}</Text>
         </View>
 
         <View style={styles.infoLine}>
-          <Text>Delivery Fee</Text>
+          <Text variant="bodyMedium">Delivery Fee</Text>
 
-          <Text>{formatCurrency(cartCalculation.shippingFee)}</Text>
+          <Text variant="bodyMedium">{formatCurrency(cartCalculation.shippingFee)}</Text>
         </View>
 
         <Divider />
 
         <View style={styles.infoLine}>
-          <Text variant="bodyLarge">Total Amount</Text>
+          <Text variant="titleMedium">Total Amount</Text>
 
-          <Text variant="bodyLarge">{formatCurrency(cartCalculation.totalAmount)}</Text>
+          <Text variant="titleMedium">{formatCurrency(cartCalculation.totalAmount)}</Text>
         </View>
       </View>
     </View>
@@ -37,7 +38,7 @@ const CartSummary = ({ cartCalculation }: Props) => {
 
 const styles = StyleSheet.create({
   infoSection: {
-    gap: 8,
+    gap: SPACE.xs,
   },
 
   infoLine: {

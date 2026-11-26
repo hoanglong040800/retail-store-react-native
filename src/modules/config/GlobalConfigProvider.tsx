@@ -5,7 +5,7 @@ import { useRecoilState } from 'recoil';
 import { getGlobalConfig } from 'service';
 import { globalConfigState } from 'states';
 import { ErrorResponse } from 'types';
-import { getStorageItem, setStorageItems } from 'utils';
+import { getStorageItem, removeStorageItems, setStorageItems } from 'utils';
 import { subscribeEvent } from 'utils/event.util';
 
 type Props = {

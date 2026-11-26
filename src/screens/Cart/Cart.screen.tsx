@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { BASE_STYLE } from 'const';
+import { BASE_STYLE, SPACE } from 'const';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import { BottomButton, useBottomSheet } from 'components';
 import { CheckoutForm, checkoutFormSchema } from 'modules/cart/shared';
@@ -143,11 +143,12 @@ const styles = StyleSheet.create({
 
   scrollView: {
     ...BASE_STYLE.SCROLL_VIEW_BOT_BTN,
-    paddingTop: 16,
+    paddingTop: SPACE.md,
   },
 
   scrollViewContentContainer: {
-    gap: 16,
+    gap: SPACE.md,
+    paddingHorizontal: SPACE.md,
   },
 });
 

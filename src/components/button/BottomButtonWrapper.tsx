@@ -1,3 +1,5 @@
+import { SPACE } from 'const';
+import { useAppTheme } from 'hooks';
 import { ReactNode } from 'react';
 import { StyleSheet } from 'react-native';
 import { Surface } from 'react-native-paper';
@@ -7,8 +9,13 @@ type Props = {
 };
 
 const BottomButtonWrapper = ({ children }: Props) => {
+  const { colors } = useAppTheme();
+
   return (
-    <Surface elevation={1} style={styles.container}>
+    <Surface
+      elevation={2}
+      style={[styles.container, { backgroundColor: colors.elevation.level2, borderTopColor: colors.outlineVariant }]}
+    >
       {children}
     </Surface>
   );
@@ -20,7 +27,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: '100%',
-    padding: 8,
+    paddingVertical: SPACE.sm,
+    paddingHorizontal: SPACE.md,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
 });
 

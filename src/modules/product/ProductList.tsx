@@ -1,5 +1,7 @@
 import { Text } from 'react-native-paper';
-import { FlatList, StyleSheet, ViewStyle, StyleProp, View, Dimensions } from 'react-native';
+import { SPACE } from 'const';
+import { useResponsiveLayout } from 'hooks';
+import { FlatList, StyleSheet, ViewStyle, StyleProp, View } from 'react-native';
 import { ProductDto } from 'types/dto/product.dto';
 import ProductCard from './ProductCard';
 
@@ -10,7 +12,11 @@ type Props = {
   style?: StyleProp<ViewStyle>;
 };
 
-const ProductList = ({ colNum = 2, products, style, onPressProductCard }: Props) => {
+const ProductList = ({ colNum, products, style, onPressProductCard }: Props) => {
+  const { gridColumns, getGridItemWidth } = useResponsiveLayout();
+  const columns = colNum ?? gridColumns;
+  const itemWidth = getGridItemWidth(columns);
+
   // -- RENDER --
   const renderProductCard = ({ item }: { item: ProductDto }) => (
     <ProductCard
@@ -19,14 +25,14 @@ const ProductList = ({ colNum = 2, products, style, onPressProductCard }: Props)
       image={item.image}
       price={item.price}
       onPress={() => onPressProductCard(item.id)}
-      style={{ width: Dimensions.get('window').width / colNum - 16 }}
+      style={{ width: itemWidth }}
     />
   );
 
   if (!products || products.length === 0) {
     return (
-      <View>
-        <Text>No product found</Text>
+      <View style={styles.empty}>
+        <Text variant="titleMedium">No product found</Text>
       </View>
     );
   }
@@ -34,7 +40,8 @@ const ProductList = ({ colNum = 2, products, style, onPressProductCard }: Props)
   return (
     <FlatList
       data={products}
-      numColumns={colNum}
+      key={columns}
+      numColumns={columns}
       renderItem={renderProductCard}
       keyExtractor={item => item.id}
       style={style}
@@ -48,11 +55,17 @@ const styles = StyleSheet.create({
   contentContainer: {
     // make flatlist scrollable
     maxHeight: 0,
-    gap: 16,
+    gap: SPACE.sm,
+    padding: SPACE.md,
   },
 
   columnWrapper: {
-    gap: 16,
+    gap: SPACE.sm,
+  },
+
+  empty: {
+    alignItems: 'center',
+    padding: SPACE.lg,
   },
 });
 

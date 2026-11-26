@@ -1,5 +1,6 @@
 import { Image, StyleSheet, View } from 'react-native';
 import { Chip, Surface, Text } from 'react-native-paper';
+import { useAppTheme } from 'hooks';
 import { formatCurrency } from 'utils';
 
 type Props = {
@@ -10,11 +11,17 @@ type Props = {
 };
 
 const ProductDetail = ({ name, description, price, image }: Props) => {
+  const { colors } = useAppTheme();
+
   return (
     <View style={styles.container}>
-      <Image source={{ uri: image }} style={styles.image} resizeMode="contain" />
+      <Image
+        source={{ uri: image }}
+        style={[styles.image, { backgroundColor: colors.elevation.level1 }]}
+        resizeMode="contain"
+      />
 
-      <Surface elevation={1} style={styles.surface}>
+      <Surface elevation={1} style={[styles.surface, { backgroundColor: colors.elevation.level1 }]}>
         <View style={styles.content}>
           <View>
             <Text variant="titleMedium">{name}</Text>
@@ -47,14 +54,12 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 300,
-    backgroundColor: 'white',
     objectFit: 'contain',
   },
 
   surface: {
     padding: 8,
     borderRadius: 8,
-    backgroundColor: 'white',
 
     marginTop: 16,
   },

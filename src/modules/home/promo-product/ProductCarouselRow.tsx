@@ -1,5 +1,5 @@
 import { ScrollViewWrapper } from 'components';
-import { BASE_STYLE } from 'const';
+import { SIZE, SPACE } from 'const';
 import { useAppNavigation } from 'hooks';
 import { ProductCard } from 'modules/product';
 import { Image, StyleSheet, View } from 'react-native';
@@ -56,7 +56,6 @@ const ProductCarouselRow = ({ productCate }: Props) => {
             name={product.name}
             image={product.image}
             price={product.price}
-            style={styles.productCard}
             onPress={() => {}}
           />
         ))}
@@ -73,31 +72,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 8,
+    paddingHorizontal: SPACE.md,
   },
 
   titleLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: SPACE.xs,
   },
 
   titleLeftImage: {
-    width: 20,
-    height: 20,
-  },
-
-  headerContainer: {
-    marginBottom: 12,
-  },
-
-  headerLabel: {
-    fontSize: 18,
-  },
-
-  productCard: {
-    width: BASE_STYLE.PRODUCT_CARD.width,
-    marginRight: 16,
+    width: SIZE.iconMd,
+    height: SIZE.iconMd,
   },
 });
 

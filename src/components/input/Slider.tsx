@@ -4,7 +4,7 @@ import { ComponentProps } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { StyleSheet, View, ViewProps } from 'react-native';
 import { Text } from 'react-native-paper';
-import { THEME } from 'const';
+import { useAppTheme } from 'hooks';
 import { SliderMarker } from './SliderCustomMarker';
 
 type Props<T> = MultiSliderProps & {
@@ -16,6 +16,8 @@ type Props<T> = MultiSliderProps & {
 
 const Slider = <T extends object>({ name, label, viewProps, formatMarkerValue, ...multiSliderProps }: Props<T>) => {
   const { control } = useFormContext();
+
+  const { colors } = useAppTheme();
 
   // GUIDE: fix Do not define components during render
   const renderSliderMarker = (props: ComponentProps<typeof SliderMarker>) => <SliderMarker {...props} />;
@@ -33,6 +35,8 @@ const Slider = <T extends object>({ name, label, viewProps, formatMarkerValue, .
               values={value}
               onValuesChange={newVal => onChange(newVal)}
               customMarker={props => renderSliderMarker({ ...props, formatValue: formatMarkerValue })}
+              selectedStyle={{ backgroundColor: colors.primary }}
+              unselectedStyle={{ backgroundColor: colors.surfaceVariant }}
               {...multiSliderProps}
             />
           </View>
@@ -47,9 +51,5 @@ export default Slider;
 const styles = StyleSheet.create({
   label: {
     marginBottom: 4,
-  },
-
-  track: {
-    backgroundColor: THEME.colors.primary,
   },
 });

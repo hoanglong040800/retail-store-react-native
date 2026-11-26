@@ -1,6 +1,6 @@
 // eslint-disable react/jsx-props-no-spreading
-import { CUSTOM_THEME, THEME } from 'const';
-import { useAppNavigation } from 'hooks';
+import { SIZE } from 'const';
+import { useAppNavigation, useAppTheme } from 'hooks';
 import { StyleSheet } from 'react-native';
 import { Appbar, Button, ButtonProps } from 'react-native-paper';
 
@@ -22,10 +22,11 @@ const DeAppBar = ({
   onPressPrimary,
 }: Props) => {
   const { goBack } = useAppNavigation();
+  const { colors } = useAppTheme();
 
   return (
-    <Appbar.Header style={styles.header}>
-      <Appbar.Action icon="chevron-left" onPress={onPressSecondary || goBack} style={styles.leftIcon} />
+    <Appbar.Header style={[styles.header, { backgroundColor: colors.elevation.level0 }]}>
+      <Appbar.Action icon="chevron-left" onPress={onPressSecondary || goBack} />
       <Appbar.Content title={title} />
       {(!isHideRightBtn || !primaryText) && (
         <Button onPress={onPressPrimary} {...rightButtonProps}>
@@ -38,12 +39,7 @@ const DeAppBar = ({
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: THEME.colors.primaryContainer,
-    height: CUSTOM_THEME.headerHeight,
-  },
-
-  leftIcon: {
-    backgroundColor: THEME.colors.primaryContainer,
+    height: SIZE.appBarHeight,
   },
 });
 

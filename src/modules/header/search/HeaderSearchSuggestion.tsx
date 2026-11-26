@@ -1,3 +1,4 @@
+import { SPACE } from 'const';
 import { Image, StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Chip, List, Text } from 'react-native-paper';
 import { SuggestedSearch } from 'types';
@@ -59,7 +60,7 @@ const HeaderSearchSuggestion = ({
 
 const styles = StyleSheet.create({
   container: {
-    gap: 20,
+    gap: SPACE.md,
   },
 
   recentChipCon: {

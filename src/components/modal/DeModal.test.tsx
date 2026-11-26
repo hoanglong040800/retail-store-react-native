@@ -10,6 +10,12 @@ jest.mock('../appbar', () => ({
   DeAppBar: () => <div data-testid="DeAppBar" />,
 }));
 
+// UT: mock hooks barrel (pulls in bottom-sheet / reanimated, which cannot load in jest)
+jest.mock('hooks', () => ({
+  useAppTheme: () => ({ colors: { background: '#fff', backdrop: '#000', shadow: '#000' } }),
+  useResponsiveLayout: () => ({ isPhone: true }),
+}));
+
 // UT: mock react-native Modal
 jest.mock('react-native/Libraries/Modal/Modal', () => ({ children }) => <div data-testid="Modal">{children}</div>);
 

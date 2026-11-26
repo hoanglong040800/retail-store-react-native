@@ -86,12 +86,9 @@ const CategoryDrawer = ({ callbackAfterPressCategory = () => null }: Props) => {
 
   return (
     <View style={styles.layout}>
-      <CategoryList
-        list={sidebarList}
-        onPressItem={onPressMainCategory}
-        selectedId={sidebarList[curMainIndex]?.id}
-        style={[styles.leftCate, { backgroundColor: colors.elevation.level2 }]}
-      />
+      <View style={[styles.leftCate, { backgroundColor: colors.elevation.level2 }]}>
+        <CategoryList list={sidebarList} onPressItem={onPressMainCategory} selectedId={sidebarList[curMainIndex]?.id} />
+      </View>
 
       <View style={[styles.rightCate, { backgroundColor: colors.surface }]}>
         <CategoryList
@@ -111,7 +108,6 @@ const styles = StyleSheet.create({
   },
 
   leftCate: {
-    flexGrow: 0,
     width: SIZE.categoryRailWidth,
   },
 
